@@ -24,10 +24,10 @@ class App extends Component{
 
         this.state = {
             types: {
-                lots: true,
-                auctions: true,
-                events: true,
-                stories: true
+                lots: false,
+                // auctions: false,
+                events: false,
+                stories: false
             },
         }
     }
@@ -45,6 +45,8 @@ class App extends Component{
 
         console.log('ACTIVE TYPES: ', types);
 
+        let allFiltersUnchecked = (!types.lots && !types.events && !types.stories);
+
         return (
             <div className="App">
                 <Provider store={store}>
@@ -55,11 +57,11 @@ class App extends Component{
 
                             <div className="container">
 
-                                { types.lots ? (<LotContainer />) : '' }
+                                { (allFiltersUnchecked || types.lots) ? (<LotContainer />) : '' }
 
                                 {/*<AuctionsContainer />*/}
 
-                                { types.stories ? (<ArticleContainer />) : '' }
+                                { (allFiltersUnchecked || types.stories) ? (<ArticleContainer />) : '' }
 
                             </div>
 

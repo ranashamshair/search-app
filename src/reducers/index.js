@@ -7,10 +7,10 @@ const initialState = {
     staticFilters: {
         upcomingOnly: false,
         contentType: {
-            lots: true,
-            auctions: true,
-            events: true,
-            stories: true
+            lots: false,
+            // auctions: false,
+            events: false,
+            stories: false
         },
         categories: '',
         pricemin: '',

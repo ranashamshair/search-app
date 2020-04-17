@@ -19,10 +19,10 @@ class SearchFilters extends Component {
             upcoming: false,
             categories: [],
             types: {
-                lots: true,
-                auctions: true,
-                events: true,
-                stories: true
+                lots: false,
+                // auctions: true,
+                events: false,
+                stories: false
             },
             pricemin: '',
             pricemax: '',
@@ -30,13 +30,15 @@ class SearchFilters extends Component {
             upcomingSaved: false,
             categoriesSaved: [],
             typesSaved: {
-                lots: true,
-                auctions: true,
-                events: true,
-                stories: true
+                lots: false,
+                // auctions: true,
+                events: false,
+                stories: false
             },
             priceminSaved: '',
             pricemaxSaved: '',
+
+            filterCounter: 0,
 
         };
 
@@ -51,8 +53,9 @@ class SearchFilters extends Component {
 
     componentDidMount() {
         this.props.getCategories()
-    }
 
+        this.checkFilterCount();
+    }
 
     handleClickInsideDropdown(e) {
         return false;
@@ -71,6 +74,23 @@ class SearchFilters extends Component {
     }
 
 
+    checkFilterCount() {
+        const { typesSaved } = this.state;
+
+        let filterCounter = 0;
+
+        if(typesSaved.lots) ++filterCounter;
+        // if(typesSaved.auctions) ++filterCounter;
+        if(typesSaved.events) ++filterCounter;
+        if(typesSaved.stories) ++filterCounter;
+
+        this.setState({filterCounter: filterCounter});
+    }
+
+    checkedCategory(categoryId) {
+        return this.state
+    }
+
 
     saveUpcomingFilter(e) {
         this.setState({upcomingSaved: this.state.upcoming}, () => this.updateLots());
@@ -83,7 +103,9 @@ class SearchFilters extends Component {
     saveOtherFilters(e) {
         const { types, pricemin, pricemax } = this.state;
 
-        this.setState({typesSaved: types, priceminSaved: pricemin, pricemaxSaved: pricemax}, () => this.updateLots());
+        this.setState({typesSaved: types, priceminSaved: pricemin, pricemaxSaved: pricemax}, () => {
+            this.checkFilterCount(); this.updateLots()
+        });
     }
 
     cancelOtherFilter(e) {
@@ -99,23 +121,25 @@ class SearchFilters extends Component {
             upcoming: false,
             categories: [],
             types: {
-                lots: true,
-                auctions: true,
-                events: true,
-                stories: true
+                lots: false,
+                // auctions: true,
+                events: false,
+                stories: false
             },
             pricemin: '',
             pricemax: '',
             upcomingSaved: false,
             categoriesSaved: [],
             typesSaved: {
-                lots: true,
-                auctions: true,
-                events: true,
-                stories: true
+                lots: false,
+                // auctions: true,
+                events: false,
+                stories: false
             },
             priceminSaved: '',
             pricemaxSaved: '',
+
+            filterCounter: 0,
 
         }, () => this.updateLots())
     }
@@ -141,7 +165,7 @@ class SearchFilters extends Component {
 
 
     render() {
-        const { upcoming, types, pricemin, pricemax } = this.state;
+        const { upcoming, types, pricemin, pricemax, filterCounter } = this.state;
 
         return (
             <>
@@ -155,14 +179,16 @@ class SearchFilters extends Component {
                             <div className="dropdown-item" onClick={this.handleClickInsideDropdown}>
                                 <h6 className="font-weight-bold">Limit results to upcoming items only</h6>  
                                 <p>Applies to lots, events and auctions</p>
-                                
-                                <div className="custom-control custom-switch mb-3">
-                                    <input type="checkbox" className="custom-control-input" id="upcoming-only" value={upcoming} onChange={e => this.setState({upcoming : !!e.target.value})} />
-                                    <label className="custom-control-label" htmlFor="upcoming-only">Upcoming Only</label>
-                                </div>
 
-                                <a className="btn btn-sm btn-cancel" onClick={this.cancelUpcomingFilter}>Cancel</a>
-                                <a className="btn btn-sm btn-save" onClick={this.saveUpcomingFilter}>Save</a>
+                                <div className="ui toggle checkbox">
+                                    {/*<div className="custom-control custom-switch mb-3">*/}
+                                        <input type="checkbox" name="upcoming_only" id="upcoming-only" value={upcoming} onChange={e => this.setState({upcoming : !!e.target.value})} />
+                                        <label htmlFor="upcoming-only"><small>Upcoming Only</small></label>
+                                    {/*</div>*/}
+
+                                    <a className="btn btn-sm btn-cancel" onClick={this.cancelUpcomingFilter}>Cancel</a>
+                                    <a className="btn btn-sm btn-save" onClick={this.saveUpcomingFilter}>Save</a>
+                                </div>
                             </div>
                         </div>
 
@@ -196,9 +222,13 @@ class SearchFilters extends Component {
                         <button className="h-search-filter-btn mr-3 show" type="button" id="OtherFilters" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <FontAwesomeIcon icon={faFilter} size="sm" />
                             Other Filters
+                            {
+                                (filterCounter > 0) ? (<span id="counter__filter" className="ui black circular label">{filterCounter}</span>) : ''
+                            }
                         </button>
 
                         <div className="dropdown-menu" aria-labelledby="OtherFilters">
+                        {/*<div className="ui filter popup bottom left transition visible" aria-labelledby="OtherFilters">*/}
                             <div className="dropdown-item">
                                 <h6 className="font-weight-bold">Type</h6>
                                 <p className="mb-1">Filter by type of content.</p>
@@ -229,22 +259,18 @@ class SearchFilters extends Component {
                                 <p>Applies to lots only</p>
 
                                 <div className="input-group mb-3">
-                                    <div className="input-group-prepend">
-                                        <span className="input-group-text" id="low">Low $</span>
-                                    </div>
-                                    <input type="text" className="form-control" placeholder="Amount" aria-label="Amount" aria-describedby="low" value={pricemin} onChange={e => this.setState({pricemin : e.target.value})} />
-                                    <div className="input-group-append">
-                                        <span className="input-group-text" id="low">.00</span>
+                                    <div className="ui right labeled input">
+                                        <label htmlFor="amount" className="ui label">Low $</label>
+                                        <input type="text" placeholder="Amount" id="amount" value={pricemin} onChange={e => this.setState({pricemin : e.target.value})} />
+                                        <div className="ui basic label">.00</div>
                                     </div>
                                 </div>
 
                                 <div className="input-group mb-3">
-                                    <div className="input-group-prepend">
-                                        <span className="input-group-text" id="high">High $</span>
-                                    </div>
-                                    <input type="text" className="form-control" placeholder="Amount" aria-label="Amount" aria-describedby="high" value={pricemax} onChange={e => this.setState({pricemax : e.target.value})} />
-                                    <div className="input-group-append">
-                                        <span className="input-group-text" id="high">.00</span>
+                                    <div className="ui right labeled input">
+                                        <label htmlFor="amount" className="ui label">High $</label>
+                                        <input type="text" placeholder="Amount" id="amount" value={pricemax} onChange={e => this.setState({pricemax : e.target.value})} />
+                                        <div className="ui basic label">.00</div>
                                     </div>
                                 </div>
 

@@ -26,3 +26,11 @@ body #searchBox .dropdown-item .ui.checkbox label:before{
 .h-site-search--form .h-form-control {
     border: 1px solid rgba(34, 36, 38, 0.15);
 }
+
+a.btn.btn-sm{
+    text-transform: unset;
+}
+
+.h-search-filter input[type="checkbox"]#upcoming-only + label{
+    padding-left: 4.5rem;
+}
