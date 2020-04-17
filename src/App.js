@@ -57,7 +57,7 @@ class App extends Component{
 
                                 { types.lots ? (<LotContainer />) : '' }
 
-                                <AuctionsContainer />
+                                {/*<AuctionsContainer />*/}
 
                                 { types.stories ? (<ArticleContainer />) : '' }
 

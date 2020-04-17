@@ -207,10 +207,10 @@ class SearchFilters extends Component {
                                     <input type="checkbox" id="lots" onChange={this.handleChangeType} checked={types.lots} />
                                     <label htmlFor="lots">Lots</label>
                                 </div>
-                                <div className="ui checkbox">
-                                    <input type="checkbox" id="auctions" onChange={this.handleChangeType} checked={types.auctions} />
-                                    <label htmlFor="auctions">Auctions</label>
-                                </div>
+                                {/*<div className="ui checkbox">*/}
+                                {/*    <input type="checkbox" id="auctions" onChange={this.handleChangeType} checked={types.auctions} />*/}
+                                {/*    <label htmlFor="auctions">Auctions</label>*/}
+                                {/*</div>*/}
                                 <div className="ui checkbox">
                                     <input type="checkbox" id="events" onChange={this.handleChangeType} checked={types.events} />
                                     <label htmlFor="events">Events</label>
