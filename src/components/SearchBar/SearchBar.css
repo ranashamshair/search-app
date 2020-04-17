@@ -1,0 +1,36 @@
+.h-site-search--search {
+    padding: 2.875rem 2.5rem;
+    transition: 0.7s all cubic-bezier(.73,.05,.69,.94);
+    background-color: white;
+    z-index: 1000;
+    width: 100%;
+}
+
+.h-site-search--searchbox {
+    transition: transform .3s;
+}
+
+.h-site-search--form .h-form-control {
+    margin-left: 0;
+}
+
+.h-site-search--form button[type="submit"] {
+    position: absolute;
+    right: 7.5%;
+    border: 0;
+    -webkit-appearance: none;
+    background: transparent;
+}
+
+.h-site-search--search-empty {
+    padding: 8rem 2.5rem 12rem;
+    z-index: 1000;
+}
+
+.searchBox .h-form-item {
+    flex: 100% 0 1;
+}
+
+.searchBox .vertical-center.move {
+    transform: translate(0);
+}

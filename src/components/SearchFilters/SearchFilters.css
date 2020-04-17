@@ -1,0 +1,114 @@
+.h-search-filter {
+    display: none;
+}
+
+.h-search-filter .dropdown-menu {
+    min-width: 200px;
+    padding: 1rem .25rem;
+}
+
+.h-search-filter .dropdown-menu:before {
+    position: absolute;
+    content: '';
+    top: -.5rem;
+    left: 1rem;
+    width: 1em;
+    height: 1em;
+    background: #FFFFFF;
+    transform: rotate(-135deg);
+    z-index: 2;
+    box-shadow: 1px 1px 0px 0px #bababc;
+}
+
+.h-search-filter .form-control {
+    padding: .25rem 1rem;
+    min-width: 50px;
+}
+
+.h-search-filter input.form-control::placeholder {
+    font-size: .75rem;
+}
+
+.h-search-filter p {
+    font-size: 14px;
+}
+
+.h-search-filter .btn {
+    min-width: auto;
+    font-family: 'Nunito Sans';
+    font-weight: bold;
+}
+
+.h-search-filter .input-group-text {
+    font-size: .75rem;
+}
+
+.h-search-filter .form-control:placeholder {
+    font-size: .75rem;
+}
+
+
+.h-search-filter .btn-save {
+    background-color: #d4917c;
+    color: white;
+}
+
+.h-search-filter .btn-cancel {
+    background-color: #eee;
+    color:rgba(0, 0, 0, 0.6);
+}
+
+.h-search-filter input[type="checkbox"]#upcoming-only + label {
+    padding: 0;
+}
+
+.h-search-filter .svg-inline--fa.fa-w-16 {
+    color: rgba(0, 0, 0, 0.6);
+    vertical-align: middle;
+}
+
+.h-search-filter .svg-inline--fa.fa-w-16:not(.fa-redo) {
+    margin-right: .5rem;
+}
+
+.h-search-filter-show {
+    display: flex;
+}
+
+.h-search-filter-btn {
+    visibility: hidden;
+    transform: translateX(-20px);
+    transition: all .2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+    opacity: 0;
+    appearance: none;
+    border: 0;
+    background-color: #E0E1E2;
+    padding: .5rem 1rem;
+    color: rgba(0,0,0,0.6);
+    font-weight: bold;
+}
+
+.h-search-filter-btn.show {
+    visibility: visible;
+    transform: translateX(0px);
+    opacity: 1;
+}
+
+
+
+
+.h-search-filter .custom-switch .custom-control-label::before {
+    height: 1rem;
+    border: 1px solid #adb5bd;
+    display: block;
+}
+
+.h-search-filter .custom-switch .custom-control-label::after {
+    transform: none;
+    box-shadow: none;
+    border: 0;
+    opacity: 1;
+}
+.h-search-filter .custom-control-input:checked~.custom-control-label::before {
+    background-color: #d4917c;
+}
