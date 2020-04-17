@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="29525dcd-948c-488a-8879-ff66f93da875" name="Default Changelist" comment="" />
+    <list default="true" id="29525dcd-948c-488a-8879-ff66f93da875" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CheckBox/CheckBox.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CheckBox/CheckBox.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SearchBar/SearchBar.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SearchBar/SearchBar.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SearchBar/SearchBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SearchBar/SearchBar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SearchFilters/SearchFilters.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SearchFilters/SearchFilters.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -19,7 +29,11 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1aU846ZSqbTioGs0OP4k6k7LG38" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -27,6 +41,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -50,7 +65,7 @@
       <workItem from="1586931484636" duration="15616000" />
       <workItem from="1587018542163" duration="14177000" />
       <workItem from="1587103446516" duration="584000" />
-      <workItem from="1587109884451" duration="3774000" />
+      <workItem from="1587109884451" duration="16464000" />
     </task>
     <servers />
   </component>
@@ -58,9 +73,17 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="336" y="224" width="607" height="536" key="find.popup" timestamp="1587112477549">
+    <state x="92" y="92" width="1096" height="800" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1587125967088">
       <screen x="0" y="0" width="1280" height="984" />
     </state>
-    <state x="336" y="224" width="607" height="536" key="find.popup/0.0.1280.984@0.0.1280.984" timestamp="1587112477549" />
+    <state x="92" y="92" width="1096" height="800" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1280.984@0.0.1280.984" timestamp="1587125967088" />
+    <state x="92" y="92" width="1096" height="800" maximized="true" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog" timestamp="1587119102052">
+      <screen x="0" y="0" width="1280" height="984" />
+    </state>
+    <state x="92" y="92" width="1096" height="800" maximized="true" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog/0.0.1280.984@0.0.1280.984" timestamp="1587119102052" />
+    <state x="336" y="224" width="607" height="536" key="find.popup" timestamp="1587123203216">
+      <screen x="0" y="0" width="1280" height="984" />
+    </state>
+    <state x="336" y="224" width="607" height="536" key="find.popup/0.0.1280.984@0.0.1280.984" timestamp="1587123203216" />
   </component>
 </project>

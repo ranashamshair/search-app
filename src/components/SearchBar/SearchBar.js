@@ -11,53 +11,85 @@ class SearchBar extends Component {
         super(props)
 
         this.state = {
-            searchFiltersActive: false
+            searchFiltersActive: true
         }
 
-        this.delay = 200;
+        this.delay = 0;
 
         this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
         this.showSearchFilters = this.showSearchFilters.bind(this);
 
     }
 
+    componentDidMount() {
+        const menu_btn = document.getElementById('menu_search_form_btn');
+
+        console.log('menu_btn: ', menu_btn);
+
+        if(menu_btn){
+            menu_btn.addEventListener('click', e => {
+                const el = document.getElementById('searchBox');
+
+                if(el && el.classList.contains('show')){
+                    menu_btn.classList.remove('open');
+                    menu_btn.querySelector('#to_open').style.display = "block";
+                }
+                else{
+                    menu_btn.classList.add('open');
+                    menu_btn.querySelector('#to_open').style.display = "none";
+                }
+            });
+        }
+
+
+
+
+        // this.showSearchFilters();
+    }
+
+
     handleSearchSubmit = (e) => {
         e.preventDefault();
 
-        const searchFormContainer = document.querySelector('#searchBox');
-        
-        searchFormContainer.classList.remove('h-site-search--search-empty');
-        
-        this.setState({
-            searchFiltersActive: true
-        });
-
-        this.showSearchFilters();
+        // const searchFormContainer = document.querySelector('#searchBox');
+        //
+        // searchFormContainer.classList.remove('h-site-search--search-empty');
+        //
+        // this.setState({
+        //     searchFiltersActive: true
+        // });
         
     }
 
     showSearchFilters = (e) => {
 
-        const searchFilter = document.querySelector('.h-search-filter');
-        const searchFilterButtons = document.querySelectorAll('.h-search-filter-btn');
+        const menu_btn = document.getElementById('menu_search_form_btn');
 
-        searchFilter.classList.add('h-search-filter-show');
+        console.log('menu_btn: ', menu_btn);
 
-        searchFilterButtons.forEach( (button, i) => {
-            setInterval(function() {
+        menu_btn.classList.add('open');
+        // menu_btn.innerHTML =
 
-                button.classList.add('show');
-
-            }, this.delay * i)
-        }); 
-        
+        // const searchFilter = document.querySelector('.h-search-filter');
+        // const searchFilterButtons = document.querySelectorAll('.h-search-filter-btn');
+        //
+        // searchFilter.classList.add('h-search-filter-show');
+        //
+        // searchFilterButtons.forEach( (button, i) => {
+        //     setInterval(function() {
+        //
+        //         button.classList.add('show');
+        //
+        //     }, this.delay * i)
+        // });
+        //
     }
 
     render() {
         return (
-            <>
+            <div className="collapse position-fixed h-site-search--search-wrap" id="searchBox">
                 
-                <section id="searchBox" className="searchBox position-fixed collapse h-site-search--search h-site-search--search-empty">
+                <section className="searchBox h-site-search--search">
                     
                     <form action="/" className="h-site-search--form" onSubmit={this.handleSearchSubmit}>
                         <div className="container">
@@ -77,7 +109,7 @@ class SearchBar extends Component {
                         
                 </section>                
     
-            </>
+            </div>
         );
     }
     

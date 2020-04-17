@@ -14,3 +14,15 @@ body {
 .row-spacing {
     margin-bottom: 3rem;
 }
+
+.dropdown-item .ui.checkbox{
+    display: block;
+}
+
+body #searchBox .dropdown-item .ui.checkbox label:before{
+    border: 1px solid #D4D4D5;
+}
+
+.h-site-search--form .h-form-control {
+    border: 1px solid rgba(34, 36, 38, 0.15);
+}

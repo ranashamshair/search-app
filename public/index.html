@@ -18,15 +18,22 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
+      <link rel="stylesheet" href="./dist/css/app.css?=1.4">
+      <link rel="stylesheet" href="./dist/css/theme.css?=1.0">
+
+      <link rel="stylesheet" href="./dist/css/semantic.css?=1.0">
+      <link rel="stylesheet" href="./dan.css">
+
+      <!--
+        Notice the use of %PUBLIC_URL% in the tags above.
+        It will be replaced with the URL of the `public` folder during the build.
+        Only files inside the `public` folder can be referenced from the HTML.
+
+        Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+        work correctly both with client-side routing and a non-root public URL.
+        Learn how to configure a non-root public URL by running `npm run build`.
+      -->
     <title>Search</title>
   </head>
   <body>
@@ -272,11 +279,12 @@
                 
                 <li class="nav-item d-flex align-items-center ">
                   
-                  <a href="#searchBox" role="button" class="nav-link text-uppercase h-search-button" id="" data-toggle="collapse">
+                  <a href="#searchBox" id="menu_search_form_btn" role="button" class="nav-link text-uppercase h-search-button" data-toggle="collapse">
                     
-                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="38.9px" height="39.2px" viewBox="0 0 38.9 39.2" style="enable-background:new 0 0 38.9 39.2;" xml:space="preserve"><path class="st0" d="M28.8,27.1c2.6-3,4-6.8,4-10.7C32.8,7.3,25.4,0,16.4,0C7.3,0,0,7.4,0,16.4c0,9.1,7.4,16.4,16.4,16.4 c3.9,0,7.7-1.4,10.7-3.9l10,10.3l1.8-1.8L28.8,27.1z M30.2,16.4c0,7.7-6.2,13.9-13.9,13.9S2.5,24.1,2.5,16.4S8.7,2.5,16.4,2.5 S30.2,8.8,30.2,16.4z"></path></svg>
-                    <svg class="icon icon-close" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"></path><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg>
-                    
+                    <svg id="to_open" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="38.9px" height="39.2px" viewBox="0 0 38.9 39.2" style="enable-background:new 0 0 38.9 39.2;" xml:space="preserve"><path class="st0" d="M28.8,27.1c2.6-3,4-6.8,4-10.7C32.8,7.3,25.4,0,16.4,0C7.3,0,0,7.4,0,16.4c0,9.1,7.4,16.4,16.4,16.4 c3.9,0,7.7-1.4,10.7-3.9l10,10.3l1.8-1.8L28.8,27.1z M30.2,16.4c0,7.7-6.2,13.9-13.9,13.9S2.5,24.1,2.5,16.4S8.7,2.5,16.4,2.5 S30.2,8.8,30.2,16.4z"></path></svg>
+
+                    <svg class="icon-close" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 46 43.4" style="enable-background:new 0 0 46 43.4;" xml:space="preserve"><g><rect x="21.4" y="-3.6" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -8.9823 22.6615)" class="st0" width="2.8" height="51.6"></rect></g><g><rect x="-2.6" y="20.8" transform="matrix(0.707 -0.7072 0.7072 0.707 -8.9021 22.8585)" class="st0" width="51.6" height="2.8"></rect></g></svg>
+
                   </a>
                 </li>
                 

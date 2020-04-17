@@ -26,7 +26,7 @@ class CheckBox extends Component {
         
         return (
             <>
-                <div className="form-checkbox">
+                <div className="ui checkbox">
                     <input type="checkbox" id={this.props.attr} onChange={this.handleChange} checked={this.state.checked} /> 
                     <label htmlFor={this.props.attr}>{this.props.label}</label>
                 </div>

@@ -89,6 +89,8 @@ class SearchFilters extends Component {
     cancelOtherFilter(e) {
         const { typesSaved, priceminSaved, pricemaxSaved } = this.state;
 
+        console.log('typesSaved: ', typesSaved);
+
         this.setState({types: typesSaved, pricemin: priceminSaved, pricemax: pricemaxSaved});
     }
 
@@ -143,11 +145,11 @@ class SearchFilters extends Component {
 
         return (
             <>
-                <div className="col-12 col-lg-8 h-search-filter">
+                <div className="col-12 col-lg-8 h-search-filter h-search-filter-show" id="container__filters">
 
                     <div className="btn-group">
                     
-                        <button className="h-search-filter-btn mr-3" type="button" id="UpcomingOnly" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Upcoming Only</button>
+                        <button className="h-search-filter-btn mr-3 show" type="button" id="UpcomingOnly" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Upcoming Only</button>
 
                         <div className="dropdown-menu" aria-labelledby="UpcomingOnly" >
                             <div className="dropdown-item" onClick={this.handleClickInsideDropdown}>
@@ -168,7 +170,7 @@ class SearchFilters extends Component {
 
                     <div className="btn-group">
 
-                        <button className="h-search-filter-btn mr-3 dropdown-toggle" data-offset="10" type="button" id="Categories" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button className="h-search-filter-btn mr-3 show dropdown-toggle" data-offset="10" type="button" id="Categories" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <FontAwesomeIcon icon={faTag} size="1x" />
                             Categories
                         </button>
@@ -191,7 +193,7 @@ class SearchFilters extends Component {
 
                     <div className="btn-group">
 
-                        <button className="h-search-filter-btn mr-3" type="button" id="OtherFilters" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button className="h-search-filter-btn mr-3 show" type="button" id="OtherFilters" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <FontAwesomeIcon icon={faFilter} size="sm" />
                             Other Filters
                         </button>
@@ -201,19 +203,19 @@ class SearchFilters extends Component {
                                 <h6 className="font-weight-bold">Type</h6>
                                 <p className="mb-1">Filter by type of content.</p>
 
-                                <div className="form-checkbox">
+                                <div className="ui checkbox">
                                     <input type="checkbox" id="lots" onChange={this.handleChangeType} checked={types.lots} />
                                     <label htmlFor="lots">Lots</label>
                                 </div>
-                                {/*<div className="form-checkbox">*/}
-                                {/*    <input type="checkbox" id="auctions" onChange={this.handleChangeType} checked={types.auctions} />*/}
-                                {/*    <label htmlFor="auctions">Auctions</label>*/}
-                                {/*</div>*/}
-                                <div className="form-checkbox">
+                                <div className="ui checkbox">
+                                    <input type="checkbox" id="auctions" onChange={this.handleChangeType} checked={types.auctions} />
+                                    <label htmlFor="auctions">Auctions</label>
+                                </div>
+                                <div className="ui checkbox">
                                     <input type="checkbox" id="events" onChange={this.handleChangeType} checked={types.events} />
                                     <label htmlFor="events">Events</label>
                                 </div>
-                                <div className="form-checkbox">
+                                <div className="ui checkbox">
                                     <input type="checkbox" id="stories" onChange={this.handleChangeType} checked={types.stories} />
                                     <label htmlFor="stories">News &amp; Stories</label>
                                 </div>
@@ -254,9 +256,16 @@ class SearchFilters extends Component {
 
                     </div>
 
-                    <button className="h-search-filter-btn mr-3" onClick={this.resetAll}>
+
+                    <button className="h-search-filter-btn mr-3 show ui filter grey button" id="clear" onClick={this.resetAll}>
                         <FontAwesomeIcon icon={faRedo} size="sm" />
                     </button>
+
+                    {/*<div className="search-filter__anim-in-left search-filter__anim-reset show">*/}
+                    {/*    <div className="ui filter grey button" id="clear" title="Clear Filters" onClick={this.resetAll}>*/}
+                    {/*        <i className="redo alternate icon" />*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
 
                 </div>
             </>

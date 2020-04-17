@@ -34,3 +34,8 @@
 .searchBox .vertical-center.move {
     transform: translate(0);
 }
+
+.h-site-search--search-wrap{
+    width: 100%;
+    z-index: 1000;
+}

@@ -6,6 +6,7 @@ import ArticleContainer from './components/ArticleContainer/ArticleContainer';
 import SearchBox from './components/SearchBox/SearchBox';
 
 import './App.css';
+// import './assets/css/app.css';
 
 import { Provider } from 'react-redux';
 import store from './store/index';
@@ -56,7 +57,7 @@ class App extends Component{
 
                                 { types.lots ? (<LotContainer />) : '' }
 
-                                {/*<AuctionsContainer />*/}
+                                <AuctionsContainer />
 
                                 { types.stories ? (<ArticleContainer />) : '' }
 
