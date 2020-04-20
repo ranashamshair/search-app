@@ -1,4 +1,4 @@
-import {GET_CATEGORIES, GET_LOTS, UPDATE_FILTERS} from "../constants/action-types";
+import {GET_CATEGORIES, GET_LOTS} from "../constants/action-types";
 import axios from "axios";
 
 const baseUrl = 'https://johnmoran.hksndev2.co.uk/wp-json';
@@ -7,12 +7,45 @@ export function getLots(payload = null) {
     return function (dispatch) {
         var params = payload;
 
-        return axios.get( '../../../json/lot-detail.json' )
+        // TODO change URL for all lots !!!
+        // let route = baseUrl + '/searchlots/inv/past';
+        let route = baseUrl + '/searchlots/inv/upcoming';
+        if(params){
+            const filters = params.staticFilters;
+            const qs = [];
+
+            if(params.searchQuery){
+                qs.push('keyword=' + params.searchQuery)
+            }
+
+            if(filters){
+                if(filters.upcomingOnly){
+                    route = baseUrl + '/searchlots/inv/upcoming';
+                }
+
+                if(filters.pricemin) qs.push('pricemin=' + filters.pricemin);
+                if(filters.pricemin) qs.push('pricemax=' + filters.pricemax);
+                if(filters.categories) qs.push('categories=' + filters.categories.join(' '));
+            }
+
+            if(qs.length > 0) route += '?' + qs.join('&');
+        }
+
+        console.log('params', params);
+
+        return axios.get(route, {
+            headers: {
+                'id': 'kniWHWvyfDrEbi1noF'
+            }
+        })
             .then( response => {
-                console.log('params: ', params);
                 if(!params) params = {};
 
-                params.lots = response.data;
+                if(params.page && params.page > 0){
+                    params.lots = [...params.lots, ...response.data];
+                }else{
+                    params.lots = response.data;
+                }
                 params.isLoading = false;
 
                 console.log('result params before dispatch: ', params);
@@ -21,6 +54,13 @@ export function getLots(payload = null) {
             } )
             .catch(error => {
                 console.log(error);
+
+                if(!params) params = {};
+
+                params.lots = [];
+                params.isLoading = false;
+
+                dispatch({ type: GET_LOTS, payload: params });
             });
     }
 }

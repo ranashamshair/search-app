@@ -43,3 +43,17 @@
 .input-group.mb-3{
     display: block;
 }
+
+.h-search-filter .ui.button.primary .svg-inline--fa.fa-w-16{
+    color: #ffffff;
+}
+
+.h-header.w-100.has-no-hero{
+    border-bottom: unset;
+}
+
+@media (min-width: 992px){
+    body .hero-empty {
+        min-height: 4.5625rem;
+    }
+}

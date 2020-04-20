@@ -4,15 +4,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 import './SearchBar.css';
+import store from "../../store";
+import {updateFilters} from "../../actions";
 
 class SearchBar extends Component {
 
     constructor(props) {
-        super(props)
+        super(props);
 
         this.state = {
-            searchFiltersActive: true
-        }
+            searchFiltersActive: true,
+            query: '',
+        };
 
         this.delay = 0;
 
@@ -24,7 +27,7 @@ class SearchBar extends Component {
     componentDidMount() {
         const menu_btn = document.getElementById('menu_search_form_btn');
 
-        console.log('menu_btn: ', menu_btn);
+        // console.log('menu_btn: ', menu_btn);
 
         if(menu_btn){
             menu_btn.addEventListener('click', e => {
@@ -42,7 +45,11 @@ class SearchBar extends Component {
         }
 
 
+        store.subscribe(() => {
+            const {searchQuery} = store.getState();
 
+            this.setState({query: searchQuery})
+        });
 
         // this.showSearchFilters();
     }
@@ -58,8 +65,18 @@ class SearchBar extends Component {
         // this.setState({
         //     searchFiltersActive: true
         // });
+
+        const { query } = this.state;
+        const { staticFilters } = store.getState();
+
+        store.dispatch( updateFilters({
+            page: 0,
+            isLoading: true,
+            searchQuery: query,
+            staticFilters: staticFilters
+        }) );
         
-    }
+    };
 
     showSearchFilters = (e) => {
 
@@ -96,9 +113,11 @@ class SearchBar extends Component {
                             <div className="row justify-content-center">
 
                                 <div className="col-12 col-lg-4 form-group form-item h-form-group h-form-item d-flex flex-column flex-lg-row align-items-lg-center">
-                                    <label htmlFor="search" className="sr-only">Search Auctions/Lots</label>
-                                    <input type="text" id="search" className="form-control h-form-control" placeholder="Enter the terms you wish to search for" />
-                                    <button type="submit" className="position-relative"><FontAwesomeIcon icon={faSearch} size="sm" /></button>
+                                    <div className="ui icon input">
+                                        <label htmlFor="search" className="sr-only">Search Auctions/Lots</label>
+                                        <input type="text" id="search" className="form-control h-form-control" placeholder="Enter the terms you wish to search for" value={this.state.query} onChange={e => this.setState({query: e.target.value})} />
+                                        <button type="submit" className="position-relative"><FontAwesomeIcon icon={faSearch} size="sm" /></button>
+                                    </div>
                                 </div>
 
                                 <SearchFilters searchFiltersActive={this.showSearchFilters} />                        

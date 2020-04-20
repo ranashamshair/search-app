@@ -5,7 +5,7 @@ import BlockHeader from '../BlockHeader/BlockHeader';
 import Lot from '../Lot/Lot';
 import LotLoader from '../LotLoader/LotLoader';
 import {connect} from "react-redux";
-import { getLots } from '../../actions/index';
+import {getLots, updateFilters} from '../../actions/index';
 import store from "../../store";
 
 class LotContainer extends Component {
@@ -13,20 +13,34 @@ class LotContainer extends Component {
     constructor(props) {
         super(props);
 
-        // this.state = {
-        //     lots: [],
-        //     isLoading: true
-        // }
+        this.state = {page: 0};
 
+        this.loadMore = this.loadMore.bind(this);
     }
 
     componentDidMount() {
         this.props.getLots();
 
-        store.subscribe(() => console.log('load after filters change:  ', store.getState()));
+        store.subscribe(() => {
+            const {page} = store.getState();
+
+            console.log('state page: ', page);
+
+            this.setState({page: page});
+        });
+    }
+
+    loadMore(e) {
+        const st = store.getState();
+
+        st.isLoading = true;
+        st.page +=1;
+
+        store.dispatch( updateFilters(st) );
     }
 
     render() {
+        console.log('this.props.lots: ', this.props.lots);
 
         let lots = [];
 
@@ -34,21 +48,20 @@ class LotContainer extends Component {
             lots.push(<LotLoader key={i} />)
         }
 
-        
         if ( this.props.lots.length )
         {
             lots = this.props.lots.map(item =>
-                
-                <Lot 
-                    key={item.id}
-                    lotNumber={item.lotNumber} 
-                    artist={item.artist}
-                    provenance={item.provenance}
-                    estimate={item.estimate}
-                    imgSrc={item.imgSrc}
-                />
-                
-                );
+                <>
+                {
+                    (item.itemView) ? (
+                        <Lot
+                            key={'lot_' + item.itemView.ref}
+                            lot={item.itemView}
+                        />
+                    ) : ''
+                }
+                </>
+            );
             
         }
 
@@ -58,15 +71,11 @@ class LotContainer extends Component {
 
                 <div className="row row-spacing">
 
-                    
-
-                        {lots}
-
-                    
-                    
+                    {lots}
 
                 </div>
-                
+
+                <button onClick={this.loadMore}>LOAD MORE</button>
             </div>
         );
 

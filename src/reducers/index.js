@@ -1,6 +1,8 @@
-import {GET_CATEGORIES, GET_LOTS, UPDATE_FILTERS} from "../constants/action-types";
+import {GET_CATEGORIES, GET_LOTS} from "../constants/action-types";
 
 const initialState = {
+    page: 0,
+    searchQuery: '',
     lots: [],
     categories: [],
     isLoading: false,
@@ -12,7 +14,7 @@ const initialState = {
             events: false,
             stories: false
         },
-        categories: '',
+        categories: [],
         pricemin: '',
         pricemax: '',
     }
@@ -20,6 +22,7 @@ const initialState = {
 
 function rootReducer(state = initialState, action) {
     if (action.type === GET_LOTS) {
+        console.log('action.payload: ', action.payload);
         return Object.assign({}, state, action.payload);
     }
     if (action.type === GET_CATEGORIES) {
