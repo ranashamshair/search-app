@@ -39,6 +39,12 @@ class SearchFilters extends Component {
 
             filterCounter: 0,
 
+            dropdowns: {
+                upcoming: false,
+                category: false,
+                other: false,
+            }
+
         };
 
         this.handleClickInsideDropdown = this.handleClickInsideDropdown.bind(this);
@@ -110,33 +116,48 @@ class SearchFilters extends Component {
 
 
     saveUpcomingFilter = e => {
-        console.log('save this.state.upcoming :  ', this.state.upcoming);
-        this.setState({upcomingSaved: this.state.upcoming}, () => this.updateLots());
+        const { upcoming, dropdowns } = this.state;
+        dropdowns.upcoming = false;
+
+        this.setState({upcomingSaved: upcoming, dropdowns: dropdowns}, () => this.updateLots());
     };
 
-    cancelUpcomingFilter = e => this.setState({upcoming: this.state.upcomingSaved});
+    cancelUpcomingFilter = e => {
+        const { upcomingSaved, dropdowns } = this.state;
+        dropdowns.upcoming = false;
+
+        this.setState({upcoming: upcomingSaved, dropdowns: dropdowns});
+    };
 
 
     saveCategoryFilter = e => {
-        this.setState({categoriesSaved: this.state.categories}, () => this.updateLots());
+        const { categories, dropdowns } = this.state;
+        dropdowns.category = false;
+
+        this.setState({categoriesSaved: categories, dropdowns: dropdowns}, () => this.updateLots());
     };
 
-    cancelCategoryFilter = e => this.setState({categories: this.state.categoriesSaved});
+    cancelCategoryFilter = e => {
+        const { categoriesSaved, dropdowns } = this.state;
+        dropdowns.category = false;
+
+        this.setState({categories: categoriesSaved, dropdowns: dropdowns});
+    };
 
     saveOtherFilters(e) {
-        const { types, pricemin, pricemax } = this.state;
+        const { types, pricemin, pricemax, dropdowns } = this.state;
+        dropdowns.other = false;
 
-        this.setState({typesSaved: types, priceminSaved: pricemin, pricemaxSaved: pricemax}, () => {
+        this.setState({typesSaved: types, priceminSaved: pricemin, pricemaxSaved: pricemax, dropdowns: dropdowns}, () => {
             this.checkFilterCount(); this.updateLots()
         });
     }
 
     cancelOtherFilter(e) {
-        const { typesSaved, priceminSaved, pricemaxSaved } = this.state;
+        const { typesSaved, priceminSaved, pricemaxSaved, dropdowns } = this.state;
+        dropdowns.other = false;
 
-        console.log('typesSaved: ', typesSaved);
-
-        this.setState({types: typesSaved, pricemin: priceminSaved, pricemax: pricemaxSaved});
+        this.setState({types: typesSaved, pricemin: priceminSaved, pricemax: pricemaxSaved, dropdowns: dropdowns});
     }
 
     resetAll(e) {
@@ -163,6 +184,12 @@ class SearchFilters extends Component {
             pricemaxSaved: '',
 
             filterCounter: 0,
+
+            dropdowns: {
+                upcoming: false,
+                category: false,
+                other: false,
+            }
 
         }, () => this.updateLots(true))
     }
@@ -193,7 +220,7 @@ class SearchFilters extends Component {
 
 
     render() {
-        const { upcoming, upcomingSaved, categoriesSaved, types, pricemin, pricemax, filterCounter } = this.state;
+        const { upcoming, upcomingSaved, categoriesSaved, types, pricemin, pricemax, filterCounter, dropdowns } = this.state;
 
         return (
             <>
@@ -202,9 +229,12 @@ class SearchFilters extends Component {
                     <div className="filter-container">
                         <div className="btn-group">
 
-                            <button className={ upcomingSaved ? 'h-search-filter-btn mr-3 show ui filter button primary' : 'h-search-filter-btn mr-3 show ui filter button'} type="button" id="UpcomingOnly" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Upcoming Only</button>
+                            <button className={ upcomingSaved ? 'h-search-filter-btn mr-3 show ui filter button primary' : 'h-search-filter-btn mr-3 show ui filter button'} type="button" id="UpcomingOnly" aria-haspopup="true" aria-expanded="false" onClick={() => {
+                                dropdowns.upcoming = !dropdowns.upcoming;
+                                this.setState({dropdowns: dropdowns})
+                            }}>Upcoming Only</button>
 
-                            <div className="dropdown-menu" aria-labelledby="UpcomingOnly" >
+                            <div className={dropdowns.upcoming ? 'dropdown-menu show' : 'dropdown-menu'} aria-labelledby="UpcomingOnly" >
                                 <div className="dropdown-item" onClick={this.handleClickInsideDropdown}>
                                     <h6 className="font-weight-bold">Limit results to upcoming items only</h6>
                                     <p>Applies to lots, events and auctions</p>
@@ -225,7 +255,10 @@ class SearchFilters extends Component {
 
                         <div className="btn-group">
 
-                            <button className={ (categoriesSaved.length > 0) ? 'h-search-filter-btn mr-3 show dropdown-toggle ui filter button primary has-counter' : 'h-search-filter-btn mr-3 show dropdown-toggle ui filter button' } data-offset="10" type="button" id="Categories" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button className={ (categoriesSaved.length > 0) ? 'h-search-filter-btn mr-3 show dropdown-toggle ui filter button primary has-counter' : 'h-search-filter-btn mr-3 show dropdown-toggle ui filter button' } data-offset="10" type="button" id="Categories" aria-haspopup="true" aria-expanded="false" onClick={() => {
+                                dropdowns.category = !dropdowns.category;
+                                this.setState({dropdowns: dropdowns})
+                            }}>
                                 <i className="tags icon" />
                                 Categories
                                 {
@@ -233,7 +266,7 @@ class SearchFilters extends Component {
                                 }
                             </button>
 
-                            <div className="dropdown-menu" aria-labelledby="Categories">
+                            <div className={dropdowns.category ? 'dropdown-menu show' : 'dropdown-menu'} aria-labelledby="Categories">
                                 <div className="dropdown-item">
                                     <h6 className="font-weight-bold">Categories</h6>
                                     <p className="mb-1">Filter your results by specialisms.</p>
@@ -254,7 +287,10 @@ class SearchFilters extends Component {
 
                         <div className="btn-group">
 
-                            <button className={ (filterCounter > 0) ? 'h-search-filter-btn mr-3 show ui filter button primary has-counter' : 'h-search-filter-btn mr-3 show ui filter button' } type="button" id="OtherFilters" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button className={ (filterCounter > 0) ? 'h-search-filter-btn mr-3 show ui filter button primary has-counter' : 'h-search-filter-btn mr-3 show ui filter button' } type="button" id="OtherFilters" aria-haspopup="true" aria-expanded="false" onClick={() => {
+                                dropdowns.other = !dropdowns.other;
+                                this.setState({dropdowns: dropdowns})
+                            }}>
                                 <FontAwesomeIcon icon={faFilter} size="sm" />
                                 Other Filters
                                 {
@@ -262,7 +298,7 @@ class SearchFilters extends Component {
                                 }
                             </button>
 
-                            <div className="dropdown-menu" aria-labelledby="OtherFilters">
+                            <div className={dropdowns.other ? 'dropdown-menu show' : 'dropdown-menu'} aria-labelledby="OtherFilters">
                                 {/*<div className="ui filter popup bottom left transition visible" aria-labelledby="OtherFilters">*/}
                                 <div className="dropdown-item">
                                     <h6 className="font-weight-bold">Type</h6>
