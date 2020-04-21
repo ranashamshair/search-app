@@ -1,11 +1,15 @@
-import {GET_CATEGORIES, GET_LOTS} from "../constants/action-types";
+import {GET_CATEGORIES, GET_LOTS, GET_PAST_LOTS} from "../constants/action-types";
 
 const initialState = {
     page: 0,
+    pagePast: 0,
     searchQuery: '',
     lots: [],
+    pastLots: [],
     categories: [],
     isLoading: false,
+    upcomingLoading: false,
+    pastLoading: false,
     staticFilters: {
         upcomingOnly: false,
         contentType: {
@@ -21,7 +25,7 @@ const initialState = {
 };
 
 function rootReducer(state = initialState, action) {
-    if (action.type === GET_LOTS) {
+    if (action.type === GET_LOTS || action.type === GET_PAST_LOTS) {
         console.log('action.payload: ', action.payload);
         return Object.assign({}, state, action.payload);
     }

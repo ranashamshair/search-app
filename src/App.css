@@ -15,8 +15,12 @@ body {
     margin-bottom: 3rem;
 }
 
-.dropdown-item .ui.checkbox{
+body #searchBox .dropdown-item-alt .ui.checkbox{
     display: block;
+}
+
+body #searchBox .dropdown-menu[aria-labelledby="Categories"] .dropdown-item-alt .ui.checkbox{
+    min-height: 24px;
 }
 
 body #searchBox .dropdown-item .ui.checkbox label:before{

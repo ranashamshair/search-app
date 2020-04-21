@@ -10,12 +10,13 @@ import './App.css';
 
 import { Provider } from 'react-redux';
 import store from './store/index';
-import { getLots, getCategories, updateFilters } from './actions/index';
+import {getLots, getCategories, getPastLots} from './actions/index';
+import PastLotContainer from "./components/PastLotContainer/PastLotContainer";
 
 window.store = store;
 window.getLots = getLots;
+window.getPastLots = getPastLots;
 window.getCategories = getCategories;
-window.updateFilters = updateFilters;
 
 
 class App extends Component{
@@ -23,6 +24,7 @@ class App extends Component{
         super(props);
 
         this.state = {
+            upcomingOnly: false,
             types: {
                 lots: false,
                 // auctions: false,
@@ -36,12 +38,12 @@ class App extends Component{
         store.subscribe(() => {
             const {staticFilters} = store.getState();
 
-            this.setState({types: staticFilters.contentType})
+            this.setState({types: staticFilters.contentType, upcomingOnly: staticFilters.upcomingOnly})
         });
     }
 
     render() {
-        const { types } = this.state;
+        const { upcomingOnly, types } = this.state;
 
         console.log('ACTIVE TYPES: ', types);
 
@@ -57,7 +59,18 @@ class App extends Component{
 
                             <div className="container">
 
-                                { (allFiltersUnchecked || types.lots) ? (<LotContainer />) : '' }
+                                {
+                                    (allFiltersUnchecked || types.lots) ? (
+                                        <>
+                                            <LotContainer />
+                                            {
+                                                (!upcomingOnly) ? (
+                                                    <PastLotContainer />
+                                                ) : ''
+                                            }
+                                        </>
+                                    ) : ''
+                                }
 
                                 {/*<AuctionsContainer />*/}
 

@@ -5,7 +5,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 import './SearchBar.css';
 import store from "../../store";
-import {updateFilters} from "../../actions";
+import {getLots, getPastLots} from "../../actions";
 
 class SearchBar extends Component {
 
@@ -26,8 +26,6 @@ class SearchBar extends Component {
 
     componentDidMount() {
         const menu_btn = document.getElementById('menu_search_form_btn');
-
-        // console.log('menu_btn: ', menu_btn);
 
         if(menu_btn){
             menu_btn.addEventListener('click', e => {
@@ -69,9 +67,16 @@ class SearchBar extends Component {
         const { query } = this.state;
         const { staticFilters } = store.getState();
 
-        store.dispatch( updateFilters({
+        store.dispatch( getLots({
             page: 0,
-            isLoading: true,
+            upcomingLoading: true,
+            searchQuery: query,
+            staticFilters: staticFilters
+        }) );
+
+        store.dispatch( getPastLots({
+            pagePast: 0,
+            pastLoading: true,
             searchQuery: query,
             staticFilters: staticFilters
         }) );
@@ -81,8 +86,6 @@ class SearchBar extends Component {
     showSearchFilters = (e) => {
 
         const menu_btn = document.getElementById('menu_search_form_btn');
-
-        console.log('menu_btn: ', menu_btn);
 
         menu_btn.classList.add('open');
         // menu_btn.innerHTML =

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import FadeIn from 'react-fade-in';
 
+import '../LotContainer/LotContainer.css'
+
 import BlockHeader from '../BlockHeader/BlockHeader';
 import Lot from '../Lot/Lot';
 import LotLoader from '../LotLoader/LotLoader';
 import {connect} from "react-redux";
-import {getLots} from '../../actions/index';
+import {getPastLots} from '../../actions/index';
 import store from "../../store";
 
 class LotContainer extends Component {
@@ -17,47 +19,47 @@ class LotContainer extends Component {
             loading: true
         };
 
-        this.loadMoreUpcoming = this.loadMoreUpcoming.bind(this);
+        this.loadMorePast = this.loadMorePast.bind(this);
     }
 
     componentDidMount() {
-        this.props.getLots();
+        this.props.getPastLots();
     }
 
-    loadMoreUpcoming(e) {
+
+    loadMorePast(e) {
         const st = store.getState();
 
-        st.upcomingLoading = true;
-        st.page +=1;
+        st.pastLoading = true;
+        st.pagePast +=1;
 
-        store.dispatch( getLots(st) );
+        store.dispatch( getPastLots(st) );
     }
 
-
     render() {
-        let lots = [];
+        let pastLots = [];
 
         if ( this.state.loading ) {
             for (let i = 0; i < 4; i++) {
-                lots.push(<LotLoader key={i}/>);
+                pastLots.push(<LotLoader key={i} />);
             }
         }
 
-        if ( this.props.lots.length )
+        if ( this.props.pastLots.length )
         {
-            lots = this.props.lots.map(item =>
+            pastLots = this.props.pastLots.map(item =>
                 <>
-                {
-                    (item.itemView) ? (
-                        <Lot
-                            key={'lot_' + item.itemView.ref}
-                            lot={item.itemView}
-                        />
-                    ) : ''
-                }
+                    {
+                        (item.itemView) ? (
+                            <Lot
+                                key={'lot_' + item.itemView.ref}
+                                lot={item.itemView}
+                            />
+                        ) : ''
+                    }
                 </>
             );
-            
+
         } else {
             if ( !this.props.pastLoading ) {
                 setTimeout(() => {
@@ -66,16 +68,15 @@ class LotContainer extends Component {
             }
         }
 
-
         return (
             <div>
-                <BlockHeader title="Upcoming Lots" />
+                <BlockHeader title="Past Lots" />
 
                 <div className="row row-spacing">
-                    {lots}
+                    {pastLots}
                 </div>
 
-                <button onClick={this.loadMoreUpcoming}>LOAD MORE</button>
+                <button onClick={this.loadMorePast}>LOAD MORE</button>
             </div>
         );
 
@@ -85,13 +86,14 @@ class LotContainer extends Component {
 
 function mapStateToProps(state) {
     return {
-        lots: state.lots,
+        pastLots: state.pastLots,
+        pastLoading: state.pastLoading
     };
 }
 
 export default connect(
     mapStateToProps,
-    { getLots }
+    { getPastLots }
 )(LotContainer);
 
 // export default LotContainer;

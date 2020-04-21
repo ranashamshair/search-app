@@ -5,7 +5,7 @@ function Lot(props) {
     // console.log('lot props: ', props);
     const lot = props.lot;
 
-    let img = lot.photos[0]._links;
+    let img = !!lot.photos ? lot.photos[0]._links : null;
     let imgSrc = '';
     if(img){
         imgSrc = (img.thumbnail) ? img.thumbnail.href : (img.medium ? img.medium.href : (img.large ? img.large.href : ''));

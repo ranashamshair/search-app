@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
 import {connect} from "react-redux";
-import {getCategories, updateFilters} from "../../actions";
+import {getCategories, getLots, getPastLots} from "../../actions";
 import store from "../../store";
 
 
@@ -47,7 +47,6 @@ class SearchFilters extends Component {
 
         };
 
-        this.handleClickInsideDropdown = this.handleClickInsideDropdown.bind(this);
         this.saveUpcomingFilter = this.saveUpcomingFilter.bind(this);
         this.cancelUpcomingFilter = this.cancelUpcomingFilter.bind(this);
         this.checkedCategory = this.checkedCategory.bind(this);
@@ -65,13 +64,7 @@ class SearchFilters extends Component {
         this.checkFilterCount();
     }
 
-    handleClickInsideDropdown(e) {
-        return false;
-    }
-
     handleChangeType(e) {
-        console.log('event: ', e);
-
         const tg = e.target, { types } = this.state;
 
         types[tg.id] = tg.checked;
@@ -94,8 +87,6 @@ class SearchFilters extends Component {
     }
 
     checkedCategory(e) {
-        console.log('event: ', e);
-
         const {categories, categoriesSaved} = this.state;
         console.log('categoriesSaved: ', categoriesSaved);
         const val = e.target.value;
@@ -105,10 +96,10 @@ class SearchFilters extends Component {
         }else{
             categories.splice(categories.indexOf(val), 1);
         }
-
+        //
         console.log('categories: ', categories);
         // console.log('categoriesSaved: ', categoriesSaved);
-
+        //
         this.setState({categories: categories});
     }
 
@@ -133,6 +124,8 @@ class SearchFilters extends Component {
     saveCategoryFilter = e => {
         const { categories, dropdowns } = this.state;
         dropdowns.category = false;
+
+        console.log('categories')
 
         this.setState({categoriesSaved: categories, dropdowns: dropdowns}, () => this.updateLots());
     };
@@ -199,9 +192,13 @@ class SearchFilters extends Component {
     updateLots(resetSearch = false) {
         const { upcomingSaved, categoriesSaved, typesSaved, priceminSaved, pricemaxSaved } = this.state;
 
+        console.log('UpdateLots categoriesSaved:  ', categoriesSaved);
+
         let payload = {
             page: 0,
-            isLoading: true,
+            pagePast: 0,
+            upcomingLoading: true,
+            pastLoading: true,
             staticFilters: {
                 upcomingOnly: upcomingSaved,
                 contentType: typesSaved,
@@ -213,7 +210,8 @@ class SearchFilters extends Component {
 
         if(resetSearch) payload.searchQuery = '';
 
-        store.dispatch( updateFilters(payload) );
+        store.dispatch( getLots(payload) );
+        store.dispatch( getPastLots(payload) );
     }
 
 
@@ -221,6 +219,8 @@ class SearchFilters extends Component {
 
     render() {
         const { upcoming, upcomingSaved, categoriesSaved, types, pricemin, pricemax, filterCounter, dropdowns } = this.state;
+
+        console.log('render categoriesSaved  : ', categoriesSaved);
 
         return (
             <>
@@ -235,7 +235,7 @@ class SearchFilters extends Component {
                             }}>Upcoming Only</button>
 
                             <div className={dropdowns.upcoming ? 'dropdown-menu show' : 'dropdown-menu'} aria-labelledby="UpcomingOnly" >
-                                <div className="dropdown-item" onClick={this.handleClickInsideDropdown}>
+                                <div className="dropdown-item-alt">
                                     <h6 className="font-weight-bold">Limit results to upcoming items only</h6>
                                     <p>Applies to lots, events and auctions</p>
 
@@ -267,7 +267,7 @@ class SearchFilters extends Component {
                             </button>
 
                             <div className={dropdowns.category ? 'dropdown-menu show' : 'dropdown-menu'} aria-labelledby="Categories">
-                                <div className="dropdown-item">
+                                <div className="dropdown-item-alt">
                                     <h6 className="font-weight-bold">Categories</h6>
                                     <p className="mb-1">Filter your results by specialisms.</p>
                                     {
@@ -300,7 +300,7 @@ class SearchFilters extends Component {
 
                             <div className={dropdowns.other ? 'dropdown-menu show' : 'dropdown-menu'} aria-labelledby="OtherFilters">
                                 {/*<div className="ui filter popup bottom left transition visible" aria-labelledby="OtherFilters">*/}
-                                <div className="dropdown-item">
+                                <div className="dropdown-item-alt">
                                     <h6 className="font-weight-bold">Type</h6>
                                     <p className="mb-1">Filter by type of content.</p>
 
