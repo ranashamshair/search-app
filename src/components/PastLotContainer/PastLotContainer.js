@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import FadeIn from 'react-fade-in';
 
 import '../LotContainer/LotContainer.css'
 
@@ -76,9 +75,13 @@ class LotContainer extends Component {
                     {pastLots}
                 </div>
 
-                <div className="col-12 text-center">
-                    <button className="btn btn-load-more mt-3 mb-5" onClick={this.loadMorePast}>Load More</button>
-                </div>
+                {
+                    (this.props.page !== -1) ? (
+                        <div className="col-12 text-center">
+                            <button className="btn btn-load-more mt-3 mb-5" onClick={this.loadMorePast}>Load More</button>
+                        </div>
+                    ) : ''
+                }
             </div>
         );
 
@@ -89,6 +92,7 @@ class LotContainer extends Component {
 function mapStateToProps(state) {
     return {
         pastLots: state.pastLots,
+        page: state.pagePast,
         pastLoading: state.pastLoading
     };
 }
@@ -97,5 +101,3 @@ export default connect(
     mapStateToProps,
     { getPastLots }
 )(LotContainer);
-
-// export default LotContainer;

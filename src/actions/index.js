@@ -43,10 +43,10 @@ export function getLots(payload = null) {
             .then( response => {
                 if(!params) params = {};
 
-                params.lots = (params.lots && params.page > 0) ? [...params.lots, ...response.data] : response.data;
-                params.upcomingLoading = false;
+                if(params.lots && params.lots.length > response.data.length) params.page = -1;
 
-                console.log('result params before dispatch: ', params);
+                params.lots = (params.lots && (params.page > 0 || params.page === -1)) ? [...params.lots, ...response.data] : response.data;
+                params.upcomingLoading = false;
 
                 dispatch({ type: GET_LOTS, payload: params });
             } )
@@ -56,6 +56,7 @@ export function getLots(payload = null) {
                 if(!params) params = {};
 
                 params.lots = (params.lots && params.page > 0) ? params.lots: [];
+                params.page = -1;
                 params.upcomingLoading = false;
 
                 dispatch({ type: GET_LOTS, payload: params });
@@ -77,7 +78,9 @@ export function getPastLots(payload = null) {
             .then( response => {
                 if(!params) params = {};
 
-                params.pastLots = (params.pastLots && params.pagePast > 0) ? [...params.pastLots, ...response.data] : response.data;
+                if(params.pastLots && params.pastLots.length > response.data.length) params.pagePast = -1;
+
+                params.pastLots = (params.pastLots && (params.pagePast > 0 || params.pagePast === -1)) ? [...params.pastLots, ...response.data] : response.data;
                 params.pastLoading = false;
 
                 dispatch({ type: GET_PAST_LOTS, payload: params });
@@ -88,6 +91,7 @@ export function getPastLots(payload = null) {
                 if(!params) params = {};
 
                 params.pastLots = (params.pastLots && params.pagePast > 0) ? params.pastLots : [];
+                params.pagePast = -1;
                 params.upcomingLoading = false;
 
                 dispatch({ type: GET_PAST_LOTS, payload: params });

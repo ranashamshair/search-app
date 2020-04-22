@@ -16,7 +16,6 @@ class SearchFilters extends Component {
 
         this.state = {
             upcoming: false,
-            categories: [],
             types: {
                 lots: false,
                 // auctions: true,
@@ -49,7 +48,6 @@ class SearchFilters extends Component {
 
         this.saveUpcomingFilter = this.saveUpcomingFilter.bind(this);
         this.cancelUpcomingFilter = this.cancelUpcomingFilter.bind(this);
-        this.checkedCategory = this.checkedCategory.bind(this);
         this.saveCategoryFilter = this.saveCategoryFilter.bind(this);
         this.cancelCategoryFilter = this.cancelCategoryFilter.bind(this);
         this.saveOtherFilters = this.saveOtherFilters.bind(this);
@@ -86,25 +84,7 @@ class SearchFilters extends Component {
         this.setState({filterCounter: filterCounter});
     }
 
-    checkedCategory(e) {
-        const {categories, categoriesSaved} = this.state;
-        console.log('categoriesSaved: ', categoriesSaved);
-        const val = e.target.value;
-
-        if(e.target.checked){
-            categories.push(val);
-        }else{
-            categories.splice(categories.indexOf(val), 1);
-        }
-        //
-        console.log('categories: ', categories);
-        // console.log('categoriesSaved: ', categoriesSaved);
-        //
-        this.setState({categories: categories});
-    }
-
-    categorySelected = categoryId => (this.state.categories.indexOf(categoryId) !== -1);
-
+    categorySelected = categoryId => (this.state.categoriesSaved.indexOf(categoryId) !== -1);
 
     saveUpcomingFilter = e => {
         const { upcoming, dropdowns } = this.state;
@@ -120,22 +100,40 @@ class SearchFilters extends Component {
         this.setState({upcoming: upcomingSaved, dropdowns: dropdowns});
     };
 
-
     saveCategoryFilter = e => {
-        const { categories, dropdowns } = this.state;
+        const { dropdowns } = this.state;
         dropdowns.category = false;
 
-        console.log('categories')
+        const categoriesEls = document.querySelectorAll('input[data-input="categories_chechbox"]:checked');
+
+        const categories = [];
+        if(categoriesEls && categoriesEls.length > 0){
+            for(let ch of categoriesEls){
+                categories.push(ch.value);
+            }
+        }
 
         this.setState({categoriesSaved: categories, dropdowns: dropdowns}, () => this.updateLots());
     };
 
     cancelCategoryFilter = e => {
-        const { categoriesSaved, dropdowns } = this.state;
+        const { dropdowns } = this.state;
         dropdowns.category = false;
 
-        this.setState({categories: categoriesSaved, dropdowns: dropdowns});
+        this.resetCategoriesFilter();
+
+        this.setState({dropdowns: dropdowns});
     };
+
+    resetCategoriesFilter(clear = false){
+        const categoriesEls = document.querySelectorAll('input[data-input="categories_chechbox"]');
+
+        if(categoriesEls && categoriesEls.length > 0){
+            for(let ch of categoriesEls){
+                ch.checked = clear ? false : this.categorySelected(ch.value);
+            }
+        }
+    }
 
     saveOtherFilters(e) {
         const { types, pricemin, pricemax, dropdowns } = this.state;
@@ -154,9 +152,10 @@ class SearchFilters extends Component {
     }
 
     resetAll(e) {
+        this.resetCategoriesFilter(true);
+
         this.setState({
             upcoming: false,
-            categories: [],
             types: {
                 lots: false,
                 // auctions: true,
@@ -192,8 +191,6 @@ class SearchFilters extends Component {
     updateLots(resetSearch = false) {
         const { upcomingSaved, categoriesSaved, typesSaved, priceminSaved, pricemaxSaved } = this.state;
 
-        console.log('UpdateLots categoriesSaved:  ', categoriesSaved);
-
         let payload = {
             page: 0,
             pagePast: 0,
@@ -219,8 +216,6 @@ class SearchFilters extends Component {
 
     render() {
         const { upcoming, upcomingSaved, categoriesSaved, types, pricemin, pricemax, filterCounter, dropdowns } = this.state;
-
-        console.log('render categoriesSaved  : ', categoriesSaved);
 
         return (
             <>
@@ -257,6 +252,8 @@ class SearchFilters extends Component {
 
                             <button className={ (categoriesSaved.length > 0) ? 'h-search-filter-btn mr-3 show dropdown-toggle ui filter button primary has-counter' : 'h-search-filter-btn mr-3 show dropdown-toggle ui filter button' } data-offset="10" type="button" id="Categories" aria-haspopup="true" aria-expanded="false" onClick={() => {
                                 dropdowns.category = !dropdowns.category;
+                                if(!dropdowns.category) this.resetCategoriesFilter();
+
                                 this.setState({dropdowns: dropdowns})
                             }}>
                                 <i className="tags icon" />
@@ -273,7 +270,7 @@ class SearchFilters extends Component {
                                     {
                                         this.props.categories.map(item => (
                                             <div className="ui checkbox" key={'category_' + item.id}>
-                                                <input type="checkbox" id={'category_' + item.id} onChange={this.checkedCategory} checked={this.categorySelected(item.id)} value={item.id} />
+                                                <input type="checkbox" data-input="categories_chechbox" id={'category_' + item.id} defaultChecked={this.categorySelected(item.id)} value={item.id} />
                                                 <label htmlFor={'category_' + item.id}>{item.name}</label>
                                             </div>
                                         ))
@@ -375,6 +372,8 @@ class SearchFilters extends Component {
 }
 
 function mapStateToProps(state) {
+    console.log('store state: ', state);
+
     return {
         categories: state.categories
     };
