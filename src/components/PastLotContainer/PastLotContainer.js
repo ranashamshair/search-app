@@ -76,7 +76,9 @@ class LotContainer extends Component {
                     {pastLots}
                 </div>
 
-                <button onClick={this.loadMorePast}>LOAD MORE</button>
+                <div className="col-12 text-center">
+                    <button className="btn btn-load-more mt-3 mb-5" onClick={this.loadMorePast}>Load More</button>
+                </div>
             </div>
         );
 
