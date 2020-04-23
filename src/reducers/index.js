@@ -26,7 +26,6 @@ const initialState = {
 
 function rootReducer(state = initialState, action) {
     if (action.type === GET_LOTS || action.type === GET_PAST_LOTS) {
-        console.log('action.payload: ', action.payload);
         return Object.assign({}, state, action.payload);
     }
     if (action.type === GET_CATEGORIES) {

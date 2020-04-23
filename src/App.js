@@ -45,8 +45,6 @@ class App extends Component{
     render() {
         const { upcomingOnly, types } = this.state;
 
-        console.log('ACTIVE TYPES: ', types);
-
         let allFiltersUnchecked = (!types.lots && !types.events && !types.stories);
 
         return (

@@ -56,14 +56,6 @@ class SearchBar extends Component {
     handleSearchSubmit = (e) => {
         e.preventDefault();
 
-        // const searchFormContainer = document.querySelector('#searchBox');
-        //
-        // searchFormContainer.classList.remove('h-site-search--search-empty');
-        //
-        // this.setState({
-        //     searchFiltersActive: true
-        // });
-
         const { query } = this.state;
         const { staticFilters } = store.getState();
 
@@ -88,22 +80,7 @@ class SearchBar extends Component {
         const menu_btn = document.getElementById('menu_search_form_btn');
 
         menu_btn.classList.add('open');
-        // menu_btn.innerHTML =
-
-        // const searchFilter = document.querySelector('.h-search-filter');
-        // const searchFilterButtons = document.querySelectorAll('.h-search-filter-btn');
-        //
-        // searchFilter.classList.add('h-search-filter-show');
-        //
-        // searchFilterButtons.forEach( (button, i) => {
-        //     setInterval(function() {
-        //
-        //         button.classList.add('show');
-        //
-        //     }, this.delay * i)
-        // });
-        //
-    }
+    };
 
     render() {
         return (

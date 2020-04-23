@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import FadeIn from 'react-fade-in';
 
 import BlockHeader from '../BlockHeader/BlockHeader';
 import Lot from '../Lot/Lot';
@@ -59,7 +58,7 @@ class LotContainer extends Component {
             );
             
         } else {
-            if ( !this.props.pastLoading ) {
+            if ( !this.props.upcomingLoading ) {
                 setTimeout(() => {
                     this.setState({loading: false});
                 }, 3000);
@@ -75,9 +74,13 @@ class LotContainer extends Component {
                     {lots}
                 </div>
 
-                <div className="col-12 text-center">
-                    <button className="btn btn-load-more mt-3 mb-5" onClick={this.loadMoreUpcoming}>Load More</button>
-                </div>
+                {
+                    (this.props.page !== -1) ? (
+                        <div className="col-12 text-center">
+                            <button className="btn btn-load-more mt-3 mb-5" onClick={this.loadMoreUpcoming}>Load More</button>
+                        </div>
+                    ) : ''
+                }
             </div>
         );
 
@@ -88,6 +91,8 @@ class LotContainer extends Component {
 function mapStateToProps(state) {
     return {
         lots: state.lots,
+        page: state.page,
+        upcomingLoading: state.upcomingLoading
     };
 }
 
@@ -95,5 +100,3 @@ export default connect(
     mapStateToProps,
     { getLots }
 )(LotContainer);
-
-// export default LotContainer;
