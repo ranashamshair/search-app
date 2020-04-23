@@ -3,13 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="29525dcd-948c-488a-8879-ff66f93da875" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/actions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/LotContainer/LotContainer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/LotContainer/LotContainer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PastLotContainer/PastLotContainer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PastLotContainer/PastLotContainer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/SearchBar/SearchBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SearchBar/SearchBar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/SearchFilters/SearchFilters.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SearchFilters/SearchFilters.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reducers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/reducers/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,7 +66,8 @@
       <workItem from="1587482595355" duration="1642000" />
       <workItem from="1587530820815" duration="1173000" />
       <workItem from="1587559003470" duration="7186000" />
-      <workItem from="1587573741159" duration="2810000" />
+      <workItem from="1587573741159" duration="3532000" />
+      <workItem from="1587616976748" duration="687000" />
     </task>
     <servers />
   </component>

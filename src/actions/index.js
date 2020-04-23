@@ -3,6 +3,8 @@ import axios from "axios";
 
 const baseUrl = 'https://johnmoran.hksndev2.co.uk/wp-json';
 
+const pageSize = 20;
+
 function procLotFilters(route, params = null, upcoming = false) {
     if(params){
         const filters = params.staticFilters;
@@ -17,6 +19,8 @@ function procLotFilters(route, params = null, upcoming = false) {
             if(filters.pricemin) qs.push('pricemax=' + filters.pricemax);
             if(upcoming && filters.categories && filters.categories.length > 0) qs.push('categories=' + filters.categories.join(' '));
         }
+
+        qs.push('size=' + pageSize);
 
         if(upcoming && params.page > 0) qs.push('page=' + params.page);
         else if(!upcoming && params.pagePast > 0) qs.push('page=' + params.pagePast);
@@ -43,7 +47,7 @@ export function getLots(payload = null) {
             .then( response => {
                 if(!params) params = {};
 
-                if(params.lots && params.lots.length > response.data.length) params.page = -1;
+                if(response.data.length < pageSize) params.page = -1;
 
                 params.lots = (params.lots && (params.page > 0 || params.page === -1)) ? [...params.lots, ...response.data] : response.data;
                 params.upcomingLoading = false;
@@ -78,7 +82,7 @@ export function getPastLots(payload = null) {
             .then( response => {
                 if(!params) params = {};
 
-                if(params.pastLots && params.pastLots.length > response.data.length) params.pagePast = -1;
+                if(response.data.length < pageSize) params.pagePast = -1;
 
                 params.pastLots = (params.pastLots && (params.pagePast > 0 || params.pagePast === -1)) ? [...params.pastLots, ...response.data] : response.data;
                 params.pastLoading = false;
