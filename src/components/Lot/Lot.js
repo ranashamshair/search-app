@@ -23,12 +23,17 @@ function Lot(props) {
                         <img src={imgSrc} alt="Text" className="mw-100" width="260" height="250" />
                     </figure>
                     <aside className="search-lot--content py-3 px-2 text-center">
-                        <span className="text-grey mb-1 d-block">Lot {props.lot.lotNumber}</span>
+                        <span className="text-grey mb-1 d-block">Lot {lot.lotNumber + ((props.isPast && lot.lotNumberExtension) ? ' - ' + lot.lotNumberExtension : '')}</span>
                         {/*<h3 className="font-weight-bold text-grey">{props.artist}</h3>*/}
                         <h3 className="font-weight-bold text-grey">{seller}</h3>
-                        <p className="mb-1">{props.lot.title}</p>
+                        <p className="mb-1">{lot.title}</p>
                         <p className="font-weight-bold text-grey">{estimate}</p>
-                    </aside>   
+                        {
+                            (props.isPast) ? (
+                                <p className="font-weight-bold text-grey">Result price: {curr + lot.priceResult}</p>
+                            ) : ''
+                        }
+                    </aside>
                 </FadeIn>
             </div>
         </>
