@@ -17,7 +17,28 @@ function procLotFilters(route, params = null, upcoming = false) {
         if(filters){
             if(filters.pricemin) qs.push('pricemin=' + filters.pricemin);
             if(filters.pricemin) qs.push('pricemax=' + filters.pricemax);
-            if(upcoming && filters.categories && filters.categories.length > 0) qs.push('categories=' + filters.categories.join(' '));
+            if(upcoming && filters.categories && filters.categories.length > 0){
+                const categories = [];
+                for (let c of filters.categories) {
+                    if(c.indexOf('i') === -1) continue;
+
+                    categories.push(c.replace('i', ''));
+                }
+
+                qs.push('categories=' + categories.join(' '));
+            }
+
+            if(filters.contentType) {
+                const ct = filters.contentType;
+                const types = [];
+
+                if(ct.lots) types.push('auctions');
+                if(ct.events) types.push('events');
+                if(ct.stories) types.push('news');
+
+                qs.push('type=' + types.join(','));
+            }
+
         }
 
         qs.push('size=' + pageSize);
@@ -129,7 +150,7 @@ export function getCategories(payload = null) {
         })
             .then( response => {
                 dispatch({ type: GET_CATEGORIES, payload: {
-                        categories: JSON.parse(response.data),
+                        categories: response.data,
                         // isLoading: false
                     }
                 });
