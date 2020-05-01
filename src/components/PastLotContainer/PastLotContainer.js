@@ -51,7 +51,7 @@ class LotContainer extends Component {
                     {
                         (item.itemView) ? (
                             <Lot
-                                key={'lot_' + item.itemView.ref}
+                                key={'past_lot_' + item.itemView.ref}
                                 lot={item.itemView}
                                 isPast={true}
                             />

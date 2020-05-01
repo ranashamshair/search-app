@@ -3,7 +3,17 @@
   <component name="ChangeListManager">
     <list default="true" id="29525dcd-948c-488a-8879-ff66f93da875" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/actions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Article/Article.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Article/Article.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ArticleContainer/ArticleContainer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ArticleContainer/ArticleContainer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Auction/Auction.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Auction/Auction.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/AuctionsContainer/AuctionsContainer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/AuctionsContainer/AuctionsContainer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/PastLotContainer/PastLotContainer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PastLotContainer/PastLotContainer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SearchBar/SearchBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SearchBar/SearchBar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SearchFilters/SearchFilters.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SearchFilters/SearchFilters.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constants/action-types.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constants/action-types.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reducers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/reducers/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,10 +46,17 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/components/Event" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\PhpStorm 2019.3.3\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\work\React\search-app\src\components\Event" />
+      <recent name="D:\work\React\search-app\src\components\EventContainer" />
+    </key>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -69,7 +86,9 @@
       <workItem from="1587573741159" duration="3532000" />
       <workItem from="1587616976748" duration="1931000" />
       <workItem from="1587632527332" duration="2579000" />
-      <workItem from="1588062305483" duration="3039000" />
+      <workItem from="1588062305483" duration="3340000" />
+      <workItem from="1588150467101" duration="10326000" />
+      <workItem from="1588314690436" duration="8417000" />
     </task>
     <servers />
   </component>
@@ -89,10 +108,10 @@
       <screen x="0" y="0" width="1280" height="984" />
     </state>
     <state x="92" y="92" width="1096" height="800" maximized="true" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog/0.0.1280.984@0.0.1280.984" timestamp="1587131544790" />
-    <state x="336" y="224" width="737" height="606" key="find.popup" timestamp="1587576195843">
+    <state x="336" y="224" width="737" height="606" key="find.popup" timestamp="1588152698295">
       <screen x="0" y="0" width="1280" height="984" />
     </state>
-    <state x="336" y="224" width="737" height="606" key="find.popup/0.0.1280.984@0.0.1280.984" timestamp="1587576195843" />
+    <state x="336" y="224" width="737" height="606" key="find.popup/0.0.1280.984@0.0.1280.984" timestamp="1588152698295" />
     <state x="296" y="226" key="run.anything.popup" timestamp="1587134781775">
       <screen x="0" y="0" width="1280" height="984" />
     </state>

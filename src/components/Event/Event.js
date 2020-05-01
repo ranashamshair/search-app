@@ -1,8 +1,8 @@
 import React from 'react';
 
-import './Article.css';
+import './Event.css';
 
-function Article(props) {
+function Event(props) {
     
     return (
         <>
@@ -17,7 +17,7 @@ function Article(props) {
                         ) : ''
                     }
                     <div className="favourite-content p-3 flex-1">
-                        <h3 className="font-weight-bold"><a href={props.link} className="link-overlay">{props.articleTitle}</a></h3>
+                        <h3 className="font-weight-bold"><a href={props.link} className="link-overlay">{props.title}</a></h3>
                     </div>
                 </aside>
             </div>
@@ -27,4 +27,4 @@ function Article(props) {
     
 }
 
-export default Article;
+export default Event;

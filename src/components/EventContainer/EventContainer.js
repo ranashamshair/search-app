@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 
 import BlockHeader from '../BlockHeader/BlockHeader';
-import Auction from '../Auction/Auction';
-import {connect} from "react-redux";
-import {getAuctions} from '../../actions/index';
+import Event from '../Event/Event';
 import store from "../../store";
-import AuctionLoader from "../AuctionLoader/AuctionLoader";
+import {getEvents} from "../../actions";
+import {connect} from "react-redux";
+import ArticleLoader from "../ArticleLoader/ArticleLoader";
 
-class AuctionsContainer extends Component {
+class EventContainer extends Component {
     constructor(props) {
         super(props);
 
@@ -19,37 +19,35 @@ class AuctionsContainer extends Component {
     }
 
     componentDidMount() {
-        this.props.getAuctions();
+        this.props.getEvents();
     }
 
 
     loadMore(e) {
         const st = store.getState();
 
-        st.auctionsLoading = true;
-        st.pageAuctions +=1;
+        st.eventsLoading = true;
+        st.pageEvents +=1;
 
-        store.dispatch( getAuctions(st) );
+        store.dispatch( getEvents(st) );
     }
 
     render() {
-        let auctions = [];
+        let events = [];
 
         if ( this.state.loading ) {
             for (let i = 0; i < 4; i++) {
-                auctions.push(<AuctionLoader key={'auction_' + i} />);
+                events.push(<ArticleLoader key={'event_' + i} />);
             }
         }
 
-        if ( this.props.auctions.length )
+        if ( this.props.events.length )
         {
-            auctions = this.props.auctions.map(item =>
-                <Auction
-                    key={'auction_' + item.id}
-                    location={item.location}
+            events = this.props.events.map(item =>
+                <Event
+                    key={'event_' + item.id}
                     link={item.link}
                     title={(item.title) ? item.title.rendered : ''}
-                    datetime={item.date}
                     imgSrc={item.image_url}
                 />
             );
@@ -65,10 +63,10 @@ class AuctionsContainer extends Component {
 
         return (
             <div>
-                <BlockHeader title="Auctions" />
+                <BlockHeader title="Events" />
 
                 <div className="row row-spacing">
-                    {auctions}
+                    {events}
                 </div>
 
                 {
@@ -86,13 +84,13 @@ class AuctionsContainer extends Component {
 
 function mapStateToProps(state) {
     return {
-        auctions: (state.auctions && state.auctions.auctions) ? state.auctions.auctions : [],
-        page: state.pageAuctions,
-        loading: state.newsLoading
+        events: (state.events && state.events.events) ? state.events.events : [],
+        page: state.pageEvents,
+        loading: state.eventsLoading
     };
 }
 
 export default connect(
     mapStateToProps,
-    { getAuctions }
-)(AuctionsContainer);
+    { getEvents }
+)(EventContainer);

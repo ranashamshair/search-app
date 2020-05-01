@@ -1,51 +1,96 @@
-import React from 'react';
+import React, {Component} from 'react';
 
 import BlockHeader from '../BlockHeader/BlockHeader';
 import Article from '../Article/Article';
+import store from "../../store";
+import {getNews} from "../../actions";
+import {connect} from "react-redux";
+import ArticleLoader from "../ArticleLoader/ArticleLoader";
 
-function ArticleContainer() {
+class ArticleContainer extends Component {
+    constructor(props) {
+        super(props);
 
-    const testArticleData = [
-        {   
-            id: 1,
-            articleTitle: "The 13th President Of The United States, The ASPCA, And A Gothic Revival Coffee Pot",
-            imgSrc: "http://hksndev2.co.uk/decoupled/search/dist/img/lot_5.jpg",
-        },
-        {
-            id: 2,
-            articleTitle: "Moran’s October REdesigned Auction Is The Place To Find Everything To Refresh Your Home",
-            imgSrc: "http://hksndev2.co.uk/decoupled/search/dist/img/lot_2.jpg",
-        },
-        {
-            id: 3,
-            articleTitle: "Moran’s Art Of The American West Set A New Record And Achieved Strong Prices Across The Board",
-            imgSrc: "http://hksndev2.co.uk/decoupled/search/dist/img/lot_4.jpg",
-        },
-        {
-            id: 4,
-            articleTitle: "A Wide Array Of Western And Native American Items At Auction",
-            imgSrc: "http://hksndev2.co.uk/decoupled/search/dist/img/lot_1.jpg",
+        this.state = {
+            loading: true
+        };
+
+        this.loadMore = this.loadMore.bind(this);
+    }
+
+    componentDidMount() {
+        this.props.getNews();
+    }
+
+
+    loadMore(e) {
+        const st = store.getState();
+
+        st.newsLoading = true;
+        st.pageNews +=1;
+
+        store.dispatch( getNews(st) );
+    }
+
+    render() {
+        let news = [];
+
+        if ( this.state.loading ) {
+            for (let i = 0; i < 4; i++) {
+                news.push(<ArticleLoader key={'news_' + i} />);
+            }
         }
-    ]
 
-    return (
-        <div>
-            <BlockHeader title="Articles" />            
-            <div className="row row-spacing">
-
-            {testArticleData.map( item =>
+        if ( this.props.news.length )
+        {
+            news = this.props.news.map(item =>
                 <Article
-                    key={item.id}
-                    articleTitle={item.articleTitle}
-                    imgSrc={item.imgSrc}
+                    key={'article_' + item.id}
+                    link={item.link}
+                    articleTitle={(item.title) ? item.title.rendered : ''}
+                    imgSrc={item.image_url}
                 />
-            )}
-            
-            </div>
+            );
 
-        </div>
-    );
+        } else {
+            if ( !this.props.loading ) {
+                setTimeout(() => {
+                    this.setState({loading: false});
+                }, 3000);
+            }
+        }
+
+
+        return (
+            <div>
+                <BlockHeader title="Articles" />
+
+                <div className="row row-spacing">
+                    {news}
+                </div>
+
+                {
+                    (this.props.page !== -1) ? (
+                        <div className="col-12 text-center">
+                            <button className="btn btn-load-more mt-3 mb-5" onClick={this.loadMore}>Load More</button>
+                        </div>
+                    ) : ''
+                }
+            </div>
+        );
+    }
     
 }
 
-export default ArticleContainer;
+function mapStateToProps(state) {
+    return {
+        news: (state.news && state.news.news) ? state.news.news : [],
+        page: state.pageNews,
+        loading: state.auctionsLoading
+    };
+}
+
+export default connect(
+    mapStateToProps,
+    { getNews }
+)(ArticleContainer);
