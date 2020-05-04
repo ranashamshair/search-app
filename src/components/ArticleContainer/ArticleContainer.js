@@ -54,9 +54,13 @@ class ArticleContainer extends Component {
 
         } else {
             if ( !this.props.loading ) {
-                setTimeout(() => {
-                    this.setState({loading: false});
-                }, 3000);
+                if(!this.state.loading && this.props.message){
+                    news = <p className="error-message">{this.props.message}</p>;
+                }else{
+                    setTimeout(() => {
+                        this.setState({loading: false});
+                    }, 3000);
+                }
             }
         }
 
@@ -85,6 +89,7 @@ class ArticleContainer extends Component {
 function mapStateToProps(state) {
     return {
         news: (state.news && state.news.news) ? state.news.news : [],
+        message: state.newsMessage,
         page: state.pageNews,
         loading: state.auctionsLoading
     };

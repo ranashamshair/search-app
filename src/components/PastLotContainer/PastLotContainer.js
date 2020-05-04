@@ -61,10 +61,14 @@ class LotContainer extends Component {
             );
 
         } else {
-            if ( !this.props.pastLoading ) {
-                setTimeout(() => {
-                    this.setState({loading: false});
-                }, 3000);
+            if ( !this.props.loading ) {
+                if(!this.state.loading && this.props.message){
+                    pastLots = <p className="error-message">{this.props.message}</p>;
+                }else{
+                    setTimeout(() => {
+                        this.setState({loading: false});
+                    }, 3000);
+                }
             }
         }
 
@@ -93,6 +97,7 @@ class LotContainer extends Component {
 function mapStateToProps(state) {
     return {
         pastLots: state.pastLots,
+        message: state.pastLotsMessage,
         page: state.pagePast,
         pastLoading: state.pastLoading
     };

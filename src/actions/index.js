@@ -84,7 +84,7 @@ function procSearchFilters(route, params = null, type = null) {
 }
 
 
-function procRes(params = null, response, itemsKey, loaderKey, pageKey, success = true) {
+function procRes(params = null, response, itemsKey, loaderKey, pageKey, msgKey = null, success = true) {
     if(!params) params = {};
 
     if(success){
@@ -93,9 +93,13 @@ function procRes(params = null, response, itemsKey, loaderKey, pageKey, success 
         params[itemsKey] = (params[itemsKey] && (params[pageKey] > 0 || params[pageKey] === -1)) ? [...params[itemsKey], ...response.data] : response.data;
         params[loaderKey] = false;
     }else{
+        console.log('err response : ', response);
+
         params[itemsKey] = (params[itemsKey] && params[pageKey] > 0) ? params[itemsKey]: [];
         params[pageKey] = -1;
         params[loaderKey] = false;
+
+        if(msgKey && params[itemsKey].length === 0 && response.message) params[msgKey] = response.message;
     }
 
     return params;
@@ -124,7 +128,7 @@ export function getLots(payload = null) {
 
                 dispatch({
                     type: GET_LOTS,
-                    payload: procRes(params, null, 'lots', 'upcomingLoading', 'page', false)
+                    payload: procRes(params, error.response.data, 'lots', 'upcomingLoading', 'page', 'lotsMessage', false)
                 });
             });
     }
@@ -152,7 +156,7 @@ export function getPastLots(payload = null) {
 
                 dispatch({
                     type: GET_PAST_LOTS,
-                    payload: procRes(params, null, 'pastLots', 'pastLoading', 'pagePast', false)
+                    payload: procRes(params, error.response.data, 'pastLots', 'pastLoading', 'pagePast', 'pastLotsMessage', false)
                 });
             });
     }
@@ -180,7 +184,7 @@ export function getAuctions(payload = null) {
 
                 dispatch({
                     type: GET_AUCTIONS,
-                    payload: procRes(params, null, 'auctions', 'auctionsLoading', 'pageAuctions', false)
+                    payload: procRes(params, error.response.data, 'auctions', 'auctionsLoading', 'pageAuctions', 'auctionsMessage', false)
                 });
             });
     }
@@ -208,7 +212,7 @@ export function getEvents(payload = null) {
 
                 dispatch({
                     type: GET_EVENTS,
-                    payload: procRes(params, null, 'events', 'eventsLoading', 'pageEvents', false)
+                    payload: procRes(params, error.response.data, 'events', 'eventsLoading', 'pageEvents', 'eventsMessage', false)
                 });
             });
     }
@@ -232,11 +236,9 @@ export function getNews(payload = null) {
                 });
             } )
             .catch(error => {
-                console.log(error);
-
                 dispatch({
                     type: GET_NEWS,
-                    payload: procRes(params, null, 'news', 'newsLoading', 'pageNews', false)
+                    payload: procRes(params, error.response.data, 'news', 'newsLoading', 'pageNews', 'newsMessage', false)
                 });
             });
     }

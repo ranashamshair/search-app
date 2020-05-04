@@ -54,9 +54,13 @@ class EventContainer extends Component {
 
         } else {
             if ( !this.props.loading ) {
-                setTimeout(() => {
-                    this.setState({loading: false});
-                }, 3000);
+                if(!this.state.loading && this.props.message){
+                    events = <p className="error-message">{this.props.message}</p>;
+                }else{
+                    setTimeout(() => {
+                        this.setState({loading: false});
+                    }, 3000);
+                }
             }
         }
 
@@ -85,6 +89,7 @@ class EventContainer extends Component {
 function mapStateToProps(state) {
     return {
         events: (state.events && state.events.events) ? state.events.events : [],
+        message: state.eventsMessage,
         page: state.pageEvents,
         loading: state.eventsLoading
     };

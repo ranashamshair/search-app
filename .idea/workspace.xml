@@ -3,16 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="29525dcd-948c-488a-8879-ff66f93da875" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/actions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Article/Article.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Article/Article.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/ArticleContainer/ArticleContainer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ArticleContainer/ArticleContainer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Auction/Auction.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Auction/Auction.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/AuctionsContainer/AuctionsContainer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/AuctionsContainer/AuctionsContainer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/EventContainer/EventContainer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/EventContainer/EventContainer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/LotContainer/LotContainer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/LotContainer/LotContainer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/PastLotContainer/PastLotContainer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PastLotContainer/PastLotContainer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/SearchBar/SearchBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SearchBar/SearchBar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/SearchFilters/SearchFilters.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SearchFilters/SearchFilters.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constants/action-types.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constants/action-types.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reducers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/reducers/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -88,7 +85,9 @@
       <workItem from="1587632527332" duration="2579000" />
       <workItem from="1588062305483" duration="3340000" />
       <workItem from="1588150467101" duration="10326000" />
-      <workItem from="1588314690436" duration="8417000" />
+      <workItem from="1588314690436" duration="9535000" />
+      <workItem from="1588347687768" duration="633000" />
+      <workItem from="1588595303689" duration="5172000" />
     </task>
     <servers />
   </component>

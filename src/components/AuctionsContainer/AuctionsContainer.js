@@ -56,9 +56,13 @@ class AuctionsContainer extends Component {
 
         } else {
             if ( !this.props.loading ) {
-                setTimeout(() => {
-                    this.setState({loading: false});
-                }, 3000);
+                if(!this.state.loading && this.props.message){
+                    auctions = <p className="error-message">{this.props.message}</p>;
+                }else{
+                    setTimeout(() => {
+                        this.setState({loading: false});
+                    }, 3000);
+                }
             }
         }
 
@@ -87,6 +91,7 @@ class AuctionsContainer extends Component {
 function mapStateToProps(state) {
     return {
         auctions: (state.auctions && state.auctions.auctions) ? state.auctions.auctions : [],
+        message: state.auctionsMessage,
         page: state.pageAuctions,
         loading: state.newsLoading
     };
