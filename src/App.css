@@ -38,3 +38,8 @@ a.btn.btn-sm{
 .h-search-filter input[type="checkbox"]#upcoming-only + label{
     padding-left: 4.5rem;
 }
+
+.error-message{
+    font-size: 40px;
+    margin-left: 0.875rem;
+}

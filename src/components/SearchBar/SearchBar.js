@@ -5,7 +5,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 import './SearchBar.css';
 import store from "../../store";
-import {getLots, getPastLots} from "../../actions";
+import {getLots, getPastLots, getAuctions, getEvents, getNews} from "../../actions";
 
 class SearchBar extends Component {
 
@@ -69,6 +69,27 @@ class SearchBar extends Component {
         store.dispatch( getPastLots({
             pagePast: 0,
             pastLoading: true,
+            searchQuery: query,
+            staticFilters: staticFilters
+        }) );
+
+        store.dispatch( getAuctions({
+            pageAuctions: 0,
+            auctionsLoading: true,
+            searchQuery: query,
+            staticFilters: staticFilters
+        }) );
+
+        store.dispatch( getEvents({
+            pageEvents: 0,
+            eventsLoading: true,
+            searchQuery: query,
+            staticFilters: staticFilters
+        }) );
+
+        store.dispatch( getNews({
+            pageNews: 0,
+            newsLoading: true,
             searchQuery: query,
             staticFilters: staticFilters
         }) );

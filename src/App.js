@@ -10,13 +10,17 @@ import './App.css';
 
 import { Provider } from 'react-redux';
 import store from './store/index';
-import {getLots, getCategories, getPastLots} from './actions/index';
+import {getLots, getCategories, getPastLots, getAuctions, getEvents, getNews} from './actions/index';
 import PastLotContainer from "./components/PastLotContainer/PastLotContainer";
+import EventContainer from "./components/EventContainer/EventContainer";
 
 window.store = store;
 window.getLots = getLots;
 window.getPastLots = getPastLots;
 window.getCategories = getCategories;
+window.getAuctions = getAuctions;
+window.getEvents = getEvents;
+window.getNews = getNews;
 
 
 class App extends Component{
@@ -27,7 +31,7 @@ class App extends Component{
             upcomingOnly: false,
             types: {
                 lots: false,
-                // auctions: false,
+                auctions: false,
                 events: false,
                 stories: false
             },
@@ -45,7 +49,7 @@ class App extends Component{
     render() {
         const { upcomingOnly, types } = this.state;
 
-        let allFiltersUnchecked = (!types.lots && !types.events && !types.stories);
+        let allFiltersUnchecked = (!types.lots && !types.auctions && !types.events && !types.stories);
 
         return (
             <div className="App">
@@ -70,7 +74,9 @@ class App extends Component{
                                     ) : ''
                                 }
 
-                                {/*<AuctionsContainer />*/}
+                                { (allFiltersUnchecked || types.auctions) ? (<AuctionsContainer />) : '' }
+
+                                { (allFiltersUnchecked || types.events) ? (<EventContainer />) : '' }
 
                                 { (allFiltersUnchecked || types.stories) ? (<ArticleContainer />) : '' }
 

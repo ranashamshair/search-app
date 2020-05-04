@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
 import {connect} from "react-redux";
-import {getCategories, getLots, getPastLots} from "../../actions";
+import {getAuctions, getCategories, getEvents, getLots, getNews, getPastLots} from "../../actions";
 import store from "../../store";
 
 
@@ -18,7 +18,7 @@ class SearchFilters extends Component {
             upcoming: false,
             types: {
                 lots: false,
-                // auctions: true,
+                auctions: false,
                 events: false,
                 stories: false
             },
@@ -29,7 +29,7 @@ class SearchFilters extends Component {
             categoriesSaved: [],
             typesSaved: {
                 lots: false,
-                // auctions: true,
+                auctions: false,
                 events: false,
                 stories: false
             },
@@ -77,7 +77,7 @@ class SearchFilters extends Component {
         let filterCounter = 0;
 
         if(typesSaved.lots) ++filterCounter;
-        // if(typesSaved.auctions) ++filterCounter;
+        if(typesSaved.auctions) ++filterCounter;
         if(typesSaved.events) ++filterCounter;
         if(typesSaved.stories) ++filterCounter;
 
@@ -90,7 +90,7 @@ class SearchFilters extends Component {
         const { upcoming, dropdowns } = this.state;
         dropdowns.upcoming = false;
 
-        this.setState({upcomingSaved: upcoming, dropdowns: dropdowns}, () => this.updateLots());
+        this.setState({upcomingSaved: upcoming, dropdowns: dropdowns}, () => this.updateResults());
     };
 
     cancelUpcomingFilter = e => {
@@ -113,7 +113,7 @@ class SearchFilters extends Component {
             }
         }
 
-        this.setState({categoriesSaved: categories, dropdowns: dropdowns}, () => this.updateLots());
+        this.setState({categoriesSaved: categories, dropdowns: dropdowns}, () => this.updateResults());
     };
 
     cancelCategoryFilter = e => {
@@ -140,7 +140,7 @@ class SearchFilters extends Component {
         dropdowns.other = false;
 
         this.setState({typesSaved: types, priceminSaved: pricemin, pricemaxSaved: pricemax, dropdowns: dropdowns}, () => {
-            this.checkFilterCount(); this.updateLots()
+            this.checkFilterCount(); this.updateResults()
         });
     }
 
@@ -158,7 +158,7 @@ class SearchFilters extends Component {
             upcoming: false,
             types: {
                 lots: false,
-                // auctions: true,
+                auctions: false,
                 events: false,
                 stories: false
             },
@@ -168,7 +168,7 @@ class SearchFilters extends Component {
             categoriesSaved: [],
             typesSaved: {
                 lots: false,
-                // auctions: true,
+                auctions: false,
                 events: false,
                 stories: false
             },
@@ -183,19 +183,25 @@ class SearchFilters extends Component {
                 other: false,
             }
 
-        }, () => this.updateLots(true))
+        }, () => this.updateResults(true))
     }
 
 
 
-    updateLots(resetSearch = false) {
+    updateResults(resetSearch = false) {
         const { upcomingSaved, categoriesSaved, typesSaved, priceminSaved, pricemaxSaved } = this.state;
 
         let payload = {
             page: 0,
             pagePast: 0,
+            pageAuctions: 0,
+            pageEvents: 0,
+            pageNews: 0,
             upcomingLoading: true,
             pastLoading: true,
+            auctionsLoading: true,
+            eventsLoading: true,
+            newsLoading: true,
             staticFilters: {
                 upcomingOnly: upcomingSaved,
                 contentType: typesSaved,
@@ -209,6 +215,9 @@ class SearchFilters extends Component {
 
         store.dispatch( getLots(payload) );
         store.dispatch( getPastLots(payload) );
+        store.dispatch( getAuctions(payload) );
+        store.dispatch( getEvents(payload) );
+        store.dispatch( getNews(payload) );
     }
 
 
@@ -305,10 +314,10 @@ class SearchFilters extends Component {
                                         <input type="checkbox" id="lots" onChange={this.handleChangeType} checked={types.lots} />
                                         <label htmlFor="lots">Lots</label>
                                     </div>
-                                    {/*<div className="ui checkbox">*/}
-                                    {/*    <input type="checkbox" id="auctions" onChange={this.handleChangeType} checked={types.auctions} />*/}
-                                    {/*    <label htmlFor="auctions">Auctions</label>*/}
-                                    {/*</div>*/}
+                                    <div className="ui checkbox">
+                                        <input type="checkbox" id="auctions" onChange={this.handleChangeType} checked={types.auctions} />
+                                        <label htmlFor="auctions">Auctions</label>
+                                    </div>
                                     <div className="ui checkbox">
                                         <input type="checkbox" id="events" onChange={this.handleChangeType} checked={types.events} />
                                         <label htmlFor="events">Events</label>
@@ -317,11 +326,6 @@ class SearchFilters extends Component {
                                         <input type="checkbox" id="stories" onChange={this.handleChangeType} checked={types.stories} />
                                         <label htmlFor="stories">News &amp; Stories</label>
                                     </div>
-
-                                    {/*<Checkbox label="Lots" attr="lots" />*/}
-                                    {/*<Checkbox label="Auctions" attr="auctions" />*/}
-                                    {/*<Checkbox label="Events" attr="events" />*/}
-                                    {/*<Checkbox label="News &amp; Stories" attr="news-stories" />*/}
 
                                     <h6 className="font-weight-bold mt-3">Limit results to price range</h6>
                                     <p>Applies to lots only</p>
@@ -357,13 +361,6 @@ class SearchFilters extends Component {
                             </button>
                         </div>
                     </div>
-
-
-                    {/*<div className="search-filter__anim-in-left search-filter__anim-reset show">*/}
-                    {/*    <div className="ui filter grey button" id="clear" title="Clear Filters" onClick={this.resetAll}>*/}
-                    {/*        <i className="redo alternate icon" />*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
 
                 </div>
             </>

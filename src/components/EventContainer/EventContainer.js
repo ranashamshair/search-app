@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 
 import BlockHeader from '../BlockHeader/BlockHeader';
-import Article from '../Article/Article';
+import Event from '../Event/Event';
 import store from "../../store";
-import {getNews} from "../../actions";
+import {getEvents} from "../../actions";
 import {connect} from "react-redux";
 import ArticleLoader from "../ArticleLoader/ArticleLoader";
 
-class ArticleContainer extends Component {
+class EventContainer extends Component {
     constructor(props) {
         super(props);
 
@@ -19,35 +19,35 @@ class ArticleContainer extends Component {
     }
 
     componentDidMount() {
-        this.props.getNews();
+        this.props.getEvents();
     }
 
 
     loadMore(e) {
         const st = store.getState();
 
-        st.newsLoading = true;
-        st.pageNews +=1;
+        st.eventsLoading = true;
+        st.pageEvents +=1;
 
-        store.dispatch( getNews(st) );
+        store.dispatch( getEvents(st) );
     }
 
     render() {
-        let news = [];
+        let events = [];
 
         if ( this.state.loading ) {
             for (let i = 0; i < 4; i++) {
-                news.push(<ArticleLoader key={'news_' + i} />);
+                events.push(<ArticleLoader key={'event_' + i} />);
             }
         }
 
-        if ( this.props.news.length )
+        if ( this.props.events.length )
         {
-            news = this.props.news.map(item =>
-                <Article
-                    key={'article_' + item.id}
+            events = this.props.events.map(item =>
+                <Event
+                    key={'event_' + item.id}
                     link={item.link}
-                    articleTitle={(item.title) ? item.title.rendered : ''}
+                    title={(item.title) ? item.title.rendered : ''}
                     imgSrc={item.image_url}
                 />
             );
@@ -55,7 +55,7 @@ class ArticleContainer extends Component {
         } else {
             if ( !this.props.loading ) {
                 if(!this.state.loading && this.props.message){
-                    news = <p className="error-message">{this.props.message}</p>;
+                    events = <p className="error-message">{this.props.message}</p>;
                 }else{
                     setTimeout(() => {
                         this.setState({loading: false});
@@ -67,10 +67,10 @@ class ArticleContainer extends Component {
 
         return (
             <div>
-                <BlockHeader title="Articles" />
+                <BlockHeader title="Events" />
 
                 <div className="row row-spacing">
-                    {news}
+                    {events}
                 </div>
 
                 {
@@ -88,14 +88,14 @@ class ArticleContainer extends Component {
 
 function mapStateToProps(state) {
     return {
-        news: (state.news && state.news.news) ? state.news.news : [],
-        message: state.newsMessage,
-        page: state.pageNews,
-        loading: state.auctionsLoading
+        events: (state.events && state.events.events) ? state.events.events : [],
+        message: state.eventsMessage,
+        page: state.pageEvents,
+        loading: state.eventsLoading
     };
 }
 
 export default connect(
     mapStateToProps,
-    { getNews }
-)(ArticleContainer);
+    { getEvents }
+)(EventContainer);
