@@ -31,8 +31,8 @@ class App extends Component{
             upcomingOnly: false,
             types: {
                 lots: false,
-                auctions: false,
-                events: false,
+                // auctions: false,
+                // events: false,
                 stories: false
             },
         }
@@ -74,9 +74,9 @@ class App extends Component{
                                     ) : ''
                                 }
 
-                                { (allFiltersUnchecked || types.auctions) ? (<AuctionsContainer />) : '' }
+                                {/*{ (allFiltersUnchecked || types.auctions) ? (<AuctionsContainer />) : '' }*/}
 
-                                { (allFiltersUnchecked || types.events) ? (<EventContainer />) : '' }
+                                {/*{ (allFiltersUnchecked || types.events) ? (<EventContainer />) : '' }*/}
 
                                 { (allFiltersUnchecked || types.stories) ? (<ArticleContainer />) : '' }
 

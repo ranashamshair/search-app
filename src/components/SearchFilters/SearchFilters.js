@@ -158,8 +158,8 @@ class SearchFilters extends Component {
             upcoming: false,
             types: {
                 lots: false,
-                auctions: false,
-                events: false,
+                // auctions: false,
+                // events: false,
                 stories: false
             },
             pricemin: '',
@@ -168,8 +168,8 @@ class SearchFilters extends Component {
             categoriesSaved: [],
             typesSaved: {
                 lots: false,
-                auctions: false,
-                events: false,
+                // auctions: false,
+                // events: false,
                 stories: false
             },
             priceminSaved: '',
@@ -191,32 +191,32 @@ class SearchFilters extends Component {
     updateResults(resetSearch = false) {
         const { upcomingSaved, categoriesSaved, typesSaved, priceminSaved, pricemaxSaved } = this.state;
 
-        let payload = {
-            page: 0,
-            pagePast: 0,
-            pageAuctions: 0,
-            pageEvents: 0,
-            pageNews: 0,
-            upcomingLoading: true,
-            pastLoading: true,
-            auctionsLoading: true,
-            eventsLoading: true,
-            newsLoading: true,
-            staticFilters: {
-                upcomingOnly: upcomingSaved,
-                contentType: typesSaved,
-                categories: categoriesSaved,
-                pricemin: priceminSaved,
-                pricemax: pricemaxSaved,
-            }
+        const payload = store.getState();
+
+        payload.page = 0;
+        payload.pagePast = 0;
+        // payload.pageAuctions = 0;
+        // payload.pageEvents = 0;
+        payload.pageNews = 0;
+        payload.upcomingLoading = true;
+        payload.pastLoading = true;
+        // payload.auctionsLoading = true;
+        // payload.eventsLoading = true;
+        payload.newsLoading = true;
+        payload.staticFilters = {
+            upcomingOnly: upcomingSaved,
+            contentType: typesSaved,
+            categories: categoriesSaved,
+            pricemin: priceminSaved,
+            pricemax: pricemaxSaved,
         };
 
         if(resetSearch) payload.searchQuery = '';
 
         store.dispatch( getLots(payload) );
         store.dispatch( getPastLots(payload) );
-        store.dispatch( getAuctions(payload) );
-        store.dispatch( getEvents(payload) );
+        // store.dispatch( getAuctions(payload) );
+        // store.dispatch( getEvents(payload) );
         store.dispatch( getNews(payload) );
     }
 
@@ -224,7 +224,7 @@ class SearchFilters extends Component {
 
 
     render() {
-        const { upcoming, upcomingSaved, categoriesSaved, types, pricemin, pricemax, filterCounter, dropdowns } = this.state;
+        const { upcoming, upcomingSaved, categoriesSaved, priceminSaved, pricemaxSaved, types, pricemin, pricemax, filterCounter, dropdowns } = this.state;
 
         return (
             <>
@@ -245,7 +245,7 @@ class SearchFilters extends Component {
 
                                     <div className="ui toggle checkbox">
                                         {/*<div className="custom-control custom-switch mb-3">*/}
-                                        <input type="checkbox" name="upcoming_only" id="upcoming-only" value={upcoming} onChange={e => this.setState({upcoming : e.target.checked})} />
+                                        <input type="checkbox" name="upcoming_only" id="upcoming-only" checked={upcoming} onChange={e => this.setState({upcoming : e.target.checked})} />
                                         <label htmlFor="upcoming-only"><small>Upcoming Only</small></label>
                                         {/*</div>*/}
 
@@ -293,7 +293,10 @@ class SearchFilters extends Component {
 
                         <div className="btn-group">
 
-                            <button className={ (filterCounter > 0) ? 'h-search-filter-btn mr-3 show ui filter button primary has-counter' : 'h-search-filter-btn mr-3 show ui filter button' } type="button" id="OtherFilters" aria-haspopup="true" aria-expanded="false" onClick={() => {
+                            <button className={
+                                (filterCounter > 0) ? 'h-search-filter-btn mr-3 show ui filter button primary has-counter' : (
+                                    (priceminSaved || pricemaxSaved) ? 'h-search-filter-btn mr-3 show ui filter button primary' : 'h-search-filter-btn mr-3 show ui filter button'
+                                ) } type="button" id="OtherFilters" aria-haspopup="true" aria-expanded="false" onClick={() => {
                                 dropdowns.other = !dropdowns.other;
                                 this.setState({dropdowns: dropdowns})
                             }}>
@@ -314,14 +317,14 @@ class SearchFilters extends Component {
                                         <input type="checkbox" id="lots" onChange={this.handleChangeType} checked={types.lots} />
                                         <label htmlFor="lots">Lots</label>
                                     </div>
-                                    <div className="ui checkbox">
-                                        <input type="checkbox" id="auctions" onChange={this.handleChangeType} checked={types.auctions} />
-                                        <label htmlFor="auctions">Auctions</label>
-                                    </div>
-                                    <div className="ui checkbox">
-                                        <input type="checkbox" id="events" onChange={this.handleChangeType} checked={types.events} />
-                                        <label htmlFor="events">Events</label>
-                                    </div>
+                                    {/*<div className="ui checkbox">*/}
+                                    {/*    <input type="checkbox" id="auctions" onChange={this.handleChangeType} checked={types.auctions} />*/}
+                                    {/*    <label htmlFor="auctions">Auctions</label>*/}
+                                    {/*</div>*/}
+                                    {/*<div className="ui checkbox">*/}
+                                    {/*    <input type="checkbox" id="events" onChange={this.handleChangeType} checked={types.events} />*/}
+                                    {/*    <label htmlFor="events">Events</label>*/}
+                                    {/*</div>*/}
                                     <div className="ui checkbox">
                                         <input type="checkbox" id="stories" onChange={this.handleChangeType} checked={types.stories} />
                                         <label htmlFor="stories">News &amp; Stories</label>

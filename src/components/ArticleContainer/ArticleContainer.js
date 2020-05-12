@@ -35,6 +35,8 @@ class ArticleContainer extends Component {
     render() {
         let news = [];
 
+        let show = true;
+
         if ( this.state.loading ) {
             for (let i = 0; i < 4; i++) {
                 news.push(<ArticleLoader key={'news_' + i} />);
@@ -55,7 +57,9 @@ class ArticleContainer extends Component {
         } else {
             if ( !this.props.loading ) {
                 if(!this.state.loading && this.props.message){
-                    news = <p className="error-message">{this.props.message}</p>;
+                    console.log('news:  ', news);
+                    show = false;
+                    // news = <p className="error-message">{this.props.message}</p>;
                 }else{
                     setTimeout(() => {
                         this.setState({loading: false});
@@ -65,9 +69,9 @@ class ArticleContainer extends Component {
         }
 
 
-        return (
+        return show ? (
             <div>
-                <BlockHeader title="Articles" />
+                <BlockHeader title="Articles > Other" />
 
                 <div className="row row-spacing">
                     {news}
@@ -81,14 +85,14 @@ class ArticleContainer extends Component {
                     ) : ''
                 }
             </div>
-        );
+        ) : '';
     }
     
 }
 
 function mapStateToProps(state) {
     return {
-        news: (state.news && state.news.news) ? state.news.news : [],
+        news: state.news ? state.news : [],
         message: state.newsMessage,
         page: state.pageNews,
         loading: state.auctionsLoading
