@@ -7,6 +7,7 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import {connect} from "react-redux";
 import {getAuctions, getCategories, getEvents, getLots, getNews, getPastLots} from "../../actions";
 import store from "../../store";
+import Loader from "react-loader-spinner";
 
 
 class SearchFilters extends Component {
@@ -15,6 +16,7 @@ class SearchFilters extends Component {
         super(props);
 
         this.state = {
+            submited: false,
             upcoming: false,
             types: {
                 lots: false,
@@ -189,45 +191,67 @@ class SearchFilters extends Component {
 
 
     updateResults(resetSearch = false) {
-        const { upcomingSaved, categoriesSaved, typesSaved, priceminSaved, pricemaxSaved } = this.state;
+        this.setState({submited: true}, () => {
+            const { upcomingSaved, categoriesSaved, typesSaved, priceminSaved, pricemaxSaved } = this.state;
 
-        const payload = store.getState();
+            const payload = store.getState();
 
-        payload.page = 0;
-        payload.pagePast = 0;
-        // payload.pageAuctions = 0;
-        // payload.pageEvents = 0;
-        payload.pageNews = 0;
-        payload.upcomingLoading = true;
-        payload.pastLoading = true;
-        // payload.auctionsLoading = true;
-        // payload.eventsLoading = true;
-        payload.newsLoading = true;
-        payload.staticFilters = {
-            upcomingOnly: upcomingSaved,
-            contentType: typesSaved,
-            categories: categoriesSaved,
-            pricemin: priceminSaved,
-            pricemax: pricemaxSaved,
-        };
+            payload.page = 0;
+            payload.pagePast = 0;
+            // payload.pageAuctions = 0;
+            // payload.pageEvents = 0;
+            payload.pageNews = 0;
+            payload.upcomingLoading = true;
+            payload.pastLoading = true;
+            // payload.auctionsLoading = true;
+            // payload.eventsLoading = true;
+            payload.newsLoading = true;
+            payload.staticFilters = {
+                upcomingOnly: upcomingSaved,
+                contentType: typesSaved,
+                categories: categoriesSaved,
+                pricemin: priceminSaved,
+                pricemax: pricemaxSaved,
+            };
 
-        if(resetSearch) payload.searchQuery = '';
+            if(resetSearch) payload.searchQuery = '';
 
-        store.dispatch( getLots(payload) );
-        store.dispatch( getPastLots(payload) );
-        // store.dispatch( getAuctions(payload) );
-        // store.dispatch( getEvents(payload) );
-        store.dispatch( getNews(payload) );
+            store.dispatch( getLots(payload) );
+            store.dispatch( getPastLots(payload) );
+            // store.dispatch( getAuctions(payload) );
+            // store.dispatch( getEvents(payload) );
+            store.dispatch( getNews(payload) );
+        });
     }
 
 
 
 
     render() {
-        const { upcoming, upcomingSaved, categoriesSaved, priceminSaved, pricemaxSaved, types, pricemin, pricemax, filterCounter, dropdowns } = this.state;
+        const { submited, upcoming, upcomingSaved, categoriesSaved, priceminSaved, pricemaxSaved, types, pricemin, pricemax, filterCounter, dropdowns } = this.state;
+
+        if(submited){
+            setTimeout(() => {
+                this.setState({submited: false})
+            }, 2000)
+        }
 
         return (
             <>
+                {
+                    submited ? (
+                        <div className="preloader-blur">
+                            <Loader
+                                type="ThreeDots"
+                                color="#8C2828"
+                                height={50}
+                                width={50}
+                                timeout={2000}
+                            />
+                        </div>
+                    ) : ''
+                }
+
                 <div className="col-12 col-lg-8 h-search-filter h-search-filter-show" id="container__filters">
 
                     <div className="filter-container">

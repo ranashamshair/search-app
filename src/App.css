@@ -43,3 +43,16 @@ a.btn.btn-sm{
     font-size: 40px;
     margin-left: 0.875rem;
 }
+
+.preloader-blur{
+    position: fixed;
+    background: rgba(243, 243, 243, 0.4);
+    width: 100%;
+    height: 100%;
+    z-index: 60;
+}
+
+body div[aria-busy=true]{
+    position: fixed;
+    z-index: 100;
+}
