@@ -84,23 +84,32 @@ function procSearchFilters(route, params = null, type = null) {
 }
 
 
-function procRes(params = null, response, itemsKey, loaderKey, pageKey, msgKey = null, success = true) {
+function procRes(params = null, response, itemsKey, loaderKey, pageKey, msgKey = null, success = true, isSearch = false) {
     if(!params) params = {};
 
     if(success){
-        if(response.data.length < pageSize) params[pageKey] = -1;
+        if(
+            (!isSearch && response.data.length < pageSize) ||
+            (isSearch && response.data && response.data[itemsKey].length < pageSize)
+        ) params[pageKey] = -1;
 
-        params[itemsKey] = (params[itemsKey] && (params[pageKey] > 0 || params[pageKey] === -1)) ? [...params[itemsKey], ...response.data] : response.data;
+        let data = isSearch ? response.data[itemsKey] : response.data;
+        if(params.changedSearch){
+            params[itemsKey] = data;
+        }else{
+            params[itemsKey] = (params[itemsKey] && (params[pageKey] > 0 || params[pageKey] === -1)) ? [...params[itemsKey], ...data] : data;
+        }
+
         params[loaderKey] = false;
     }else{
-        console.log('err response : ', response);
-
         params[itemsKey] = (params[itemsKey] && params[pageKey] > 0) ? params[itemsKey]: [];
         params[pageKey] = -1;
         params[loaderKey] = false;
 
         if(msgKey && params[itemsKey].length === 0 && response.message) params[msgKey] = response.message;
     }
+
+    params.changedSearch = false;
 
     return params;
 }
@@ -232,10 +241,12 @@ export function getNews(payload = null) {
             .then( response => {
                 dispatch({
                     type: GET_NEWS,
-                    payload: procRes(params, response, 'news', 'newsLoading', 'pageNews')
+                    payload: procRes(params, response, 'news', 'newsLoading', 'pageNews', null, true, true)
                 });
             } )
             .catch(error => {
+                console.log('NEWS|ARTICLES error: ', error);
+
                 dispatch({
                     type: GET_NEWS,
                     payload: procRes(params, error.response.data, 'news', 'newsLoading', 'pageNews', 'newsMessage', false)

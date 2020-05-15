@@ -38,6 +38,8 @@ class LotContainer extends Component {
     render() {
         let pastLots = [];
 
+        let show = true;
+
         if ( this.state.loading ) {
             for (let i = 0; i < 4; i++) {
                 pastLots.push(<LotLoader key={i} />);
@@ -46,6 +48,8 @@ class LotContainer extends Component {
 
         if ( this.props.pastLots.length )
         {
+            console.log('this.props.pastLots:  ', this.props.pastLots);
+
             pastLots = this.props.pastLots.map(item =>
                 <>
                     {
@@ -63,7 +67,8 @@ class LotContainer extends Component {
         } else {
             if ( !this.props.loading ) {
                 if(!this.state.loading && this.props.message){
-                    pastLots = <p className="error-message">{this.props.message}</p>;
+                    show = false;
+                    // pastLots = <p className="error-message">{this.props.message}</p>;
                 }else{
                     setTimeout(() => {
                         this.setState({loading: false});
@@ -72,7 +77,7 @@ class LotContainer extends Component {
             }
         }
 
-        return (
+        return show ? (
             <div>
                 <BlockHeader title="Past Lots" />
 
@@ -88,7 +93,7 @@ class LotContainer extends Component {
                     ) : ''
                 }
             </div>
-        );
+        ) : '';
 
     }
 

@@ -3,6 +3,8 @@ import SearchFilters from '../SearchFilters/SearchFilters';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
+import Loader from 'react-loader-spinner';
+
 import './SearchBar.css';
 import store from "../../store";
 import {getLots, getPastLots, getAuctions, getEvents, getNews} from "../../actions";
@@ -15,6 +17,7 @@ class SearchBar extends Component {
         this.state = {
             searchFiltersActive: true,
             query: '',
+            submited: false
         };
 
         this.delay = 0;
@@ -28,6 +31,8 @@ class SearchBar extends Component {
         const menu_btn = document.getElementById('menu_search_form_btn');
 
         if(menu_btn){
+            menu_btn.querySelector('#to_open').style.display = "none";
+
             menu_btn.addEventListener('click', e => {
                 const el = document.getElementById('searchBox');
 
@@ -56,43 +61,33 @@ class SearchBar extends Component {
     handleSearchSubmit = (e) => {
         e.preventDefault();
 
-        const { query } = this.state;
-        const { staticFilters } = store.getState();
+        this.setState({submited: true}, () => {
+            const { query } = this.state;
+            const payload = store.getState();
 
-        store.dispatch( getLots({
-            page: 0,
-            upcomingLoading: true,
-            searchQuery: query,
-            staticFilters: staticFilters
-        }) );
+            payload.page = 0;
+            payload.upcomingLoading = true;
+            payload.searchQuery = query;
+            payload.pagePast = 0;
+            payload.pastLoading = true;
+            // payload.pageAuctions = 0;
+            // payload.auctionsLoading = true;
+            // payload.pageEvents = 0;
+            // payload.eventsLoading = true;
+            payload.pageNews = 0;
+            payload.newsLoading = true;
+            payload.changedSearch = true;
 
-        store.dispatch( getPastLots({
-            pagePast: 0,
-            pastLoading: true,
-            searchQuery: query,
-            staticFilters: staticFilters
-        }) );
+            store.dispatch( getLots(payload) );
 
-        store.dispatch( getAuctions({
-            pageAuctions: 0,
-            auctionsLoading: true,
-            searchQuery: query,
-            staticFilters: staticFilters
-        }) );
+            store.dispatch( getPastLots(payload) );
 
-        store.dispatch( getEvents({
-            pageEvents: 0,
-            eventsLoading: true,
-            searchQuery: query,
-            staticFilters: staticFilters
-        }) );
+            // store.dispatch( getAuctions(payload) );
+            //
+            // store.dispatch( getEvents(payload) );
 
-        store.dispatch( getNews({
-            pageNews: 0,
-            newsLoading: true,
-            searchQuery: query,
-            staticFilters: staticFilters
-        }) );
+            store.dispatch( getNews(payload) );
+        })
         
     };
 
@@ -104,32 +99,55 @@ class SearchBar extends Component {
     };
 
     render() {
+        if(this.state.submited){
+            setTimeout(() => {
+                this.setState({submited: false})
+            }, 2000)
+        }
+
         return (
-            <div className="collapse position-fixed h-site-search--search-wrap" id="searchBox">
-                
-                <section className="searchBox h-site-search--search">
-                    
-                    <form action="/" className="h-site-search--form" onSubmit={this.handleSearchSubmit}>
-                        <div className="container">
-                            <div className="row justify-content-center">
-
-                                <div className="col-12 col-lg-4 form-group form-item h-form-group h-form-item d-flex flex-column flex-lg-row align-items-lg-center">
-                                    <div className="ui icon input">
-                                        <label htmlFor="search" className="sr-only">Search Auctions/Lots</label>
-                                        <input type="text" id="search" className="form-control h-form-control" placeholder="Enter the terms you wish to search for" value={this.state.query} onChange={e => this.setState({query: e.target.value})} />
-                                        <button type="submit" className="position-relative"><FontAwesomeIcon icon={faSearch} size="sm" /></button>
-                                    </div>
-                                </div>
-
-                                <SearchFilters searchFiltersActive={this.showSearchFilters} />                        
-
-                            </div>
+            <>
+                {
+                    this.state.submited ? (
+                        <div className="preloader-blur">
+                            <Loader
+                                type="ThreeDots"
+                                color="#8C2828"
+                                height={50}
+                                width={50}
+                                timeout={2000}
+                            />
                         </div>
-                    </form>
-                        
-                </section>                
-    
-            </div>
+                    ) : ''
+                }
+
+                <div className="collapse position-fixed h-site-search--search-wrap show" id="searchBox">
+
+                    <section className="searchBox h-site-search--search">
+
+                        <form action="/" className="h-site-search--form" onSubmit={this.handleSearchSubmit}>
+                            <div className="container">
+                                <div className="row justify-content-center">
+
+                                    <div className="col-12 col-lg-4 form-group form-item h-form-group h-form-item d-flex flex-column flex-lg-row align-items-lg-center">
+                                        <div className="ui icon input">
+                                            <label htmlFor="search" className="sr-only">Search Auctions/Lots</label>
+                                            <input type="text" id="search" className="form-control h-form-control" placeholder="Enter the terms you wish to search for" value={this.state.query} onChange={e => this.setState({query: e.target.value})} />
+                                            <button type="submit" className="position-relative"><FontAwesomeIcon icon={faSearch} size="sm" /></button>
+                                        </div>
+                                    </div>
+
+                                    <SearchFilters searchFiltersActive={this.showSearchFilters} />
+
+                                </div>
+                            </div>
+                        </form>
+
+                    </section>
+
+                </div>
+
+            </>
         );
     }
     
