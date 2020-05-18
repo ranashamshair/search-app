@@ -3,11 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="29525dcd-948c-488a-8879-ff66f93da875" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/SearchBar/SearchBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SearchBar/SearchBar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/actions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/SearchFilters/SearchFilters.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SearchFilters/SearchFilters.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,7 +88,8 @@
       <workItem from="1588595303689" duration="5772000" />
       <workItem from="1588928294525" duration="168000" />
       <workItem from="1589265026885" duration="16069000" />
-      <workItem from="1589365556660" duration="5950000" />
+      <workItem from="1589365556660" duration="6592000" />
+      <workItem from="1589790079214" duration="6603000" />
     </task>
     <servers />
   </component>
@@ -100,18 +101,18 @@
       <screen x="0" y="0" width="1280" height="984" />
     </state>
     <state x="94" y="147" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.984@0.0.1280.984" timestamp="1589374348985" />
-    <state x="92" y="92" width="1096" height="800" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1587471664931">
+    <state x="92" y="92" width="1096" height="800" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1589809467086">
       <screen x="0" y="0" width="1280" height="984" />
     </state>
-    <state x="92" y="92" width="1096" height="800" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1280.984@0.0.1280.984" timestamp="1587471664931" />
+    <state x="92" y="92" width="1096" height="800" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1280.984@0.0.1280.984" timestamp="1589809467086" />
     <state x="92" y="92" width="1096" height="800" maximized="true" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog" timestamp="1587131544790">
       <screen x="0" y="0" width="1280" height="984" />
     </state>
     <state x="92" y="92" width="1096" height="800" maximized="true" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog/0.0.1280.984@0.0.1280.984" timestamp="1587131544790" />
-    <state x="336" y="224" width="737" height="606" key="find.popup" timestamp="1589280554330">
+    <state x="336" y="224" width="737" height="606" key="find.popup" timestamp="1589805676121">
       <screen x="0" y="0" width="1280" height="984" />
     </state>
-    <state x="336" y="224" width="737" height="606" key="find.popup/0.0.1280.984@0.0.1280.984" timestamp="1589280554330" />
+    <state x="336" y="224" width="737" height="606" key="find.popup/0.0.1280.984@0.0.1280.984" timestamp="1589805676121" />
     <state x="296" y="226" key="run.anything.popup" timestamp="1587134781775">
       <screen x="0" y="0" width="1280" height="984" />
     </state>
