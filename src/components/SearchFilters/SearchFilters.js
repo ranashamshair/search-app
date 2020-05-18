@@ -43,7 +43,7 @@ class SearchFilters extends Component {
             dropdowns: {
                 upcoming: false,
                 category: false,
-                other: false,
+                other: false
             }
 
         };

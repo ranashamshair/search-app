@@ -11,7 +11,7 @@ function procLotFilters(route, params = null, upcoming = false) {
         const qs = [];
 
         if(params.searchQuery){
-            qs.push('keyword=' + params.searchQuery)
+            qs.push('keyword=' + params.searchQuery);
         }
 
         if(filters){
@@ -267,7 +267,7 @@ export function getCategories(payload = null) {
         })
             .then( response => {
                 dispatch({ type: GET_CATEGORIES, payload: {
-                        categories: response.data,
+                        categories: response.data
                         // isLoading: false
                     }
                 });
