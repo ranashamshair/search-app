@@ -35,7 +35,11 @@ const initialState = {
         pricemin: '',
         pricemax: '',
     },
-    changedSearch: false
+    changedLots: false,
+    changedPastLots: false,
+    // changedAuctions: false,
+    // changedEvents: false,
+    changedArticles: false,
 };
 
 function rootReducer(state = initialState, action) {

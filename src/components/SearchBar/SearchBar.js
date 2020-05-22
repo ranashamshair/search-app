@@ -76,7 +76,11 @@ class SearchBar extends Component {
             // payload.eventsLoading = true;
             payload.pageNews = 0;
             payload.newsLoading = true;
-            payload.changedSearch = true;
+            payload.changedLots = true;
+            payload.changedPastLots = true;
+            // payload.changedAuctions = true;
+            // payload.changedEvents = true;
+            payload.changedArticles = true;
 
             store.dispatch( getLots(payload) );
 
