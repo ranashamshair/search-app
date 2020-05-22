@@ -47,16 +47,15 @@ class LotContainer extends Component {
         if ( this.props.lots.length )
         {
             lots = this.props.lots.map(item =>
-                <>
+                <React.Fragment key={'lot_' + item.itemView.ref} >
                 {
                     (item.itemView) ? (
                         <Lot
-                            key={'lot_' + item.itemView.ref}
                             lot={item.itemView}
                         />
                     ) : ''
                 }
-                </>
+                </React.Fragment>
             );
             
         } else {

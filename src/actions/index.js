@@ -84,7 +84,7 @@ function procSearchFilters(route, params = null, type = null) {
 }
 
 
-function procRes(params = null, response, itemsKey, loaderKey, pageKey, msgKey = null, success = true, isSearch = false) {
+function procRes(params = null, response, itemsKey, loaderKey, pageKey, searchKey, msgKey = null, success = true, isSearch = false) {
     if(!params) params = {};
 
     if(success){
@@ -94,7 +94,11 @@ function procRes(params = null, response, itemsKey, loaderKey, pageKey, msgKey =
         ) params[pageKey] = -1;
 
         let data = isSearch ? response.data[itemsKey] : response.data;
-        if(params.changedSearch){
+
+        console.log('itemsKey: ', itemsKey);
+        console.log('params: ', params);
+
+        if(params[searchKey]){
             params[itemsKey] = data;
         }else{
             params[itemsKey] = (params[itemsKey] && (params[pageKey] > 0 || params[pageKey] === -1)) ? [...params[itemsKey], ...data] : data;
@@ -109,7 +113,7 @@ function procRes(params = null, response, itemsKey, loaderKey, pageKey, msgKey =
         if(msgKey && params[itemsKey].length === 0 && response.message) params[msgKey] = response.message;
     }
 
-    params.changedSearch = false;
+    params[searchKey] = false;
 
     return params;
 }
@@ -129,7 +133,7 @@ export function getLots(payload = null) {
             .then( response => {
                 dispatch({
                     type: GET_LOTS,
-                    payload: procRes(params, response, 'lots', 'upcomingLoading', 'page')
+                    payload: procRes(params, response, 'lots', 'upcomingLoading', 'page', 'changedLots')
                 });
             } )
             .catch(error => {
@@ -137,7 +141,7 @@ export function getLots(payload = null) {
 
                 dispatch({
                     type: GET_LOTS,
-                    payload: procRes(params, error.response.data, 'lots', 'upcomingLoading', 'page', 'lotsMessage', false)
+                    payload: procRes(params, error.response.data, 'lots', 'upcomingLoading', 'page', 'changedLots', 'lotsMessage', false)
                 });
             });
     }
@@ -157,7 +161,7 @@ export function getPastLots(payload = null) {
             .then( response => {
                 dispatch({
                     type: GET_PAST_LOTS,
-                    payload: procRes(params, response, 'pastLots', 'pastLoading', 'pagePast')
+                    payload: procRes(params, response, 'pastLots', 'pastLoading', 'pagePast', 'changedPastLots')
                 });
             } )
             .catch(error => {
@@ -165,7 +169,7 @@ export function getPastLots(payload = null) {
 
                 dispatch({
                     type: GET_PAST_LOTS,
-                    payload: procRes(params, error.response.data, 'pastLots', 'pastLoading', 'pagePast', 'pastLotsMessage', false)
+                    payload: procRes(params, error.response.data, 'pastLots', 'pastLoading', 'pagePast', 'changedPastLots', 'pastLotsMessage', false)
                 });
             });
     }
@@ -185,7 +189,7 @@ export function getAuctions(payload = null) {
             .then( response => {
                 dispatch({
                     type: GET_AUCTIONS,
-                    payload: procRes(params, response, 'auctions', 'auctionsLoading', 'pageAuctions')
+                    payload: procRes(params, response, 'auctions', 'auctionsLoading', 'pageAuctions', 'changedAuctions')
                 });
             } )
             .catch(error => {
@@ -193,7 +197,7 @@ export function getAuctions(payload = null) {
 
                 dispatch({
                     type: GET_AUCTIONS,
-                    payload: procRes(params, error.response.data, 'auctions', 'auctionsLoading', 'pageAuctions', 'auctionsMessage', false)
+                    payload: procRes(params, error.response.data, 'auctions', 'auctionsLoading', 'pageAuctions', 'changedAuctions', 'auctionsMessage', false)
                 });
             });
     }
@@ -213,7 +217,7 @@ export function getEvents(payload = null) {
             .then( response => {
                 dispatch({
                     type: GET_EVENTS,
-                    payload: procRes(params, response, 'events', 'eventsLoading', 'pageEvents')
+                    payload: procRes(params, response, 'events', 'eventsLoading', 'pageEvents', 'changedEvents')
                 });
             } )
             .catch(error => {
@@ -221,7 +225,7 @@ export function getEvents(payload = null) {
 
                 dispatch({
                     type: GET_EVENTS,
-                    payload: procRes(params, error.response.data, 'events', 'eventsLoading', 'pageEvents', 'eventsMessage', false)
+                    payload: procRes(params, error.response.data, 'events', 'eventsLoading', 'pageEvents', 'changedEvents', 'eventsMessage', false)
                 });
             });
     }
@@ -241,7 +245,7 @@ export function getNews(payload = null) {
             .then( response => {
                 dispatch({
                     type: GET_NEWS,
-                    payload: procRes(params, response, 'news', 'newsLoading', 'pageNews', null, true, true)
+                    payload: procRes(params, response, 'news', 'newsLoading', 'pageNews', 'changedArticles', null, true, true)
                 });
             } )
             .catch(error => {
@@ -249,7 +253,7 @@ export function getNews(payload = null) {
 
                 dispatch({
                     type: GET_NEWS,
-                    payload: procRes(params, error.response.data, 'news', 'newsLoading', 'pageNews', 'newsMessage', false)
+                    payload: procRes(params, error.response.data, 'news', 'newsLoading', 'pageNews', 'changedArticles', 'newsMessage', false)
                 });
             });
     }

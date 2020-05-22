@@ -51,17 +51,16 @@ class LotContainer extends Component {
             console.log('this.props.pastLots:  ', this.props.pastLots);
 
             pastLots = this.props.pastLots.map(item =>
-                <>
+                <React.Fragment key={'past_lot_' + item.itemView.ref}>
                     {
                         (item.itemView) ? (
                             <Lot
-                                key={'past_lot_' + item.itemView.ref}
                                 lot={item.itemView}
                                 isPast={true}
                             />
                         ) : ''
                     }
-                </>
+                </React.Fragment>
             );
 
         } else {
