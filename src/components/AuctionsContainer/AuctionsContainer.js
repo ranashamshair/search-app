@@ -46,6 +46,7 @@ class AuctionsContainer extends Component {
             auctions = this.props.auctions.map(item =>
                 <Auction
                     key={'auction_' + item.id}
+                    auctionId={item.id}
                     location={item.location}
                     link={item.link}
                     title={(item.title) ? item.title.rendered : ''}

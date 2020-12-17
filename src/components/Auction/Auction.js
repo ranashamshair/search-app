@@ -39,6 +39,10 @@ function Auction(props) {
     const addr = props.location;
     let addrShow = addr.city + (addr.state ? ', ' + addr.state : '');
 
+    let slug = props.title.replace(/ /g, "-");
+    let url = `/auction-catalog/${slug}_${props.auctionId}`;
+    // console.log(url);
+
     return (
         <>
             
@@ -47,7 +51,7 @@ function Auction(props) {
                     <div className="widget-fluid--body bg-white">
                         <span className="widget-fluid--body__tag text-uppercase">{addrShow}</span>
                         <h4 className="widget-fluid--body__headline">
-                            <a href={props.link} className="link-overlay font-weight-bold">{props.title}</a>
+                            <a href={props.url} target="_blank" className="link-overlay font-weight-bold">{props.title}</a>
                         </h4>
                         <span className="widget-fluid--body__date">{date}</span>
                         <span className="widget-fluid--body__date d-block text-grey">{time}</span>
@@ -55,9 +59,11 @@ function Auction(props) {
                     {
                         (props.imgSrc) ? (
                             <div className="widget-fluid--image">
-                                <figure>
-                                    <img src={props.imgSrc} alt="Prints &amp; Multiples" className="mw-100" width="260" height="300" />
-                                </figure>
+                                <a href={props.url} target="_blank">
+                                    <figure>
+                                        <img src={props.imgSrc} alt="Prints &amp; Multiples" className="mw-100" width="260" height="300" />
+                                    </figure>
+                                </a>
                             </div>
                         ) : ''
                     }

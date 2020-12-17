@@ -127,7 +127,7 @@ export function getLots(payload = null) {
 
         return axios.get(route, {
             headers: {
-                'id': 'kniWHWvyfDrEbi1noF'
+                'id': 'amevnwEgbRd9mx5yBu'
             }
         })
             .then( response => {
@@ -155,7 +155,7 @@ export function getPastLots(payload = null) {
 
         return axios.get(route, {
             headers: {
-                'id': 'kniWHWvyfDrEbi1noF'
+                'id': 'amevnwEgbRd9mx5yBu'
             }
         })
             .then( response => {
@@ -183,7 +183,7 @@ export function getAuctions(payload = null) {
 
         return axios.get(route, {
             headers: {
-                'id': 'kniWHWvyfDrEbi1noF'
+                'id': 'amevnwEgbRd9mx5yBu'
             }
         })
             .then( response => {
@@ -211,7 +211,7 @@ export function getEvents(payload = null) {
 
         return axios.get(route, {
             headers: {
-                'id': 'kniWHWvyfDrEbi1noF'
+                'id': 'amevnwEgbRd9mx5yBu'
             }
         })
             .then( response => {
@@ -239,7 +239,7 @@ export function getNews(payload = null) {
 
         return axios.get(route, {
             headers: {
-                'id': 'kniWHWvyfDrEbi1noF'
+                'id': 'amevnwEgbRd9mx5yBu'
             }
         })
             .then( response => {
@@ -266,7 +266,7 @@ export function getCategories(payload = null) {
     return function (dispatch) {
         return axios.get( baseUrl + '/searchlots/inv/categories', {
             headers: {
-                'id': 'kniWHWvyfDrEbi1noF'
+                'id': 'amevnwEgbRd9mx5yBu'
             }
         })
             .then( response => {

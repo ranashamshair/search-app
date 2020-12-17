@@ -48,7 +48,7 @@ class LotContainer extends Component {
 
         if ( this.props.pastLots.length )
         {
-            console.log('this.props.pastLots:  ', this.props.pastLots);
+            // console.log('this.props.pastLots:  ', this.props.pastLots);
 
             pastLots = this.props.pastLots.map(item =>
                 <React.Fragment key={'past_lot_' + item.itemView.ref}>
