@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import BlockHeader from '../BlockHeader/BlockHeader';
 import Article from '../Article/Article';
 import store from "../../store";
-import {getNews} from "../../actions";
+import {getNews, updateFiltersOnly} from "../../actions";
 import {connect} from "react-redux";
 import ArticleLoader from "../ArticleLoader/ArticleLoader";
 
@@ -19,7 +19,18 @@ class ArticleContainer extends Component {
     }
 
     componentDidMount() {
-        this.props.getNews();
+        const st = store.getState();
+
+        if(st.searchQuery){
+            this.props.getNews();
+        }
+        else{
+            st.news = [];
+            st.newsLoading = false;
+            st.newsMessage = "Empty search keyword";
+
+            store.dispatch(updateFiltersOnly(st));
+        }
     }
 
 
@@ -57,7 +68,7 @@ class ArticleContainer extends Component {
         } else {
             if ( !this.props.loading ) {
                 if(!this.state.loading && this.props.message){
-                    console.log('news:  ', news);
+                    // console.log('news:  ', news);
                     show = false;
                     // news = <p className="error-message">{this.props.message}</p>;
                 }else{

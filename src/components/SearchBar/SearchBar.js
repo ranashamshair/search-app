@@ -7,7 +7,7 @@ import Loader from 'react-loader-spinner';
 
 import './SearchBar.css';
 import store from "../../store";
-import {getLots, getPastLots, getAuctions, getEvents, getNews} from "../../actions";
+import {getLots, getPastLots, getAuctions, getEvents, getNews, updateFiltersOnly} from "../../actions";
 
 class SearchBar extends Component {
 
@@ -82,15 +82,30 @@ class SearchBar extends Component {
             // payload.changedEvents = true;
             payload.changedArticles = true;
 
-            store.dispatch( getLots(payload) );
+            let types = payload.staticFilters.contentType;
+            let allFiltersUnchecked = (!types.lots && !types.auctions && !types.events && !types.stories);
 
-            store.dispatch( getPastLots(payload) );
+            if(allFiltersUnchecked || types.lots) {
+                store.dispatch(getLots(payload));
 
+                if(!payload.staticFilters.upcomingOnly){
+                    store.dispatch(getPastLots(payload));
+                }
+            }
             // store.dispatch( getAuctions(payload) );
-            //
             // store.dispatch( getEvents(payload) );
+            if(allFiltersUnchecked || types.stories) {
+                if(payload.searchQuery){
+                    store.dispatch(getNews(payload));
+                }
+                else{
+                    payload.news = [];
+                    payload.newsLoading = false;
+                    payload.newsMessage = "Empty search keyword";
 
-            store.dispatch( getNews(payload) );
+                    store.dispatch(updateFiltersOnly(payload));
+                }
+            }
         })
         
     };

@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
 import {connect} from "react-redux";
-import {getAuctions, getCategories, getEvents, getLots, getNews, getPastLots} from "../../actions";
+import {getAuctions, getCategories, getEvents, getLots, getNews, getPastLots, updateFiltersOnly} from "../../actions";
 import store from "../../store";
 import Loader from "react-loader-spinner";
 
@@ -216,11 +216,30 @@ class SearchFilters extends Component {
 
             if(resetSearch) payload.searchQuery = '';
 
-            store.dispatch( getLots(payload) );
-            store.dispatch( getPastLots(payload) );
+
+            let types = typesSaved;
+            let allFiltersUnchecked = (!types.lots && !types.auctions && !types.events && !types.stories);
+
+            if(allFiltersUnchecked || types.lots){
+                store.dispatch( getLots(payload) );
+
+                if(!upcomingSaved){
+                    store.dispatch( getPastLots(payload) );
+                }
+            }
             // store.dispatch( getAuctions(payload) );
             // store.dispatch( getEvents(payload) );
-            store.dispatch( getNews(payload) );
+            if(allFiltersUnchecked || types.stories){
+                if(payload.searchQuery){
+                    store.dispatch(getNews(payload));
+                }else{
+                    payload.news = [];
+                    payload.newsLoading = false;
+                    payload.newsMessage = "Empty search keyword";
+
+                    store.dispatch(updateFiltersOnly(payload));
+                }
+            }
         });
     }
 
@@ -382,7 +401,7 @@ class SearchFilters extends Component {
                         </div>
 
                         <div className="search-filter__anim-in-left">
-                            <button className="h-search-filter-btn mr-3 show ui filter grey button" id="clear" onClick={this.resetAll}>
+                            <button type="button" className="h-search-filter-btn mr-3 show ui filter grey button" id="clear" onClick={this.resetAll}>
                                 <i className="redo alternate icon"/>
                                 {/*<FontAwesomeIcon icon={faRedo} size="sm" />*/}
                             </button>
@@ -396,7 +415,7 @@ class SearchFilters extends Component {
 }
 
 function mapStateToProps(state) {
-    console.log('store state: ', state);
+    // console.log('store state: ', state);
 
     return {
         categories: state.categories

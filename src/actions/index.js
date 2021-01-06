@@ -1,4 +1,7 @@
-import {GET_AUCTIONS, GET_CATEGORIES, GET_EVENTS, GET_LOTS, GET_NEWS, GET_PAST_LOTS} from "../constants/action-types";
+import {
+    GET_AUCTIONS, GET_CATEGORIES, GET_EVENTS, GET_LOTS, GET_NEWS, GET_PAST_LOTS,
+    UPDATE_FILTERS_ONLY
+} from "../constants/action-types";
 import axios from "axios";
 
 const baseUrl = 'https://johnmoran.hksndev2.co.uk/wp-json';
@@ -95,8 +98,8 @@ function procRes(params = null, response, itemsKey, loaderKey, pageKey, searchKe
 
         let data = isSearch ? response.data[itemsKey] : response.data;
 
-        console.log('itemsKey: ', itemsKey);
-        console.log('params: ', params);
+        // console.log('itemsKey: ', itemsKey);
+        // console.log('params: ', params);
 
         if(params[searchKey]){
             params[itemsKey] = data;
@@ -118,6 +121,14 @@ function procRes(params = null, response, itemsKey, loaderKey, pageKey, searchKe
     return params;
 }
 
+export function updateFiltersOnly(payload = null) {
+    return function (dispatch) {
+        return dispatch({
+            type: UPDATE_FILTERS_ONLY,
+            payload: payload
+        });
+    }
+}
 
 export function getLots(payload = null) {
     return function (dispatch) {

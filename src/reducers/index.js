@@ -1,4 +1,7 @@
-import {GET_AUCTIONS, GET_CATEGORIES, GET_EVENTS, GET_LOTS, GET_NEWS, GET_PAST_LOTS} from "../constants/action-types";
+import {
+    GET_AUCTIONS, GET_CATEGORIES, GET_EVENTS, GET_LOTS, GET_NEWS, GET_PAST_LOTS,
+    UPDATE_FILTERS_ONLY
+} from "../constants/action-types";
 
 const initialState = {
     page: 0,
@@ -50,10 +53,39 @@ function rootReducer(state = initialState, action) {
         // action.type === GET_EVENTS ||
         action.type === GET_NEWS
     ) {
-        return Object.assign({}, state, action.payload);
+        const obj = Object.assign({}, state, action.payload);
+
+        if(obj.lots.length){
+            let uniqueLotsObj = obj.lots.reduce( (c, e) => {
+                if (!c[e.itemView.ref]) c[e.itemView.ref] = e;
+                return c;
+            }, {});
+            obj.lots = Object.values(uniqueLotsObj)
+        }
+
+        if(obj.pastLots.length){
+            let uniquePastLotsObj = obj.pastLots.reduce( (c, e) => {
+                if (!c[e.itemView.ref]) c[e.itemView.ref] = e;
+                return c;
+            }, {});
+            obj.pastLots = Object.values(uniquePastLotsObj)
+        }
+
+        if(obj.news.length){
+            let uniqueNewsObj = obj.news.reduce( (c, e) => {
+                if (!c[e.id]) c[e.id] = e;
+                return c;
+            }, {});
+            obj.news = Object.values(uniqueNewsObj)
+        }
+
+        return obj;
     }
     if (action.type === GET_CATEGORIES) {
         return Object.assign({}, state, { categories: action.payload.categories });
+    }
+    if (action.type === UPDATE_FILTERS_ONLY) {
+        return Object.assign({}, state, action.payload);
     }
 
     return state;

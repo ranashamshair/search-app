@@ -4,3 +4,4 @@ export const GET_CATEGORIES = "GET_CATEGORIES";
 export const GET_AUCTIONS = "GET_AUCTIONS";
 export const GET_EVENTS = "GET_EVENTS";
 export const GET_NEWS = "GET_NEWS";
+export const UPDATE_FILTERS_ONLY = "UPDATE_FILTERS_ONLY";
