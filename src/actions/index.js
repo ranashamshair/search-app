@@ -4,7 +4,9 @@ import {
 } from "../constants/action-types";
 import axios from "axios";
 
-const baseUrl = 'https://johnmoran.hksndev2.co.uk/wp-json';
+// const baseUrl = 'https://johnmoran.hksndev2.co.uk/wp-json';
+// const baseUrl = 'https://johnmoranstage.invaluable.com/wp-json';
+const baseUrl = '/wp-json';
 
 const pageSize = 20;
 

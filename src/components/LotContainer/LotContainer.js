@@ -38,11 +38,19 @@ class LotContainer extends Component {
 
         let show = true;
 
+        // console.log('lot loading: ', this.state.loading);
+
         if ( this.state.loading ) {
             for (let i = 0; i < 4; i++) {
                 lots.push(<LotLoader key={i}/>);
             }
         }
+
+        // let i = 0;
+        // while (this.state.loading) {
+        //     lots.push(<LotLoader key={i}/>);
+        //     ++i;
+        // }
 
         if ( this.props.lots.length )
         {
@@ -81,7 +89,7 @@ class LotContainer extends Component {
                 </div>
 
                 {
-                    (this.props.page !== -1) ? (
+                    (this.props.lots.length && this.props.page !== -1) ? (
                         <div className="col-12 text-center">
                             <button className="btn btn-load-more mt-3 mb-5" onClick={this.loadMoreUpcoming}>Load More</button>
                         </div>

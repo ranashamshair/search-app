@@ -21,11 +21,14 @@ const initialState = {
     // eventsMessage: '',
     newsMessage: '',
     categories: [],
-    upcomingLoading: false,
-    pastLoading: false,
+    // upcomingLoading: false,
+    upcomingLoading: true,
+    // pastLoading: false,
+    pastLoading: true,
     // auctionsLoading: false,
     // eventsLoading: false,
-    newsLoading: false,
+    newsLoading: true,
+    // newsLoading: false,
     staticFilters: {
         upcomingOnly: false,
         contentType: {

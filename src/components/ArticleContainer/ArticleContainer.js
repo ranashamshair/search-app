@@ -54,6 +54,12 @@ class ArticleContainer extends Component {
             }
         }
 
+        // let i = 0;
+        // while (this.state.loading) {
+        //     news.push(<ArticleLoader key={'news_' + i} />);
+        //     ++i;
+        // }
+
         if ( this.props.news.length )
         {
             news = this.props.news.map(item =>
@@ -89,7 +95,7 @@ class ArticleContainer extends Component {
                 </div>
 
                 {
-                    (this.props.page !== -1) ? (
+                    (this.props.news.length && this.props.page !== -1) ? (
                         <div className="col-12 text-center">
                             <button className="btn btn-load-more mt-3 mb-5" onClick={this.loadMore}>Load More</button>
                         </div>

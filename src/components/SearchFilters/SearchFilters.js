@@ -16,7 +16,8 @@ class SearchFilters extends Component {
         super(props);
 
         this.state = {
-            submited: false,
+            // submited: false,
+            submited: true,
             upcoming: false,
             types: {
                 lots: false,
@@ -62,6 +63,16 @@ class SearchFilters extends Component {
         this.props.getCategories();
 
         this.checkFilterCount();
+
+        const _this = this;
+
+        store.subscribe(() => {
+            const { upcomingLoading, pastLoading, newsLoading } = store.getState();
+
+            if(!upcomingLoading && !pastLoading && !newsLoading && _this.state.submited){
+                this.setState({submited: false});
+            }
+        });
     }
 
     handleChangeType(e) {
@@ -249,11 +260,12 @@ class SearchFilters extends Component {
     render() {
         const { submited, upcoming, upcomingSaved, categoriesSaved, priceminSaved, pricemaxSaved, types, pricemin, pricemax, filterCounter, dropdowns } = this.state;
 
-        if(submited){
-            setTimeout(() => {
-                this.setState({submited: false})
-            }, 2000)
-        }
+
+        // if(submited){
+        //     setTimeout(() => {
+        //         this.setState({submited: false})
+        //     }, 2000)
+        // }
 
         return (
             <>
@@ -265,7 +277,7 @@ class SearchFilters extends Component {
                                 color="#8C2828"
                                 height={50}
                                 width={50}
-                                timeout={2000}
+                                timeout={100000}
                             />
                         </div>
                     ) : ''

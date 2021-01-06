@@ -85,7 +85,7 @@ class LotContainer extends Component {
                 </div>
 
                 {
-                    (this.props.page !== -1) ? (
+                    (this.props.pastLots.length && this.props.page !== -1) ? (
                         <div className="col-12 text-center">
                             <button className="btn btn-load-more mt-3 mb-5" onClick={this.loadMorePast}>Load More</button>
                         </div>
