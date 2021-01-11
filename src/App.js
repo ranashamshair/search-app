@@ -35,19 +35,22 @@ class App extends Component{
                 // events: false,
                 stories: false
             },
+            noResults: false
         }
     }
 
     componentDidMount() {
         store.subscribe(() => {
-            const {staticFilters} = store.getState();
+            const {staticFilters, lots, pastLots, news, submited} = store.getState();
 
-            this.setState({types: staticFilters.contentType, upcomingOnly: staticFilters.upcomingOnly})
+            // console.log('notFound: ', lots, pastLots, news);
+
+            this.setState({types: staticFilters.contentType, upcomingOnly: staticFilters.upcomingOnly, noResults: (!submited && !lots.length && !pastLots.length && !news.length)})
         });
     }
 
     render() {
-        const { upcomingOnly, types } = this.state;
+        const { upcomingOnly, types, noResults } = this.state;
 
         let allFiltersUnchecked = (!types.lots && !types.auctions && !types.events && !types.stories);
 
@@ -60,6 +63,9 @@ class App extends Component{
                         <section className="section">
 
                             <div className="container">
+                                {
+                                    noResults ? (<p className="error-message">No results</p>) : ''
+                                }
 
                                 {
                                     (allFiltersUnchecked || types.lots) ? (

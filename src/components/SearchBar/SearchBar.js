@@ -47,11 +47,19 @@ class SearchBar extends Component {
             });
         }
 
+        const _this = this;
 
         store.subscribe(() => {
-            const {searchQuery} = store.getState();
+            const {searchQuery,  upcomingLoading, pastLoading, newsLoading } = store.getState();
 
-            this.setState({query: searchQuery})
+            console.log('LOADING: ', upcomingLoading, pastLoading, newsLoading);
+            console.log('LOADING RES: ', (!upcomingLoading && !pastLoading && !newsLoading && _this.state.submited));
+
+            if(!upcomingLoading && !pastLoading && !newsLoading && _this.state.submited){
+                this.setState({query: searchQuery, submited: false})
+            }else{
+                this.setState({query: searchQuery})
+            }
         });
 
         // this.showSearchFilters();
@@ -118,11 +126,11 @@ class SearchBar extends Component {
     };
 
     render() {
-        if(this.state.submited){
-            setTimeout(() => {
-                this.setState({submited: false})
-            }, 2000)
-        }
+        // if(this.state.submited){
+        //     setTimeout(() => {
+        //         this.setState({submited: false})
+        //     }, 2000)
+        // }
 
         return (
             <>
@@ -134,7 +142,7 @@ class SearchBar extends Component {
                                 color="#8C2828"
                                 height={50}
                                 width={50}
-                                timeout={2000}
+                                timeout={100000}
                             />
                         </div>
                     ) : ''
