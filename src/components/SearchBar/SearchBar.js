@@ -11,6 +11,8 @@ import {getLots, getPastLots,getNews, updateFiltersOnly} from "../../actions"; /
 
 import SearchFiltersNew from '../SearchFiltersNew/SearchFiltersNew';
 
+import data from '../../requestApi.json';
+
 class SearchBar extends Component {
 
     constructor(props) {
@@ -175,25 +177,25 @@ class SearchBar extends Component {
                                           className="active text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2"
                                           name="upcoming"
                                           onClick={this.props.handleTabSelect}>
-                                            Upcoming ({this.state.count}) {/*get data from redux store about count of lots (count field)*/}
+                                            Upcoming ({data.upcoming.count}) {/*get data from redux store about count of lots (count field)*/}
                                         </button>
                                         <button
                                           className="text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2"
                                           name="past"
                                           onClick={this.props.handleTabSelect}>
-                                            Past ({this.state.count}) {/*get data from redux store about count of lots (count field)*/}
+                                            Past ({data.past.count}) {/*get data from redux store about count of lots (count field)*/}
                                         </button>
                                         <button
                                           className="text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2"
                                           name="auctions"
                                           onClick={this.props.handleTabSelect}>
-                                            Auctions ({this.state.count}) {/*get data from redux store about count of lots (count field)*/}
+                                            Auctions ({data.auctions.count}) {/*get data from redux store about count of lots (count field)*/}
                                         </button>
                                         <button
                                           className="text-uppercase py-2 px-lg-5 px-md-2"
                                           name="other"
                                           onClick={this.props.handleTabSelect}>
-                                            Other ({this.state.count}) {/*get data from redux store about count of lots (count field)*/}
+                                            Other ({data.other.count}) {/*get data from redux store about count of lots (count field)*/}
                                         </button>
                                     </div>
 
