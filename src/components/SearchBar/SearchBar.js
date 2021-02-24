@@ -7,7 +7,7 @@ import Loader from 'react-loader-spinner';
 
 import './SearchBar.css';
 import store from "../../store";
-import {getLots, getPastLots,getNews, updateFiltersOnly} from "../../actions"; //  getAuctions, getEvents,
+import {getLots, getPastLots, getNews, updateFiltersOnly, updateSearch} from "../../actions"; //  getAuctions, getEvents,
 
 import SearchFiltersNew from '../SearchFiltersNew/SearchFiltersNew';
 
@@ -22,14 +22,14 @@ class SearchBar extends Component {
             searchFiltersActive: true,
             query: '',
             submited: false,
-            count: 1 // delete this when api return count of lots
+            count: 1, // delete this when api return count of lots,
+            currentTab: 'upcoming',
         };
 
         this.delay = 0;
 
         this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
         this.showSearchFilters = this.showSearchFilters.bind(this);
-
     }
 
     componentDidMount() {
@@ -55,15 +55,15 @@ class SearchBar extends Component {
         const _this = this;
 
         store.subscribe(() => {
-            const {searchQuery,  upcomingLoading, pastLoading, newsLoading } = store.getState();
+            const {searchQuery, upcomingLoading, pastLoading, newsLoading, currentTab } = store.getState();
 
             console.log('LOADING: ', upcomingLoading, pastLoading, newsLoading);
             console.log('LOADING RES: ', (!upcomingLoading && !pastLoading && !newsLoading && _this.state.submited));
 
             if(!upcomingLoading && !pastLoading && !newsLoading && _this.state.submited){
-                this.setState({query: searchQuery, submited: false})
+                this.setState({query: searchQuery, submited: false, currentTab: currentTab})
             }else{
-                this.setState({query: searchQuery})
+                this.setState({query: searchQuery, currentTab: currentTab})
             }
         });
 
@@ -80,6 +80,25 @@ class SearchBar extends Component {
     handleSearchSubmit = (e) => {
         e.preventDefault();
 
+        const { currentTab, query } = this.state;
+        // TODO finish URL params for search !!!
+        // if (window.history.pushState) {
+        //     let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+        //     const params = [];
+        //
+        //     if (currentTab) params.push('tab=' + currentTab);
+        //     if (query) params.push('search=' + query);
+        //
+        //     if (params.length) {
+        //         newUrl += '?' + params.join('&');
+        //     }
+        //
+        //     window.history.pushState({path:newUrl},'',newUrl);
+        // }
+
+        store.dispatch(updateSearch({searchText: query }));
+
+        // TODO remake this method !!!
         this.setState({submited: true}, () => {
             const { query } = this.state;
             const payload = store.getState();
@@ -138,6 +157,7 @@ class SearchBar extends Component {
 
 
     render() {
+        const { currentTab } = this.state;
 
         return (
             <>
@@ -174,25 +194,25 @@ class SearchBar extends Component {
                                     <div className="tabs mx-auto col-12 d-flex justify-content-center">
                                         {/*when click save type of lots and get request to api and save to redux*/}
                                         <button
-                                          className="active text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2"
+                                          className={'text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2' + (currentTab === 'upcoming' ? ' active' : '')}
                                           name="upcoming"
                                           onClick={this.props.handleTabSelect}>
                                             Upcoming ({data.upcoming.count}) {/*get data from redux store about count of lots (count field)*/}
                                         </button>
                                         <button
-                                          className="text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2"
+                                          className={'text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2' + (currentTab === 'past' ? ' active' : '')}
                                           name="past"
                                           onClick={this.props.handleTabSelect}>
                                             Past ({data.past.count}) {/*get data from redux store about count of lots (count field)*/}
                                         </button>
                                         <button
-                                          className="text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2"
+                                          className={'text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2' + (currentTab === 'auctions' ? ' active' : '')}
                                           name="auctions"
                                           onClick={this.props.handleTabSelect}>
                                             Auctions ({data.auctions.count}) {/*get data from redux store about count of lots (count field)*/}
                                         </button>
                                         <button
-                                          className="text-uppercase py-2 px-lg-5 px-md-2"
+                                          className={'text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2' + (currentTab === 'other' ? ' active' : '')}
                                           name="other"
                                           onClick={this.props.handleTabSelect}>
                                             Other ({data.other.count}) {/*get data from redux store about count of lots (count field)*/}

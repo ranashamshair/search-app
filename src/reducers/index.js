@@ -1,6 +1,6 @@
 import {
-    GET_AUCTIONS, GET_CATEGORIES, GET_EVENTS, GET_LOTS, GET_NEWS, GET_PAST_LOTS,
-    UPDATE_FILTERS_ONLY
+    GET_AUCTIONS, GET_CATEGORIES, GET_EVENTS, GET_LOTS, GET_NEWS, GET_PAST_LOTS, UPDATE_FILTERS_NEW,
+    UPDATE_FILTERS_ONLY, UPDATE_SEARCH, UPDATE_SORTING, UPDATE_TAB
 } from "../constants/action-types";
 
 const initialState = {
@@ -46,52 +46,79 @@ const initialState = {
     // changedAuctions: false,
     // changedEvents: false,
     changedArticles: false,
+
+    // FOR NEW VERSION !!!
+    searchText: '',
+    currentTab: 'upcoming',
+    selectedCategories: [],
+    priceMin: '',
+    priceMax: '',
+    sorting: '',
 };
 
 function rootReducer(state = initialState, action) {
-    if (
-        action.type === GET_LOTS ||
-        action.type === GET_PAST_LOTS ||
-        // action.type === GET_AUCTIONS ||
-        // action.type === GET_EVENTS ||
-        action.type === GET_NEWS
-    ) {
-        const obj = Object.assign({}, state, action.payload);
+    switch (action.type) {
+        case GET_LOTS: {
+            const obj = Object.assign({}, state, action.payload);
 
-        if(obj.lots.length){
-            let uniqueLotsObj = obj.lots.reduce( (c, e) => {
-                if (!c[e.itemView.ref]) c[e.itemView.ref] = e;
-                return c;
-            }, {});
-            obj.lots = Object.values(uniqueLotsObj)
+            if(obj.lots.length){
+                let uniqueLotsObj = obj.lots.reduce( (c, e) => {
+                    if (!c[e.itemView.ref]) c[e.itemView.ref] = e;
+                    return c;
+                }, {});
+                obj.lots = Object.values(uniqueLotsObj)
+            }
+
+            return obj;
         }
+        case GET_PAST_LOTS: {
+            const obj = Object.assign({}, state, action.payload);
 
-        if(obj.pastLots.length){
-            let uniquePastLotsObj = obj.pastLots.reduce( (c, e) => {
-                if (!c[e.itemView.ref]) c[e.itemView.ref] = e;
-                return c;
-            }, {});
-            obj.pastLots = Object.values(uniquePastLotsObj)
+            if(obj.pastLots.length){
+                let uniquePastLotsObj = obj.pastLots.reduce( (c, e) => {
+                    if (!c[e.itemView.ref]) c[e.itemView.ref] = e;
+                    return c;
+                }, {});
+                obj.pastLots = Object.values(uniquePastLotsObj)
+            }
+
+            return obj;
         }
+        case GET_NEWS: {
+            const obj = Object.assign({}, state, action.payload);
 
-        if(obj.news.length){
-            let uniqueNewsObj = obj.news.reduce( (c, e) => {
-                if (!c[e.id]) c[e.id] = e;
-                return c;
-            }, {});
-            obj.news = Object.values(uniqueNewsObj)
+            if(obj.news.length){
+                let uniqueNewsObj = obj.news.reduce( (c, e) => {
+                    if (!c[e.id]) c[e.id] = e;
+                    return c;
+                }, {});
+                obj.news = Object.values(uniqueNewsObj)
+            }
+
+            return obj;
         }
-
-        return obj;
+        case GET_CATEGORIES: {
+            return Object.assign({}, state, { categories: action.payload.categories });
+        }
+        case UPDATE_FILTERS_ONLY: {
+            return Object.assign({}, state, action.payload);
+        }
+        case UPDATE_TAB: {
+            return Object.assign({}, state, { currentTab: action.payload.currentTab });
+        }
+        case UPDATE_FILTERS_NEW: {
+            return Object.assign({}, state, action.payload);
+        }
+        case UPDATE_SORTING: {
+            return Object.assign({}, state, { sorting: action.payload.sorting });
+        }
+        case UPDATE_SEARCH: {
+            return Object.assign({}, state, { searchText: action.payload.searchText });
+        }
+        default: {
+            return state;
+        }
     }
-    if (action.type === GET_CATEGORIES) {
-        return Object.assign({}, state, { categories: action.payload.categories });
-    }
-    if (action.type === UPDATE_FILTERS_ONLY) {
-        return Object.assign({}, state, action.payload);
-    }
-
-    return state;
 }
 
 export default rootReducer;

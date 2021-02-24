@@ -5,3 +5,8 @@ export const GET_AUCTIONS = "GET_AUCTIONS";
 export const GET_EVENTS = "GET_EVENTS";
 export const GET_NEWS = "GET_NEWS";
 export const UPDATE_FILTERS_ONLY = "UPDATE_FILTERS_ONLY";
+
+export const UPDATE_TAB = "UPDATE_TAB";
+export const UPDATE_FILTERS_NEW = "UPDATE_FILTERS_NEW";
+export const UPDATE_SORTING = "UPDATE_SORTING";
+export const UPDATE_SEARCH = "UPDATE_SORTING";

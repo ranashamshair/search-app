@@ -1,6 +1,6 @@
 import {
-    GET_AUCTIONS, GET_CATEGORIES, GET_EVENTS, GET_LOTS, GET_NEWS, GET_PAST_LOTS,
-    UPDATE_FILTERS_ONLY
+    GET_AUCTIONS, GET_CATEGORIES, GET_EVENTS, GET_LOTS, GET_NEWS, GET_PAST_LOTS, UPDATE_FILTERS_NEW,
+    UPDATE_FILTERS_ONLY, UPDATE_SEARCH, UPDATE_SORTING, UPDATE_TAB
 } from "../constants/action-types";
 import axios from "axios";
 
@@ -9,6 +9,12 @@ import axios from "axios";
 const baseUrl = '/wp-json';
 
 const pageSize = 20;
+
+const requestOptions = {
+    headers: {
+        'id': 'amevnwEgbRd9mx5yBu'
+    }
+};
 
 function procLotFilters(route, params = null, upcoming = false) {
     if(params){
@@ -133,86 +139,68 @@ export function updateFiltersOnly(payload = null) {
 }
 
 export function getLots(payload = null) {
-    return function (dispatch) {
-        var params = payload;
+    return async (dispatch) => {
+        let route = procLotFilters(baseUrl + '/searchlots/inv/upcoming', payload, true);
 
-        let route = procLotFilters(baseUrl + '/searchlots/inv/upcoming', params, true);
+        try {
+            const response = await axios.get(route, requestOptions);
 
-        return axios.get(route, {
-            headers: {
-                'id': 'amevnwEgbRd9mx5yBu'
-            }
-        })
-            .then( response => {
-                dispatch({
-                    type: GET_LOTS,
-                    payload: procRes(params, response, 'lots', 'upcomingLoading', 'page', 'changedLots')
-                });
-            } )
-            .catch(error => {
-                console.log(error);
-
-                dispatch({
-                    type: GET_LOTS,
-                    payload: procRes(params, error.response.data, 'lots', 'upcomingLoading', 'page', 'changedLots', 'lotsMessage', false)
-                });
+            return dispatch({
+                type: GET_LOTS,
+                payload: procRes(payload, response, 'lots', 'upcomingLoading', 'page', 'changedLots')
             });
+        } catch (error) {
+            console.log(error);
+
+            return dispatch({
+                type: GET_LOTS,
+                payload: procRes(payload, error.response.data, 'lots', 'upcomingLoading', 'page', 'changedLots', 'lotsMessage', false)
+            });
+        }
     }
 }
 
 export function getPastLots(payload = null) {
-    return function (dispatch) {
-        var params = payload;
+    return async (dispatch) => {
+        let route = procLotFilters(baseUrl + '/searchlots/inv/past', payload);
 
-        let route = procLotFilters(baseUrl + '/searchlots/inv/past', params);
+        try {
+            const response = await axios.get(route, requestOptions);
 
-        return axios.get(route, {
-            headers: {
-                'id': 'amevnwEgbRd9mx5yBu'
-            }
-        })
-            .then( response => {
-                dispatch({
-                    type: GET_PAST_LOTS,
-                    payload: procRes(params, response, 'pastLots', 'pastLoading', 'pagePast', 'changedPastLots')
-                });
-            } )
-            .catch(error => {
-                console.log(error);
-
-                dispatch({
-                    type: GET_PAST_LOTS,
-                    payload: procRes(params, error.response.data, 'pastLots', 'pastLoading', 'pagePast', 'changedPastLots', 'pastLotsMessage', false)
-                });
+            return dispatch({
+                type: GET_PAST_LOTS,
+                payload: procRes(payload, response, 'pastLots', 'pastLoading', 'pagePast', 'changedPastLots')
             });
+        } catch (error) {
+            console.log(error);
+
+            return dispatch({
+                type: GET_PAST_LOTS,
+                payload: procRes(payload, error.response.data, 'pastLots', 'pastLoading', 'pagePast', 'changedPastLots', 'pastLotsMessage', false)
+            });
+        }
     }
 }
 
 export function getAuctions(payload = null) {
-    return function(dispatch){
-        var params = payload;
+    return async (dispatch) => {
+        let route = procSearchFilters(baseUrl + '/searchlots/inv/search', payload, 'auctions');
 
-        let route = procSearchFilters(baseUrl + '/searchlots/inv/search', params, 'auctions');
+        try {
+            const response = await axios.get(route, requestOptions);
 
-        return axios.get(route, {
-            headers: {
-                'id': 'amevnwEgbRd9mx5yBu'
-            }
-        })
-            .then( response => {
-                dispatch({
-                    type: GET_AUCTIONS,
-                    payload: procRes(params, response, 'auctions', 'auctionsLoading', 'pageAuctions', 'changedAuctions')
-                });
-            } )
-            .catch(error => {
-                console.log(error);
-
-                dispatch({
-                    type: GET_AUCTIONS,
-                    payload: procRes(params, error.response.data, 'auctions', 'auctionsLoading', 'pageAuctions', 'changedAuctions', 'auctionsMessage', false)
-                });
+            return dispatch({
+                type: GET_AUCTIONS,
+                payload: procRes(payload, response, 'auctions', 'auctionsLoading', 'pageAuctions', 'changedAuctions')
             });
+        } catch (error) {
+            console.log(error);
+
+            return dispatch({
+                type: GET_AUCTIONS,
+                payload: procRes(payload, error.response.data, 'auctions', 'auctionsLoading', 'pageAuctions', 'changedAuctions', 'auctionsMessage', false)
+            });
+        }
     }
 }
 
@@ -222,11 +210,7 @@ export function getEvents(payload = null) {
 
         let route = procSearchFilters(baseUrl + '/searchlots/inv/search', params, 'events');
 
-        return axios.get(route, {
-            headers: {
-                'id': 'amevnwEgbRd9mx5yBu'
-            }
-        })
+        return axios.get(route, requestOptions)
             .then( response => {
                 dispatch({
                     type: GET_EVENTS,
@@ -245,30 +229,24 @@ export function getEvents(payload = null) {
 }
 
 export function getNews(payload = null) {
-    return function(dispatch){
-        var params = payload;
+    return async (dispatch) => {
+        let route = procSearchFilters(baseUrl + '/searchlots/inv/search', payload, 'news');
 
-        let route = procSearchFilters(baseUrl + '/searchlots/inv/search', params, 'news');
+        try {
+            const response = await axios.get(route, requestOptions);
 
-        return axios.get(route, {
-            headers: {
-                'id': 'amevnwEgbRd9mx5yBu'
-            }
-        })
-            .then( response => {
-                dispatch({
-                    type: GET_NEWS,
-                    payload: procRes(params, response, 'news', 'newsLoading', 'pageNews', 'changedArticles', null, true, true)
-                });
-            } )
-            .catch(error => {
-                console.log('NEWS|ARTICLES error: ', error);
-
-                dispatch({
-                    type: GET_NEWS,
-                    payload: procRes(params, error.response.data, 'news', 'newsLoading', 'pageNews', 'changedArticles', 'newsMessage', false)
-                });
+            return dispatch({
+                type: GET_NEWS,
+                payload: procRes(payload, response, 'news', 'newsLoading', 'pageNews', 'changedArticles', null, true, true)
             });
+        } catch (error) {
+            console.log('NEWS|ARTICLES error: ', error);
+
+            return dispatch({
+                type: GET_NEWS,
+                payload: procRes(payload, error.response.data, 'news', 'newsLoading', 'pageNews', 'changedArticles', 'newsMessage', false)
+            });
+        }
     }
 }
 
@@ -276,21 +254,38 @@ export function getNews(payload = null) {
 
 
 export function getCategories(payload = null) {
-    return function (dispatch) {
-        return axios.get( baseUrl + '/searchlots/inv/categories', {
-            headers: {
-                'id': 'amevnwEgbRd9mx5yBu'
-            }
-        })
-            .then( response => {
-                dispatch({ type: GET_CATEGORIES, payload: {
-                        categories: response.data
-                        // isLoading: false
-                    }
-                });
-            } )
-            .catch(error => {
-                console.log(error);
+    return async (dispatch) => {
+        try {
+            const response = await axios.get( baseUrl + '/searchlots/inv/categories', requestOptions);
+
+            return dispatch({
+                type: GET_CATEGORIES,
+                payload: {
+                    categories: response.data
+                    // isLoading: false
+                }
             });
+        } catch (error) {
+            console.log(error);
+        }
     }
+}
+
+
+
+// TODO save URL params changes in store !!!
+export function updateTab(payload = null) {
+    return (dispatch) => (dispatch({type: UPDATE_TAB, payload: payload}));
+}
+
+export function updateFiltersNew(payload = null) {
+    return (dispatch) => (dispatch({type: UPDATE_FILTERS_NEW, payload: payload}));
+}
+
+export function updateSorting(payload = null) {
+    return (dispatch) => (dispatch({type: UPDATE_SORTING, payload: payload}));
+}
+
+export function updateSearch(payload = null) {
+    return (dispatch) => (dispatch({type: UPDATE_SEARCH, payload: payload}));
 }

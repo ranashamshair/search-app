@@ -5,7 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowUp, faArrowDown, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 import {connect} from "react-redux";
-import {getAuctions, getCategories, getEvents, getLots, getNews, getPastLots, updateFiltersOnly} from "../../actions";
+import {
+    getAuctions, getCategories, getEvents, getLots, getNews, getPastLots, updateFiltersNew,
+    updateFiltersOnly, updateSearch, updateSorting, updateTab
+} from "../../actions";
 import store from "../../store";
 import Loader from "react-loader-spinner";
 
@@ -48,7 +51,12 @@ class SearchFilters extends Component {
         upcoming: false,
         category: false,
         other: false
-      }
+      },
+
+      // NEW DATA
+      currentTab: 'upcoming',
+      sorting: '',
+      search: '',
 
     };
 
@@ -63,6 +71,80 @@ class SearchFilters extends Component {
     this.handleOpenClose = this.handleOpenClose.bind(this);
     this.handleSetMinMax = this.handleSetMinMax.bind(this);
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
+    this.handleSubmitFilters = this.handleSubmitFilters.bind(this);
+    this.handleSortingSelect = this.handleSortingSelect.bind(this);
+  }
+
+  parseUrl() {
+    const url = window.location.search;
+    let query = url.substr(1);
+    let result = {};
+    query.split("&").forEach(function(part) {
+      let item = part.split("=");
+      result[item[0]] = decodeURIComponent(item[1]);
+    });
+    return result;
+  }
+
+  getFiltersFromUrlParams() {
+      // TODO remake for redux when API will be updated !!!
+    const { tab = 'upcoming', search = '', categories = [], min_price = '', max_price = '', sort = '' } = this.parseUrl();
+
+    if (this.state.currentTab !== tab) {
+        store.dispatch(updateTab({currentTab: tab}));
+    }
+
+    store.dispatch(updateFiltersNew({
+        selectedCategories: categories.length ? categories.split(',') : [],
+        priceMin: min_price,
+        priceMax: max_price,
+    }));
+
+    if (this.state.search !== search) {
+        store.dispatch(updateSearch({searchText: search}));
+    }
+    if (this.state.sorting !== sort) {
+        store.dispatch(updateSorting({sorting: sort}));
+    }
+  }
+
+  updateUrlParams() {
+    const { search = '', currentTab, setCategory = [], pricemin = null, pricemax = null, sorting = null } = this.state;
+
+    const params = [];
+    // const
+
+    if (window.history.pushState) {
+      let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+
+      console.log('newUrl befor params :  ', newUrl);
+
+      if (currentTab) params.push('tab=' + currentTab);
+      if (search) params.push('search=' + search);
+
+      if (setCategory.length) {
+        params.push('categories=' + setCategory.join(','));
+      }
+
+      if (pricemin) params.push('min_price=' + pricemin);
+      if (pricemax) params.push('max_price=' + pricemax);
+      if (sorting) params.push('sort=' + sorting);
+
+      if (params.length) {
+        newUrl += '?' + params.join('&');
+      }
+
+      window.history.pushState({path:newUrl},'',newUrl);
+
+      store.dispatch(updateFiltersNew({
+          selectedCategories: setCategory,
+          priceMin: pricemin || '',
+          priceMax: pricemax || '',
+      }));
+      if (sorting) {
+          store.dispatch(updateSorting({sorting: sorting}));
+      }
+    }
   }
 
   componentDidMount() {
@@ -73,11 +155,29 @@ class SearchFilters extends Component {
     const _this = this;
 
     store.subscribe(() => {
-      const { upcomingLoading, pastLoading, newsLoading } = store.getState();
+      const { upcomingLoading, pastLoading, newsLoading, currentTab, selectedCategories, priceMin, priceMax, sorting } = store.getState();
+
+      console.log('store sorting: ', sorting);
+
+      const stateChanges = {
+        currentTab: currentTab,
+        categoriesSaved: selectedCategories,
+        setCategory: selectedCategories,
+        pricemin: priceMin,
+        pricemax: priceMax,
+        sorting: sorting,
+      };
 
       if(!upcomingLoading && !pastLoading && !newsLoading && _this.state.submited){
-        this.setState({submited: false});
+        stateChanges.submited = false;
       }
+
+      this.setState(stateChanges);
+    });
+
+    this.getFiltersFromUrlParams();
+    window.addEventListener('popstate', () => {
+        this.getFiltersFromUrlParams();
     });
 
     if ( window.innerWidth < 576 ) {
@@ -85,6 +185,12 @@ class SearchFilters extends Component {
     } else {
       this.setState({isMobile: false});
     }
+  }
+
+  componentWillUnmount() {
+      window.removeEventListener('popstate', () => {
+          this.getFiltersFromUrlParams();
+      });
   }
 
   handleChangeType(e) {
@@ -275,15 +381,38 @@ class SearchFilters extends Component {
   }
 
   handleCheckboxChange ({target}) {
+    // TODO remake for redux when API will be updated !!!
     const {setCategory} = this.state;
-    this.setState({setCategory: [...setCategory, target.value]})
+
+    const newCategories = [...setCategory];
+    if (target.checked) {
+      newCategories.push(target.value);
+    } else {
+      const idx = setCategory.indexOf(target.value);
+
+      if (idx !== -1) {
+        newCategories.splice(setCategory.indexOf(target.value), 1)
+      }
+    }
+
+    this.setState({setCategory: newCategories, categoriesSaved: newCategories})
+  }
+
+  handleSubmitFilters () {
+    this.updateUrlParams();
+  }
+
+  handleSortingSelect (e) {
+    this.setState({sorting: e.target.value}, () => this.updateUrlParams());
   }
 
   render() {
-    const { submited, upcoming, upcomingSaved, categoriesSaved, priceminSaved, pricemaxSaved, types, pricemin, pricemax, filterCounter, dropdowns, isOpen, isMobile } = this.state;
+    const { submited, upcoming, upcomingSaved, categoriesSaved, priceminSaved, pricemaxSaved, types, pricemin, pricemax, sorting, filterCounter, dropdowns, isOpen, isMobile } = this.state;
     const filtersPosition = [
     "Fine Art", "American Art", "Contemporary Art", "19th Centry European Pain", "Photographs", "Diamonds", "Fine Art1", "American Art1", "Contemporary Art1"
     ];
+
+    console.log('sorting: ', sorting);
 
     return (
       <div className="pt-4 search-filter">
@@ -291,7 +420,7 @@ class SearchFilters extends Component {
           <button className="py-2 px-4 text-uppercase font-weight-bold" onClick={this.handleOpenClose}>Filter <FontAwesomeIcon className="ml-3" icon={isOpen ? faArrowUp : faArrowDown}/></button>
           {
             !isMobile ?
-            (<select>
+            (<select onChange={this.handleSortingSelect} value={sorting}>
               <option value="">Sort by</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -314,7 +443,8 @@ class SearchFilters extends Component {
                     <input
                       type="checkbox"
                       id={item.replaceAll(' ','-')}
-                      defaultChecked={this.categorySelected(item.replaceAll(' ','-'))}
+                      // defaultChecked={this.categorySelected(item.replaceAll(' ','-'))}
+                      checked={this.categorySelected(item.replaceAll(' ','-'))}
                       value={item.replaceAll(' ','-')}
                       onChange={this.handleCheckboxChange}
                     />
@@ -330,7 +460,7 @@ class SearchFilters extends Component {
               }
             </div>
             <div className="col-12 d-flex justify-content-center p-3">
-              <button type="submit" className="py-2 px-4 text-uppercase font-weight-bold" >Apply filters <FontAwesomeIcon className="ml-3" icon={faArrowRight}/></button>
+              <button type="submit" className="py-2 px-4 text-uppercase font-weight-bold" onClick={this.handleSubmitFilters}>Apply filters <FontAwesomeIcon className="ml-3" icon={faArrowRight}/></button>
             </div>
           </div>
         }

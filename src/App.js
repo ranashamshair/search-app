@@ -10,8 +10,9 @@ import './App.css';
 
 import { Provider } from 'react-redux';
 import store from './store/index';
-import {getLots, getCategories, getPastLots, getAuctions, getEvents, getNews} from './actions/index';
+import {getLots, getCategories, getPastLots, getAuctions, getEvents, getNews, updateTab} from './actions/index';
 import PastLotContainer from "./components/PastLotContainer/PastLotContainer";
+import {updateFiltersNew} from "./actions";
 // import EventContainer from "./components/EventContainer/EventContainer"; work
 
 window.store = store;
@@ -21,6 +22,7 @@ window.getCategories = getCategories;
 window.getAuctions = getAuctions;
 window.getEvents = getEvents;
 window.getNews = getNews;
+window.updateTab = updateTab;
 
 
 class App extends Component{
@@ -41,22 +43,44 @@ class App extends Component{
         this.handleTabSelect = this.handleTabSelect.bind(this);
     }
 
+    updateUrlParams() {
+        const { openTabs = 'upcoming' } = this.state;
+        console.log('NEW APP STATE :  ', this.state);
+
+        if (window.history.pushState) {
+            let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            const params = [];
+            console.log('newUrl befor params :  ', newUrl);
+
+            if (openTabs) params.push('tab=' + openTabs);
+
+            if (params.length) {
+                newUrl += '?' + params.join('&');
+            }
+            window.history.pushState({path:newUrl},'',newUrl);
+        }
+
+        store.dispatch(updateTab({currentTab: openTabs}));
+        store.dispatch(updateFiltersNew({
+            selectedCategories: [],
+            priceMin: '',
+            priceMax: '',
+        }));
+    }
+
     componentDidMount() {
         store.subscribe(() => {
-            const {staticFilters, lots, pastLots, news, submited} = store.getState();
+            const {staticFilters, lots, pastLots, news, submited, currentTab} = store.getState();
 
             // console.log('notFound: ', lots, pastLots, news);
+            console.log('currentTab: ', currentTab);
 
-            this.setState({types: staticFilters.contentType, upcomingOnly: staticFilters.upcomingOnly, noResults: (!submited && !lots.length && !pastLots.length && !news.length)})
+            this.setState({types: staticFilters.contentType, upcomingOnly: staticFilters.upcomingOnly, noResults: (!submited && !lots.length && !pastLots.length && !news.length), openTabs: currentTab})
         });
     }
 
     handleTabSelect (e) {
-        const buttons = document.querySelectorAll('.tabs button');
-        buttons.map = [].map;
-        buttons.map((item) => item.classList.contains('active') ? item.classList.remove('active') : '')
-        e.target.classList.add('active');
-        this.setState({openTabs: e.target.name});
+        this.setState({openTabs: e.target.name}, () => this.updateUrlParams());
         console.log(e.target.name)
     }
 
