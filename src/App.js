@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 import LotContainer from './components/LotContainer/LotContainer';
-import AuctionsContainer from './components/AuctionsContainer/AuctionsContainer';
+// import AuctionsContainer from './components/AuctionsContainer/AuctionsContainer'; work
 import ArticleContainer from './components/ArticleContainer/ArticleContainer';
 import SearchBox from './components/SearchBox/SearchBox';
 
@@ -12,7 +12,7 @@ import { Provider } from 'react-redux';
 import store from './store/index';
 import {getLots, getCategories, getPastLots, getAuctions, getEvents, getNews} from './actions/index';
 import PastLotContainer from "./components/PastLotContainer/PastLotContainer";
-import EventContainer from "./components/EventContainer/EventContainer";
+// import EventContainer from "./components/EventContainer/EventContainer"; work
 
 window.store = store;
 window.getLots = getLots;
@@ -35,8 +35,10 @@ class App extends Component{
                 // events: false,
                 stories: false
             },
-            noResults: false
+            noResults: false,
+            openTabs: "upcoming"
         }
+        this.handleTabSelect = this.handleTabSelect.bind(this);
     }
 
     componentDidMount() {
@@ -49,6 +51,15 @@ class App extends Component{
         });
     }
 
+    handleTabSelect (e) {
+        const buttons = document.querySelectorAll('.tabs button');
+        buttons.map = [].map;
+        buttons.map((item) => item.classList.contains('active') ? item.classList.remove('active') : '')
+        e.target.classList.add('active');
+        this.setState({openTabs: e.target.name});
+        console.log(e.target.name)
+    }
+
     render() {
         const { upcomingOnly, types, noResults } = this.state;
 
@@ -57,7 +68,7 @@ class App extends Component{
         return (
             <div className="App">
                 <Provider store={store}>
-                    <SearchBox />
+                    <SearchBox handleTabSelect={this.handleTabSelect} />
 
                     <main className="main-content">
                         <section className="section">
@@ -70,12 +81,12 @@ class App extends Component{
                                 {
                                     (allFiltersUnchecked || types.lots) ? (
                                         <>
-                                            <LotContainer />
-                                            {
-                                                (!upcomingOnly) ? (
-                                                    <PastLotContainer />
-                                                ) : ''
-                                            }
+                                            <LotContainer tab={this.state.openTabs} />
+                                            {/*{*/}
+                                            {/*    (!upcomingOnly) ? (*/}
+                                            {/*        <PastLotContainer />*/}
+                                            {/*    ) : ''*/}
+                                            {/*}*/}
                                         </>
                                     ) : ''
                                 }
