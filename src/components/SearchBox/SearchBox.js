@@ -4,17 +4,14 @@ import SearchBar from '../SearchBar/SearchBar';
 
 import './SearchBox.css';
 
-function SearchBox() {
-    
+function SearchBox({handleTabSelect}) {
+
     return (
         <div>
-            
-            <SearchBar />
-               
-
+            <SearchBar handleTabSelect={handleTabSelect} />
         </div>
     );
-    
+
 }
 
 export default SearchBox;

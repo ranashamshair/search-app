@@ -23736,7 +23736,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_libraries__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14);
 /* harmony import */ var hookson_connect_master_src_js_app__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(20);
 /////////////////////////////////////////////////////////
-// Use the file bootstrap-pieces to exclude js plugins  
+// Use the file bootstrap-pieces to exclude js plugins
 // that are not required (_js/src/lib/bootstrap-pieces.js)
 //////////////////////////////////////////////////////////
 
@@ -24172,15 +24172,15 @@ function customInvalidFeedback() {
   });
 }
 
-hksn_searchBtn.addEventListener('click', function () {
-  if (!hksn_isLanguageBoxOpen) {
-    hksn_languageBox.classList.remove('h-show');
-  }
-
-  hksn_isSearchOpen != hksn_isSearchOpen;
-  hksn_searchBox.classList.toggle('h-show');
-  hksn_searchBtn.classList.toggle('open');
-});
+// hksn_searchBtn.addEventListener('click', function () { work
+//   if (!hksn_isLanguageBoxOpen) {
+//     hksn_languageBox.classList.remove('h-show');
+//   }
+//
+//   hksn_isSearchOpen != hksn_isSearchOpen;
+//   hksn_searchBox.classList.toggle('h-show');
+//   hksn_searchBtn.classList.toggle('open');
+// });
 
 var hksn_chooseLanguage = function hksn_chooseLanguage(e) {
   hksn_languages.addEventListener('click', function (e) {
@@ -24199,9 +24199,9 @@ $(document).click(function () {
 }); // const siteURL = window.location.origin;
 // const termsURL = `${siteURL}/terms-conditions`;
 // const privacyURL = `${siteURL}/privacy-policy`;
-// // Cookie Consent 
+// // Cookie Consent
 // var cookieStatus = 'en-us';
-// if (cookieStatus) { 
+// if (cookieStatus) {
 //   var langCookieName = $.cookie($lang_cookie_name);
 //   langCookieName = (langCookieName !== undefined ? langCookieName : 'en-us' );
 //   switch(langCookieName) {
@@ -24291,7 +24291,7 @@ if (hksn_auctionInfoToggle.exists()) {
 
     hksn_auctionDetails.toggleClass('is-open');
   });
-} // Auction Slider 
+} // Auction Slider
 
 
 var hksn_auctionSlider = $('.hksn-auction-slider');
@@ -24636,7 +24636,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_bootstrap_pieces__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
 /* harmony import */ var _lib_libraries__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(24);
 /////////////////////////////////////////////////////////
-// Use the file bootstrap-pieces to exclude js plugins 
+// Use the file bootstrap-pieces to exclude js plugins
 // that are not required (_js/src/lib/bootstrap-pieces.js)
 //////////////////////////////////////////////////////////
 //
@@ -24716,7 +24716,7 @@ __webpack_require__.r(__webpack_exports__);
 
  // import "bootstrap/js/dist/modal"
 // import "bootstrap/js/dist/popover";
-// import "bootstrap/js/dist/scrollspy"; 
+// import "bootstrap/js/dist/scrollspy";
 
  // import "bootstrap/js/dist/toast";
 // import "bootstrap/js/dist/tooltip";

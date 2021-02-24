@@ -13612,7 +13612,7 @@ img.ui.bordered.image {
 
 .ui.input > input {
   margin: 0em;
-  max-width: 100%;
+  max-width: 90%;
   -webkit-box-flex: 1;
   -ms-flex: 1 0 auto;
   flex: 1 0 auto;
@@ -13623,9 +13623,10 @@ img.ui.bordered.image {
   font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
   padding: 0.67857143em 1em;
   background: #FFFFFF;
-  border: 1px solid rgba(34, 36, 38, 0.15);
+  border: 0 solid rgba(34, 36, 38, 0.15); /* 1px work */
   color: rgba(0, 0, 0, 0.87);
-  border-radius: 0.28571429rem;
+  border-radius: 0;
+  /*border-radius: 0.28571429rem;*/
   -webkit-transition: border-color 0.1s ease, -webkit-box-shadow 0.1s ease;
   transition: border-color 0.1s ease, -webkit-box-shadow 0.1s ease;
   transition: box-shadow 0.1s ease, border-color 0.1s ease;
@@ -30716,12 +30717,14 @@ a.ui.card:hover,
   height: 17px;
   content: '';
   background: #FFFFFF;
-  border-radius: 0.21428571rem;
+  border-radius: 0;
+  /*border-radius: 0.21428571rem;*/
   -webkit-transition: border 0.1s ease, opacity 0.1s ease, -webkit-transform 0.1s ease, -webkit-box-shadow 0.1s ease;
   transition: border 0.1s ease, opacity 0.1s ease, -webkit-transform 0.1s ease, -webkit-box-shadow 0.1s ease;
   transition: border 0.1s ease, opacity 0.1s ease, transform 0.1s ease, box-shadow 0.1s ease;
   transition: border 0.1s ease, opacity 0.1s ease, transform 0.1s ease, box-shadow 0.1s ease, -webkit-transform 0.1s ease, -webkit-box-shadow 0.1s ease;
-  border: 1px solid #D4D4D5;
+  border: 2px solid #000000;
+  /*border: 1px solid #D4D4D5;*/
 }
 
 /*--------------
@@ -30756,6 +30759,7 @@ a.ui.card:hover,
   color: rgba(0, 0, 0, 0.87);
   -webkit-transition: color 0.1s ease;
   transition: color 0.1s ease;
+  font-weight: 700;
 }
 
 /* Outside */

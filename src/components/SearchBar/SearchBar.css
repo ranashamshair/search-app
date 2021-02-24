@@ -1,7 +1,7 @@
 .h-site-search--search {
-    padding: 2.875rem 2.5rem;
+    /*padding: 2.875rem 2.5rem;*/
     transition: 0.7s all cubic-bezier(.73,.05,.69,.94);
-    background-color: white;
+    /*background-color: white;*/
     z-index: 1000;
     width: 100%;
 }
@@ -14,13 +14,13 @@
     margin-left: 0;
 }
 
-.h-site-search--form button[type="submit"] {
-    position: absolute;
-    right: 7.5%;
-    border: 0;
-    -webkit-appearance: none;
-    background: transparent;
-}
+/*.h-site-search--form button[type="submit"] {  work*/
+/*    position: absolute;*/
+/*    right: 7.5%;*/
+/*    border: 0;*/
+/*    -webkit-appearance: none;*/
+/*    background: transparent;*/
+/*}*/
 
 .h-site-search--search-empty {
     padding: 8rem 2.5rem 12rem;
@@ -50,6 +50,33 @@
 
 .h-header.w-100.has-no-hero{
     border-bottom: unset;
+}
+
+.tabs {
+    border-bottom: 2px solid black;
+}
+
+button {
+    font-size: 16px;
+    line-height: 20px;
+    color: #000000;
+    background-color: #FFFFFF;
+    outline: none;
+    border: none;
+}
+
+@media screen and (max-width: 768px) {
+    button {
+        font-size: 14px;
+    }
+    .h-site-search--search {
+        padding: 2rem 0;
+    }
+}
+
+button.active {
+    color: #FFFFFF;
+    background-color: #000000;
 }
 
 @media (min-width: 992px){

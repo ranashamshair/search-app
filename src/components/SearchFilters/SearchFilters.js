@@ -11,7 +11,7 @@ import Loader from "react-loader-spinner";
 
 
 class SearchFilters extends Component {
-    
+
     constructor(props) {
         super(props);
 
@@ -199,8 +199,6 @@ class SearchFilters extends Component {
         }, () => this.updateResults(true))
     }
 
-
-
     updateResults(resetSearch = false) {
         this.setState({submited: true}, () => {
             const { upcomingSaved, categoriesSaved, typesSaved, priceminSaved, pricemaxSaved } = this.state;
@@ -253,9 +251,6 @@ class SearchFilters extends Component {
             }
         });
     }
-
-
-
 
     render() {
         const { submited, upcoming, upcomingSaved, categoriesSaved, priceminSaved, pricemaxSaved, types, pricemin, pricemax, filterCounter, dropdowns } = this.state;

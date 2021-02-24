@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import SearchFilters from '../SearchFilters/SearchFilters';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -7,7 +7,9 @@ import Loader from 'react-loader-spinner';
 
 import './SearchBar.css';
 import store from "../../store";
-import {getLots, getPastLots, getAuctions, getEvents, getNews, updateFiltersOnly} from "../../actions";
+import {getLots, getPastLots,getNews, updateFiltersOnly} from "../../actions"; //  getAuctions, getEvents,
+
+import SearchFiltersNew from '../SearchFiltersNew/SearchFiltersNew';
 
 class SearchBar extends Component {
 
@@ -17,7 +19,8 @@ class SearchBar extends Component {
         this.state = {
             searchFiltersActive: true,
             query: '',
-            submited: false
+            submited: false,
+            count: 1 // delete this when api return count of lots
         };
 
         this.delay = 0;
@@ -65,6 +68,12 @@ class SearchBar extends Component {
         // this.showSearchFilters();
     }
 
+    handleButtonClick = (e) => {
+        const buttons = document.querySelectorAll('.tabs button');
+        buttons.map = [].map;
+        buttons.map((item) => item.classList.contains('active') ? item.classList.remove('active') : '')
+        e.target.classList.add('active');
+    }
 
     handleSearchSubmit = (e) => {
         e.preventDefault();
@@ -115,7 +124,7 @@ class SearchBar extends Component {
                 }
             }
         })
-        
+
     };
 
     showSearchFilters = (e) => {
@@ -125,12 +134,8 @@ class SearchBar extends Component {
         menu_btn.classList.add('open');
     };
 
+
     render() {
-        // if(this.state.submited){
-        //     setTimeout(() => {
-        //         this.setState({submited: false})
-        //     }, 2000)
-        // }
 
         return (
             <>
@@ -148,24 +153,52 @@ class SearchBar extends Component {
                     ) : ''
                 }
 
-                <div className="collapse position-fixed h-site-search--search-wrap show" id="searchBox">
+                <div className="collapse h-site-search--search-wrap show" id="searchBox"> {/*position - fixed  searchBox change id to remove action hide filter block*/}
 
-                    <section className="searchBox h-site-search--search">
+                    <section className="searchBox h-site-search--search p-0 pt-4 px-md-4 pt-md-5">
 
                         <form action="/" className="h-site-search--form" onSubmit={this.handleSearchSubmit}>
                             <div className="container">
-                                <div className="row justify-content-center">
+                                <div className="column justify-content-center">
 
-                                    <div className="col-12 col-lg-4 form-group form-item h-form-group h-form-item d-flex flex-column flex-lg-row align-items-lg-center">
+                                    <div className="mx-auto pb-5 col-12 col-md-6 col-lg-6 col-xl-4 form-group form-item h-form-group h-form-item d-flex flex-column flex-lg-row align-items-lg-center">
                                         <div className="ui icon input">
                                             <label htmlFor="search" className="sr-only">Search Auctions/Lots</label>
                                             <input type="text" id="search" className="form-control h-form-control" placeholder="Enter the terms you wish to search for" value={this.state.query} onChange={e => this.setState({query: e.target.value})} />
-                                            <button type="submit" className="position-relative"><FontAwesomeIcon icon={faSearch} size="sm" /></button>
+                                            <button type="submit" className="position-relative w-25"><FontAwesomeIcon icon={faSearch} size="sm" /></button>
                                         </div>
                                     </div>
 
-                                    <SearchFilters searchFiltersActive={this.showSearchFilters} />
+                                    <div className="tabs mx-auto col-12 d-flex justify-content-center">
+                                        {/*when click save type of lots and get request to api and save to redux*/}
+                                        <button
+                                          className="active text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2"
+                                          name="upcoming"
+                                          onClick={this.props.handleTabSelect}>
+                                            Upcoming ({this.state.count}) {/*get data from redux store about count of lots (count field)*/}
+                                        </button>
+                                        <button
+                                          className="text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2"
+                                          name="past"
+                                          onClick={this.props.handleTabSelect}>
+                                            Past ({this.state.count}) {/*get data from redux store about count of lots (count field)*/}
+                                        </button>
+                                        <button
+                                          className="text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2"
+                                          name="auctions"
+                                          onClick={this.props.handleTabSelect}>
+                                            Auctions ({this.state.count}) {/*get data from redux store about count of lots (count field)*/}
+                                        </button>
+                                        <button
+                                          className="text-uppercase py-2 px-lg-5 px-md-2"
+                                          name="other"
+                                          onClick={this.props.handleTabSelect}>
+                                            Other ({this.state.count}) {/*get data from redux store about count of lots (count field)*/}
+                                        </button>
+                                    </div>
 
+                                    {/*<SearchFilters searchFiltersActive={this.showSearchFilters} />*/}
+                                    <SearchFiltersNew />
                                 </div>
                             </div>
                         </form>
@@ -177,9 +210,9 @@ class SearchBar extends Component {
             </>
         );
     }
-    
-    
-    
+
+
+
 }
 
 export default SearchBar;
