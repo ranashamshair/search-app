@@ -56,6 +56,7 @@ const initialState = {
     sorting: '',
 };
 
+// TODO cleanup after API !!!
 function rootReducer(state = initialState, action) {
     switch (action.type) {
         case GET_LOTS: {

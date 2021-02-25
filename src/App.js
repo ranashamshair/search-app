@@ -24,7 +24,6 @@ window.getEvents = getEvents;
 window.getNews = getNews;
 window.updateTab = updateTab;
 
-
 class App extends Component{
     constructor(props) {
         super(props);
@@ -39,18 +38,16 @@ class App extends Component{
             },
             noResults: false,
             openTabs: "upcoming"
-        }
+        };
         this.handleTabSelect = this.handleTabSelect.bind(this);
     }
 
     updateUrlParams() {
         const { openTabs = 'upcoming' } = this.state;
-        console.log('NEW APP STATE :  ', this.state);
 
         if (window.history.pushState) {
             let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
             const params = [];
-            console.log('newUrl befor params :  ', newUrl);
 
             if (openTabs) params.push('tab=' + openTabs);
 
@@ -72,16 +69,14 @@ class App extends Component{
         store.subscribe(() => {
             const {staticFilters, lots, pastLots, news, submited, currentTab} = store.getState();
 
-            // console.log('notFound: ', lots, pastLots, news);
-            console.log('currentTab: ', currentTab);
-
             this.setState({types: staticFilters.contentType, upcomingOnly: staticFilters.upcomingOnly, noResults: (!submited && !lots.length && !pastLots.length && !news.length), openTabs: currentTab})
         });
     }
 
     handleTabSelect (e) {
+        e.preventDefault();
+
         this.setState({openTabs: e.target.name}, () => this.updateUrlParams());
-        console.log(e.target.name)
     }
 
     render() {

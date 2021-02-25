@@ -12,7 +12,7 @@ import {
 import store from "../../store";
 import Loader from "react-loader-spinner";
 
-
+// TODO cleanup after API !!!
 class SearchFilters extends Component {
 
   constructor(props) {
@@ -88,14 +88,14 @@ class SearchFilters extends Component {
 
   getFiltersFromUrlParams() {
       // TODO remake for redux when API will be updated !!!
-    const { tab = 'upcoming', search = '', categories = [], min_price = '', max_price = '', sort = '' } = this.parseUrl();
+    const { tab = 'upcoming', search = '', categories = null, min_price = '', max_price = '', sort = '' } = this.parseUrl();
 
     if (this.state.currentTab !== tab) {
         store.dispatch(updateTab({currentTab: tab}));
     }
 
     store.dispatch(updateFiltersNew({
-        selectedCategories: categories.length ? categories.split(',') : [],
+        selectedCategories: categories ? categories.split(',') : [],
         priceMin: min_price,
         priceMax: max_price,
     }));
@@ -116,8 +116,6 @@ class SearchFilters extends Component {
 
     if (window.history.pushState) {
       let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-
-      console.log('newUrl befor params :  ', newUrl);
 
       if (currentTab) params.push('tab=' + currentTab);
       if (search) params.push('search=' + search);
@@ -155,12 +153,11 @@ class SearchFilters extends Component {
     const _this = this;
 
     store.subscribe(() => {
-      const { upcomingLoading, pastLoading, newsLoading, currentTab, selectedCategories, priceMin, priceMax, sorting } = store.getState();
-
-      console.log('store sorting: ', sorting);
+      const { upcomingLoading, pastLoading, newsLoading, currentTab, selectedCategories, priceMin, priceMax, sorting, searchText } = store.getState();
 
       const stateChanges = {
         currentTab: currentTab,
+        search: searchText,
         categoriesSaved: selectedCategories,
         setCategory: selectedCategories,
         pricemin: priceMin,
@@ -370,7 +367,9 @@ class SearchFilters extends Component {
     });
   }
 
-  handleOpenClose () {
+  handleOpenClose (e) {
+    e.preventDefault();
+
     this.setState({isOpen: !this.state.isOpen});
   }
 
@@ -398,7 +397,9 @@ class SearchFilters extends Component {
     this.setState({setCategory: newCategories, categoriesSaved: newCategories})
   }
 
-  handleSubmitFilters () {
+  handleSubmitFilters (e) {
+    e.preventDefault();
+
     this.updateUrlParams();
   }
 

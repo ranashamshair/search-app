@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import SearchFilters from '../SearchFilters/SearchFilters';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
@@ -7,7 +6,9 @@ import Loader from 'react-loader-spinner';
 
 import './SearchBar.css';
 import store from "../../store";
-import {getLots, getPastLots, getNews, updateFiltersOnly, updateSearch} from "../../actions"; //  getAuctions, getEvents,
+import {
+    getLots, getPastLots, getNews, updateFiltersOnly, updateSearch,
+} from "../../actions"; //  getAuctions, getEvents,
 
 import SearchFiltersNew from '../SearchFiltersNew/SearchFiltersNew';
 
@@ -24,6 +25,10 @@ class SearchBar extends Component {
             submited: false,
             count: 1, // delete this when api return count of lots,
             currentTab: 'upcoming',
+            sorting: '',
+            categories: [],
+            pricemin: '',
+            pricemax: '',
         };
 
         this.delay = 0;
@@ -55,16 +60,22 @@ class SearchBar extends Component {
         const _this = this;
 
         store.subscribe(() => {
-            const {searchQuery, upcomingLoading, pastLoading, newsLoading, currentTab } = store.getState();
+            const {searchText, sorting, upcomingLoading, pastLoading, newsLoading, currentTab, selectedCategories, priceMin, priceMax } = store.getState();
 
-            console.log('LOADING: ', upcomingLoading, pastLoading, newsLoading);
-            console.log('LOADING RES: ', (!upcomingLoading && !pastLoading && !newsLoading && _this.state.submited));
+            const stateChanges = {
+                query: searchText,
+                currentTab: currentTab,
+                sorting: sorting,
+                categories: selectedCategories,
+                pricemin: priceMin,
+                pricemax: priceMax,
+            };
 
             if(!upcomingLoading && !pastLoading && !newsLoading && _this.state.submited){
-                this.setState({query: searchQuery, submited: false, currentTab: currentTab})
-            }else{
-                this.setState({query: searchQuery, currentTab: currentTab})
+                stateChanges.submited = false;
             }
+
+            this.setState(stateChanges);
         });
 
         // this.showSearchFilters();
@@ -73,30 +84,45 @@ class SearchBar extends Component {
     handleButtonClick = (e) => {
         const buttons = document.querySelectorAll('.tabs button');
         buttons.map = [].map;
-        buttons.map((item) => item.classList.contains('active') ? item.classList.remove('active') : '')
+        buttons.map((item) => item.classList.contains('active') ? item.classList.remove('active') : '');
         e.target.classList.add('active');
-    }
+    };
 
     handleSearchSubmit = (e) => {
         e.preventDefault();
 
-        const { currentTab, query } = this.state;
+        const { currentTab, query, sorting, categories, pricemin, pricemax } = this.state;
+
         // TODO finish URL params for search !!!
-        // if (window.history.pushState) {
-        //     let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-        //     const params = [];
-        //
-        //     if (currentTab) params.push('tab=' + currentTab);
-        //     if (query) params.push('search=' + query);
-        //
-        //     if (params.length) {
-        //         newUrl += '?' + params.join('&');
-        //     }
-        //
-        //     window.history.pushState({path:newUrl},'',newUrl);
-        // }
+        if (window.history.pushState) {
+            let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            const params = [];
+
+            if (currentTab) params.push('tab=' + currentTab);
+            if (query) params.push('search=' + query);
+
+            if (categories.length) {
+                params.push('categories=' + categories.join(','));
+            }
+
+            if (pricemin) params.push('min_price=' + pricemin);
+            if (pricemax) params.push('max_price=' + pricemax);
+            if (sorting) params.push('sort=' + sorting);
+
+            if (params.length) {
+                newUrl += '?' + params.join('&');
+            }
+
+            window.history.pushState({path:newUrl},'',newUrl);
+        }
 
         store.dispatch(updateSearch({searchText: query }));
+        // store.dispatch(updateFiltersNew({
+        //     selectedCategories: [],
+        //     priceMin: '',
+        //     priceMax: '',
+        // }));
+        // store.dispatch(updateSorting({sorting: ''}));
 
         // TODO remake this method !!!
         this.setState({submited: true}, () => {
@@ -144,8 +170,7 @@ class SearchBar extends Component {
                     store.dispatch(updateFiltersOnly(payload));
                 }
             }
-        })
-
+        });
     };
 
     showSearchFilters = (e) => {
@@ -179,7 +204,7 @@ class SearchBar extends Component {
 
                     <section className="searchBox h-site-search--search p-0 pt-4 px-md-4 pt-md-5">
 
-                        <form action="/" className="h-site-search--form" onSubmit={this.handleSearchSubmit}>
+                        <form action="/" className="h-site-search--form">
                             <div className="container">
                                 <div className="column justify-content-center">
 
@@ -187,7 +212,7 @@ class SearchBar extends Component {
                                         <div className="ui icon input">
                                             <label htmlFor="search" className="sr-only">Search Auctions/Lots</label>
                                             <input type="text" id="search" className="form-control h-form-control" placeholder="Enter the terms you wish to search for" value={this.state.query} onChange={e => this.setState({query: e.target.value})} />
-                                            <button type="submit" className="position-relative w-25"><FontAwesomeIcon icon={faSearch} size="sm" /></button>
+                                            <button type="submit" className="position-relative w-25" onClick={this.handleSearchSubmit}><FontAwesomeIcon icon={faSearch} size="sm" /></button>
                                         </div>
                                     </div>
 
@@ -219,7 +244,6 @@ class SearchBar extends Component {
                                         </button>
                                     </div>
 
-                                    {/*<SearchFilters searchFiltersActive={this.showSearchFilters} />*/}
                                     <SearchFiltersNew />
                                 </div>
                             </div>
