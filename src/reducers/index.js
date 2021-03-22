@@ -72,7 +72,6 @@ const reduceRefreshedData = (changes = {}, payload) => {
         changes.activeTabCounter = count;
     } else {
         changes.items = [];
-        changes.page = -1;
 
         if (message) changes.message = message;
     }
@@ -167,6 +166,27 @@ function rootReducer(state = initialState, action) {
         }
         case UPDATE_SEARCH: {
             return Object.assign({}, state, { searchText: action.payload.searchText });
+        }
+        case LOAD_MORE: {
+        //     TODO load more (pagination) !!!
+            let changes = {
+                loading: false,
+            };
+
+            const { items = [], count = 0, success = false, pageSize = 20, message = null } = payload;
+
+            if (!success || items.length < pageSize) changes.page = -1;
+
+            if (success) {
+                changes.items = (state.items && (changes.page > 0 || changes.page === -1)) ? [...state.items, ...items] : items;
+                changes.activeTabCounter = count;
+            } else {
+                changes.items = (state.items && state.items > 0) ? state.items: [];
+
+                if (changes.items.length === 0 && message) changes.message = message;
+            }
+
+            return Object.assign({}, state, changes);
         }
         default: {
             return state;
