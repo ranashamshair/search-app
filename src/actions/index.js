@@ -4,15 +4,17 @@ import {
 } from "../constants/action-types";
 import axios from "axios";
 
+
 // const baseUrl = 'https://johnmoran.hksndev2.co.uk/wp-json';
 // const baseUrl = 'https://johnmoranstage.invaluable.com/wp-json';
-const baseUrl = '/wp-json';
+const baseUrl = 'http://hksndev2.co.uk/contemporary/wp-json';
+// const baseUrl = '/wp-json';
 
 const pageSize = 20;
 
 const requestOptions = {
     headers: {
-        'id': 'amevnwEgbRd9mx5yBu'
+        'id': 'V053C9yWvo45XsOxKB'
     }
 };
 
@@ -38,25 +40,10 @@ function procLotFilters(route, params = null, upcoming = false) {
 
                 qs.push('categories=' + categories.join(' '));
             }
-
-            if(filters.contentType) {
-                const ct = filters.contentType;
-                const types = [];
-
-                if(ct.lots) types.push('auctions');
-                if(ct.events) types.push('events');
-                if(ct.stories) types.push('news');
-
-                qs.push('type=' + types.join(','));
-            }
-
         }
-
         qs.push('size=' + pageSize);
 
-        if(upcoming && params.page > 0) qs.push('page=' + params.page);
-        else if(!upcoming && params.pagePast > 0) qs.push('page=' + params.pagePast);
-
+        if(params.page > 0) qs.push('page=' + params.page);
         if(qs.length > 0) route += '?' + qs.join('&');
     }
 
@@ -94,8 +81,9 @@ function procSearchFilters(route, params = null, type = null) {
     return route;
 }
 
-
 function procRes(params = null, response, itemsKey, loaderKey, pageKey, searchKey, msgKey = null, success = true, isSearch = false) {
+    console.log('params: ', params);
+    console.log('response: ', response);
     if(!params) params = {};
 
     if(success){
@@ -126,6 +114,8 @@ function procRes(params = null, response, itemsKey, loaderKey, pageKey, searchKe
 
     params[searchKey] = false;
 
+    console.log('NEW params: ', params);
+
     return params;
 }
 
@@ -147,6 +137,7 @@ export function getLots(payload = null) {
 
             return dispatch({
                 type: GET_LOTS,
+                // payload: procLots(payload, response, 'lots', 'upcomingLoading', 'page', 'changedLots')
                 payload: procRes(payload, response, 'lots', 'upcomingLoading', 'page', 'changedLots')
             });
         } catch (error) {
@@ -154,6 +145,7 @@ export function getLots(payload = null) {
 
             return dispatch({
                 type: GET_LOTS,
+                // payload: procLots(payload, error.response.data, 'lots', 'upcomingLoading', 'page', 'changedLots', 'lotsMessage', false)
                 payload: procRes(payload, error.response.data, 'lots', 'upcomingLoading', 'page', 'changedLots', 'lotsMessage', false)
             });
         }
@@ -184,7 +176,7 @@ export function getPastLots(payload = null) {
 
 export function getAuctions(payload = null) {
     return async (dispatch) => {
-        let route = procSearchFilters(baseUrl + '/searchlots/inv/search', payload, 'auctions');
+        let route = procSearchFilters(baseUrl + '/searchlots/inv/auctions', payload, 'auctions');
 
         try {
             const response = await axios.get(route, requestOptions);
@@ -258,10 +250,11 @@ export function getCategories(payload = null) {
         try {
             const response = await axios.get( baseUrl + '/searchlots/inv/categories', requestOptions);
 
+            // TODO fix categories !!!
             return dispatch({
                 type: GET_CATEGORIES,
                 payload: {
-                    categories: response.data
+                    categories: response.data || []
                     // isLoading: false
                 }
             });
@@ -272,14 +265,159 @@ export function getCategories(payload = null) {
 }
 
 
+const lotFilter = (params) => {
+    const { searchText = null, selectedCategories = [], priceMin = null, priceMax = null, pageSize = 20, page = 1, sorting = '' } = params;
+
+    const qs = [];
+    if (searchText) qs.push('keyword=' + searchText);
+    if (priceMin) qs.push('pricemin=' + priceMin);
+    if (priceMax) qs.push('pricemax=' + priceMax);
+    if(selectedCategories.length > 0) qs.push('categories=' + selectedCategories.join(' '));
+    qs.push('size=' + pageSize);
+    qs.push('page=' + page);
+
+    return qs.length > 0 ? '?' + qs.join('&') : '';
+};
+
+const auctionFilter = (params) => {
+    const { searchText = null, pageSize = 20, page = 1, sorting = '' } = params;
+
+    // TODO finish !!!
+    const qs = [];
+    if (searchText) qs.push('keyword=' + searchText);
+    qs.push('size=' + pageSize);
+    qs.push('page=' + page);
+
+    return qs.length > 0 ? '?' + qs.join('&') : '';
+};
+
+const otherFilter = (params) => {
+    const { searchText = null, pageSize = 20, page = 1, sorting = '' } = params;
+
+    // TODO finish !!!
+    const qs = [];
+    if (searchText) qs.push('keyword=' + searchText);
+    qs.push('size=' + pageSize);
+    qs.push('page=' + page);
+
+    return qs.length > 0 ? '?' + qs.join('&') : '';
+};
+//
+// const success = (params, info, refresh = false) => {
+//     if(info.data.length < pageSize) payload.page = -1;
+//
+//     if(refresh){
+//         params.items = info.data;
+//     }else{
+//         params.items = (params.items && (params.page > 0 || params.page === -1)) ? [...params.items, ...info.data] : info.data;
+//     }
+//     params.activeTabCounter = info.count;
+//
+//     return params;
+// };
+
+// const error = (params, errInfo, refresh = false) => {
+//     console.log(error);
+//
+//     params.items = (params.items && params.items > 0) ? params.items: [];
+//     params.page = -1;
+//
+//     if(params.items.length === 0 && errInfo.message) params.message = errInfo.message;
+//
+//     return params;
+// };
+
+// TODO new versions + new functions !!!
+async function getLotsNew(payload = null, refresh = false) {
+    let route = baseUrl + '/searchlots/inv/upcoming' + lotFilter(payload);
+    const params = payload ? { ...payload } : {};
+
+    try {
+        const response = await axios.get(route, requestOptions);
+
+        console.log('response: ', response);
+
+        params.items = response.data.data;
+        params.count = response.data.count;
+        params.success = true;
+    } catch (error) {
+        console.log(error);
+        params.message = error.response.data.message;
+    }
+
+    return payload;
+}
+
+async function getAuctionsNew(payload = null, refresh = false) {
+    let route = baseUrl + '/searchlots/inv/auctions' + auctionFilter(payload);
+
+    const params = payload ? { ...payload } : {};
+
+    try {
+        const response = await axios.get(route, requestOptions);
+
+        params.items = response.data.data;
+        params.count = response.data.count;
+        params.success = true;
+    } catch (error) {
+        console.log(error);
+        params.message = error.response.data.message;
+    }
+
+    return payload;
+}
+
+async function getOtherNew(payload = null, refresh = false) {
+    let route = baseUrl + '/searchlots/inv/search' + otherFilter(payload);
+
+    const params = payload ? { ...payload } : {};
+
+    try {
+        const response = await axios.get(route, requestOptions);
+
+        params.items = response.data.data;
+        params.count = response.data.count;
+        params.success = true;
+    } catch (error) {
+        console.log(error);
+        params.message = error.response.data.message;
+    }
+
+    return payload;
+}
+
 
 // TODO save URL params changes in store !!!
 export function updateTab(payload = null) {
-    return (dispatch) => (dispatch({type: UPDATE_TAB, payload: payload}));
+    return async (dispatch) => {
+        let newParams = null;
+
+        switch (payload.currentTab) {
+            case 'upcoming': newParams = await getLotsNew(payload, true); break;
+            case 'past': newParams = await getLotsNew(payload, true); break;
+            case 'auctions': newParams = await getAuctionsNew(payload, true); break;
+            case 'other': newParams = await getOtherNew(payload, true); break;
+        }
+
+        console.log('newParams: ', newParams);
+
+        return dispatch({type: UPDATE_TAB, payload: newParams});
+    }
 }
 
-export function updateFiltersNew(payload = null) {
-    return (dispatch) => (dispatch({type: UPDATE_FILTERS_NEW, payload: payload}));
+export function updateFiltersNew(payload = null, tab = '') {
+    return async (dispatch) => {
+        let newParams = null;
+
+        switch (tab) {
+            case 'upcoming': newParams = await getLotsNew(payload, true); break;
+            case 'past': newParams = await getLotsNew(payload, true); break;
+            case 'auctions': newParams = await getAuctionsNew(payload, true); break;
+            case 'other': newParams = await getOtherNew(payload, true); break;
+        }
+
+        return dispatch({type: UPDATE_FILTERS_NEW, payload: payload});
+    };
 }
 
 export function updateSorting(payload = null) {

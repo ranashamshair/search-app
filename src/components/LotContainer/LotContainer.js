@@ -31,7 +31,8 @@ class LotContainer extends Component {
         st.upcomingLoading = true;
         st.page +=1;
 
-        store.dispatch( getLots(st) );
+        // TODO specia function for load more !!!
+        // store.dispatch( getLots(st) );
     }
 
 

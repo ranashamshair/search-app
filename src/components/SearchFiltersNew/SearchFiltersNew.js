@@ -25,25 +25,11 @@ class SearchFilters extends Component {
       isMobile: false, // work
       setCategory: [], // work
       upcoming: false,
-      types: {
-        lots: false,
-        auctions: false,
-        events: false,
-        stories: false
-      },
+
       pricemin: '',
       pricemax: '',
 
-      upcomingSaved: false,
       categoriesSaved: [],
-      typesSaved: {
-        lots: false,
-        auctions: false,
-        events: false,
-        stories: false
-      },
-      priceminSaved: '',
-      pricemaxSaved: '',
 
       filterCounter: 0,
 
@@ -60,14 +46,6 @@ class SearchFilters extends Component {
 
     };
 
-    this.saveUpcomingFilter = this.saveUpcomingFilter.bind(this);
-    this.cancelUpcomingFilter = this.cancelUpcomingFilter.bind(this);
-    this.saveCategoryFilter = this.saveCategoryFilter.bind(this);
-    this.cancelCategoryFilter = this.cancelCategoryFilter.bind(this);
-    this.saveOtherFilters = this.saveOtherFilters.bind(this);
-    this.cancelOtherFilter = this.cancelOtherFilter.bind(this);
-    this.handleChangeType = this.handleChangeType.bind(this);
-    this.resetAll = this.resetAll.bind(this);
     this.handleOpenClose = this.handleOpenClose.bind(this);
     this.handleSetMinMax = this.handleSetMinMax.bind(this);
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
@@ -148,8 +126,6 @@ class SearchFilters extends Component {
   componentDidMount() {
     this.props.getCategories();
 
-    this.checkFilterCount();
-
     const _this = this;
 
     store.subscribe(() => {
@@ -190,182 +166,7 @@ class SearchFilters extends Component {
       });
   }
 
-  handleChangeType(e) {
-    const tg = e.target, { types } = this.state;
-
-    types[tg.id] = tg.checked;
-
-    this.setState({types: types})
-  }
-
-
-  checkFilterCount() {
-    const { typesSaved } = this.state;
-
-    let filterCounter = 0;
-
-    if(typesSaved.lots) ++filterCounter;
-    if(typesSaved.auctions) ++filterCounter;
-    if(typesSaved.events) ++filterCounter;
-    if(typesSaved.stories) ++filterCounter;
-
-    this.setState({filterCounter: filterCounter});
-  }
-
   categorySelected = categoryId => (this.state.categoriesSaved.indexOf(categoryId) !== -1);
-
-  saveUpcomingFilter = e => {
-    const { upcoming, dropdowns } = this.state;
-    dropdowns.upcoming = false;
-
-    this.setState({upcomingSaved: upcoming, dropdowns: dropdowns}, () => this.updateResults());
-  };
-
-  cancelUpcomingFilter = e => {
-    const { upcomingSaved, dropdowns } = this.state;
-    dropdowns.upcoming = false;
-
-    this.setState({upcoming: upcomingSaved, dropdowns: dropdowns});
-  };
-
-  saveCategoryFilter = e => {
-    const { dropdowns } = this.state;
-    dropdowns.category = false;
-
-    const categoriesEls = document.querySelectorAll('input[data-input="categories_chechbox"]:checked');
-
-    const categories = [];
-    if(categoriesEls && categoriesEls.length > 0){
-      for(let ch of categoriesEls){
-        categories.push(ch.value);
-      }
-    }
-
-    this.setState({categoriesSaved: categories, dropdowns: dropdowns}, () => this.updateResults());
-  };
-
-  cancelCategoryFilter = e => {
-    const { dropdowns } = this.state;
-    dropdowns.category = false;
-
-    this.resetCategoriesFilter();
-
-    this.setState({dropdowns: dropdowns});
-  };
-
-  resetCategoriesFilter(clear = false){
-    const categoriesEls = document.querySelectorAll('input[data-input="categories_chechbox"]');
-
-    if(categoriesEls && categoriesEls.length > 0){
-      for(let ch of categoriesEls){
-        ch.checked = clear ? false : this.categorySelected(ch.value);
-      }
-    }
-  }
-
-  saveOtherFilters(e) {
-    const { types, pricemin, pricemax, dropdowns } = this.state;
-    dropdowns.other = false;
-
-    this.setState({typesSaved: types, priceminSaved: pricemin, pricemaxSaved: pricemax, dropdowns: dropdowns}, () => {
-      this.checkFilterCount(); this.updateResults()
-    });
-  }
-
-  cancelOtherFilter(e) {
-    const { typesSaved, priceminSaved, pricemaxSaved, dropdowns } = this.state;
-    dropdowns.other = false;
-
-    this.setState({types: typesSaved, pricemin: priceminSaved, pricemax: pricemaxSaved, dropdowns: dropdowns});
-  }
-
-  resetAll(e) {
-    this.resetCategoriesFilter(true);
-
-    this.setState({
-      upcoming: false,
-      types: {
-        lots: false,
-        // auctions: false,
-        // events: false,
-        stories: false
-      },
-      pricemin: '',
-      pricemax: '',
-      upcomingSaved: false,
-      categoriesSaved: [],
-      typesSaved: {
-        lots: false,
-        // auctions: false,
-        // events: false,
-        stories: false
-      },
-      priceminSaved: '',
-      pricemaxSaved: '',
-
-      filterCounter: 0,
-
-      dropdowns: {
-        upcoming: false,
-        category: false,
-        other: false,
-      }
-
-    }, () => this.updateResults(true))
-  }
-
-  updateResults(resetSearch = false) {
-    this.setState({submited: true}, () => {
-      const { upcomingSaved, categoriesSaved, typesSaved, priceminSaved, pricemaxSaved } = this.state;
-
-      const payload = store.getState();
-
-      payload.page = 0;
-      payload.pagePast = 0;
-      // payload.pageAuctions = 0;
-      // payload.pageEvents = 0;
-      payload.pageNews = 0;
-      payload.upcomingLoading = true;
-      payload.pastLoading = true;
-      // payload.auctionsLoading = true;
-      // payload.eventsLoading = true;
-      payload.newsLoading = true;
-      payload.staticFilters = {
-        upcomingOnly: upcomingSaved,
-        contentType: typesSaved,
-        categories: categoriesSaved,
-        pricemin: priceminSaved,
-        pricemax: pricemaxSaved,
-      };
-
-      if(resetSearch) payload.searchQuery = '';
-
-
-      let types = typesSaved;
-      let allFiltersUnchecked = (!types.lots && !types.auctions && !types.events && !types.stories);
-
-      if(allFiltersUnchecked || types.lots){
-        store.dispatch( getLots(payload) );
-
-        if(!upcomingSaved){
-          store.dispatch( getPastLots(payload) );
-        }
-      }
-      // store.dispatch( getAuctions(payload) );
-      // store.dispatch( getEvents(payload) );
-      if(allFiltersUnchecked || types.stories){
-        if(payload.searchQuery){
-          store.dispatch(getNews(payload));
-        }else{
-          payload.news = [];
-          payload.newsLoading = false;
-          payload.newsMessage = "Empty search keyword";
-
-          store.dispatch(updateFiltersOnly(payload));
-        }
-      }
-    });
-  }
 
   handleOpenClose (e) {
     e.preventDefault();
@@ -408,7 +209,7 @@ class SearchFilters extends Component {
   }
 
   render() {
-    const { submited, upcoming, upcomingSaved, categoriesSaved, priceminSaved, pricemaxSaved, types, pricemin, pricemax, sorting, filterCounter, dropdowns, isOpen, isMobile } = this.state;
+    const { pricemin, pricemax, sorting, isOpen, isMobile } = this.state;
     const filtersPosition = [
     "Fine Art", "American Art", "Contemporary Art", "19th Centry European Pain", "Photographs", "Diamonds", "Fine Art1", "American Art1", "Contemporary Art1"
     ];

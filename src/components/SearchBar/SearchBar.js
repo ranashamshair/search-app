@@ -7,7 +7,7 @@ import Loader from 'react-loader-spinner';
 import './SearchBar.css';
 import store from "../../store";
 import {
-    getLots, getPastLots, getNews, updateFiltersOnly, updateSearch,
+    getLots, getPastLots, getNews, updateFiltersOnly, updateSearch, getAuctions,
 } from "../../actions"; //  getAuctions, getEvents,
 
 import SearchFiltersNew from '../SearchFiltersNew/SearchFiltersNew';
@@ -125,52 +125,52 @@ class SearchBar extends Component {
         // store.dispatch(updateSorting({sorting: ''}));
 
         // TODO remake this method !!!
-        this.setState({submited: true}, () => {
-            const { query } = this.state;
-            const payload = store.getState();
-
-            payload.page = 0;
-            payload.upcomingLoading = true;
-            payload.searchQuery = query;
-            payload.pagePast = 0;
-            payload.pastLoading = true;
-            // payload.pageAuctions = 0;
-            // payload.auctionsLoading = true;
-            // payload.pageEvents = 0;
-            // payload.eventsLoading = true;
-            payload.pageNews = 0;
-            payload.newsLoading = true;
-            payload.changedLots = true;
-            payload.changedPastLots = true;
-            // payload.changedAuctions = true;
-            // payload.changedEvents = true;
-            payload.changedArticles = true;
-
-            let types = payload.staticFilters.contentType;
-            let allFiltersUnchecked = (!types.lots && !types.auctions && !types.events && !types.stories);
-
-            if(allFiltersUnchecked || types.lots) {
-                store.dispatch(getLots(payload));
-
-                if(!payload.staticFilters.upcomingOnly){
-                    store.dispatch(getPastLots(payload));
-                }
-            }
-            // store.dispatch( getAuctions(payload) );
-            // store.dispatch( getEvents(payload) );
-            if(allFiltersUnchecked || types.stories) {
-                if(payload.searchQuery){
-                    store.dispatch(getNews(payload));
-                }
-                else{
-                    payload.news = [];
-                    payload.newsLoading = false;
-                    payload.newsMessage = "Empty search keyword";
-
-                    store.dispatch(updateFiltersOnly(payload));
-                }
-            }
-        });
+        // this.setState({submited: true}, () => {
+        //     const { query } = this.state;
+        //     const payload = store.getState();
+        //
+        //     payload.page = 0;
+        //     payload.upcomingLoading = true;
+        //     payload.searchQuery = query;
+        //     payload.pagePast = 0;
+        //     payload.pastLoading = true;
+        //     // payload.pageAuctions = 0;
+        //     // payload.auctionsLoading = true;
+        //     // payload.pageEvents = 0;
+        //     // payload.eventsLoading = true;
+        //     payload.pageNews = 0;
+        //     payload.newsLoading = true;
+        //     payload.changedLots = true;
+        //     payload.changedPastLots = true;
+        //     // payload.changedAuctions = true;
+        //     // payload.changedEvents = true;
+        //     payload.changedArticles = true;
+        //
+        //     let types = payload.staticFilters.contentType;
+        //     let allFiltersUnchecked = (!types.lots && !types.auctions && !types.events && !types.stories);
+        //
+        //     if(allFiltersUnchecked || types.lots) {
+        //         store.dispatch(getLots(payload));
+        //
+        //         if(!payload.staticFilters.upcomingOnly){
+        //             store.dispatch(getPastLots(payload));
+        //         }
+        //     }
+        //     store.dispatch( getAuctions(payload) );
+        //     // store.dispatch( getEvents(payload) );
+        //     if(allFiltersUnchecked || types.stories) {
+        //         if(payload.searchQuery){
+        //             store.dispatch(getNews(payload));
+        //         }
+        //         else{
+        //             payload.news = [];
+        //             payload.newsLoading = false;
+        //             payload.newsMessage = "Empty search keyword";
+        //
+        //             store.dispatch(updateFiltersOnly(payload));
+        //         }
+        //     }
+        // });
     };
 
     showSearchFilters = (e) => {

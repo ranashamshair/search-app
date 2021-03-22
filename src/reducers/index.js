@@ -4,7 +4,6 @@ import {
 } from "../constants/action-types";
 
 const initialState = {
-    page: 0,
     pagePast: 0,
     // pageAuctions: 0,
     // pageEvents: 0,
@@ -48,12 +47,37 @@ const initialState = {
     changedArticles: false,
 
     // FOR NEW VERSION !!!
+    loading: '',
+    items: [],
+    page: 0,
+    dataChanged: false,
+    message: '',
     searchText: '',
     currentTab: 'upcoming',
     selectedCategories: [],
     priceMin: '',
     priceMax: '',
     sorting: '',
+    // lotsCount: 0,
+    activeTabCounter: 0,
+};
+
+const reduceRefreshedData = (changes = {}, payload) => {
+    const { items = [], count = 0, success = false, pageSize = 20, message = null } = payload;
+
+    if (!success || items.length < pageSize) changes.page = -1;
+
+    if (success) {
+        changes.items = items;
+        changes.activeTabCounter = count;
+    } else {
+        changes.items = [];
+        changes.page = -1;
+
+        if (message) changes.message = message;
+    }
+
+    return changes;
 };
 
 // TODO cleanup after API !!!
@@ -104,11 +128,39 @@ function rootReducer(state = initialState, action) {
         case UPDATE_FILTERS_ONLY: {
             return Object.assign({}, state, action.payload);
         }
+
+
         case UPDATE_TAB: {
-            return Object.assign({}, state, { currentTab: action.payload.currentTab });
+            const { tab = 'upcoming' } = action.payload;
+
+            let changes = {
+                page: 0,
+                currentTab: tab,
+                loading: false,
+            };
+
+            changes = reduceRefreshedData(changes, action.payload);
+
+            if((tab === 'upcoming' || tab === 'past') && changes.items.length){
+                let uniqueItemsObj = changes.items.reduce( (c, e) => {
+                    if (!c[e.ref]) c[e.ref] = e;
+                    return c;
+                }, {});
+                changes.items = Object.values(uniqueItemsObj)
+            }
+
+            // return Object.assign({}, state, { currentTab: action.payload.currentTab });
+            return Object.assign({}, state, changes);
         }
         case UPDATE_FILTERS_NEW: {
-            return Object.assign({}, state, action.payload);
+            let changes = {
+                page: 0,
+                loading: false,
+            };
+
+            changes = reduceRefreshedData(changes, action.payload);
+
+            return Object.assign({}, state, changes);
         }
         case UPDATE_SORTING: {
             return Object.assign({}, state, { sorting: action.payload.sorting });
