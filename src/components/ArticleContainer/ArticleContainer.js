@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import BlockHeader from '../BlockHeader/BlockHeader';
 import Article from '../Article/Article';
 import store from "../../store";
-import {getOther, updateFiltersOnly} from "../../actions";
+import {getOther, loadMore, setNextPage} from "../../actions";
 import {connect} from "react-redux";
 import ArticleLoader from "../ArticleLoader/ArticleLoader";
 
@@ -24,12 +24,12 @@ class ArticleContainer extends Component {
         store.subscribe(() => {
             const storeState = store.getState();
 
+            // TODO ???
             const {
                 searchText = '',
-                selectedCategories: [],
-                priceMin = '',
-                priceMax = '',
+                // selectedCategories = [],
                 sorting = '',
+                page = 1,
             } = storeState;
 
             const changes = {};
@@ -40,6 +40,8 @@ class ArticleContainer extends Component {
             if (Object.keys(changes).length > 0) {
                 changes.loading = true;
                 this.setState(changes, () => this.props.getOther(Object.assign(storeState, changes)));
+            } else if (page > 1) {
+                store.dispatch( loadMore(storeState, storeState.currentTab) );
             }
         });
     }
@@ -48,11 +50,10 @@ class ArticleContainer extends Component {
     loadMore(e) {
         const st = store.getState();
 
-        st.newsLoading = true;
-        st.pageNews +=1;
+        st.loading = true;
+        st.page +=1;
 
-        // TODO load more !!!
-        // store.dispatch( getOther(st) );
+        store.dispatch( setNextPage() );
     }
 
     render() {

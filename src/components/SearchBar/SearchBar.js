@@ -6,13 +6,11 @@ import Loader from 'react-loader-spinner';
 
 import './SearchBar.css';
 import store from "../../store";
-import {
-    getLots, getPastLots, updateFiltersOnly, updateSearch, getAuctions,
-} from "../../actions"; //  getAuctions, getEvents,
+import {updateSearch,} from "../../actions"; //  getAuctions, getEvents,
 
 import SearchFiltersNew from '../SearchFiltersNew/SearchFiltersNew';
 
-import data from '../../requestApi.json';
+// import data from '../../requestApi.json';
 
 class SearchBar extends Component {
 

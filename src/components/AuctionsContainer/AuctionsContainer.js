@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import BlockHeader from '../BlockHeader/BlockHeader';
 import Auction from '../Auction/Auction';
 import {connect} from "react-redux";
-import {getAuctions} from '../../actions/index';
+import {getAuctions, loadMore, setNextPage} from '../../actions/index';
 import store from "../../store";
 import AuctionLoader from "../AuctionLoader/AuctionLoader";
 
@@ -26,18 +26,21 @@ class AuctionsContainer extends Component {
 
             const {
                 searchText = '',
-                selectedCategories: [],
+                selectedCategories = [],
                 sorting = '',
+                page = 1
             } = storeState;
 
             const changes = {};
             if (searchText !== this.state.searchText) changes.searchText = searchText;
-            // if (selectedCategories !== this.state.selectedCategories) changes.selectedCategories = selectedCategories;
+            if (selectedCategories !== this.state.selectedCategories) changes.selectedCategories = selectedCategories;
             if (sorting !== this.state.sorting) changes.sorting = sorting;
 
             if (Object.keys(changes).length > 0) {
                 changes.loading = true;
                 this.setState(changes, () => this.props.getAuctions(Object.assign(storeState, changes)));
+            } else if (page > 1) {
+                store.dispatch( loadMore(storeState, storeState.currentTab) );
             }
         });
     }
@@ -47,10 +50,8 @@ class AuctionsContainer extends Component {
         const st = store.getState();
 
         st.auctionsLoading = true;
-        st.pageAuctions +=1;
-
         // TODO load more !!!
-        // store.dispatch( getAuctions(st) );
+        store.dispatch( setNextPage() );
     }
 
     render() {

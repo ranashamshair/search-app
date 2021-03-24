@@ -10,7 +10,7 @@ import './App.css';
 
 import { Provider } from 'react-redux';
 import store from './store/index';
-import {getLots, getCategories, getPastLots, getAuctions, getOther, updateTab} from './actions/index';
+import {getLots, getCategories, getPastLots, getAuctions, getOther, loadMore, updateTab, setNextPage} from './actions/index';
 import PastLotContainer from "./components/PastLotContainer/PastLotContainer";
 import {updateFiltersNew} from "./actions";
 import AuctionsContainer from "./components/AuctionsContainer/AuctionsContainer";
@@ -21,8 +21,9 @@ window.getPastLots = getPastLots;
 window.getCategories = getCategories;
 window.getAuctions = getAuctions;
 window.getOther = getOther;
-// window.getOther = loadMore;
+window.loadMore = loadMore;
 window.updateTab = updateTab;
+window.setNextPage = setNextPage;
 
 class App extends Component{
     constructor(props) {
@@ -50,7 +51,6 @@ class App extends Component{
             window.history.pushState({path:newUrl},'',newUrl);
         }
 
-        console.log('APP update tab openTabs: ', openTabs)
         store.dispatch(updateTab({currentTab: openTabs}));
         store.dispatch(updateFiltersNew({
             selectedCategories: [],
@@ -61,9 +61,26 @@ class App extends Component{
 
     componentDidMount() {
         store.subscribe(() => {
-            // const {staticFilters, lots, pastLots, news, submited, currentTab} = store.getState();
+            const {
+                currentTab,
+                loading = false,
+                lotsCount = 0,
+                pastLotsCount = 0,
+                auctionsCount = 0,
+                postsCount = 0,
+            } = store.getState();
 
-            // this.setState({types: staticFilters.contentType, upcomingOnly: staticFilters.upcomingOnly, noResults: (!submited && !lots.length && !pastLots.length && !news.length), openTabs: currentTab})
+            this.setState({
+                noResults: (!loading &&
+                    (
+                        (currentTab === 'upcoming' && lotsCount === 0) ||
+                        (currentTab === 'past' && pastLotsCount === 0) ||
+                        (currentTab === 'auctions' && auctionsCount === 0) ||
+                        (currentTab === 'other' && postsCount === 0)
+                    )
+                ),
+                openTabs: currentTab
+            })
         });
     }
 
@@ -81,6 +98,7 @@ class App extends Component{
             case 'past': return <PastLotContainer />;
             case 'auctions': return <AuctionsContainer />;
             case 'other': return <ArticleContainer />;
+            default: return '';
         }
     }
 

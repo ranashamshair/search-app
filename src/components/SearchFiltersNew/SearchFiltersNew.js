@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { Component } from 'react';
 import './SearchFiltersNew.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -6,11 +6,11 @@ import { faArrowUp, faArrowDown, faArrowRight } from '@fortawesome/free-solid-sv
 
 import {connect} from "react-redux";
 import {
-    getAuctions, getCategories, getEvents, getLots, getNews, getPastLots, updateFiltersNew,
-    updateFiltersOnly, updateSearch, updateSorting, updateTab
+  getCategories, updateFiltersNew,
+  updateSearch, updateSorting, updateTab
 } from "../../actions";
 import store from "../../store";
-import Loader from "react-loader-spinner";
+// import Loader from "react-loader-spinner";
 
 // TODO cleanup after API !!!
 class SearchFilters extends Component {
@@ -91,6 +91,8 @@ class SearchFilters extends Component {
   updateUrlParams() {
     const { search = '', currentTab, setCategory = [], pricemin = null, pricemax = null, sorting = null } = this.state;
 
+
+
     const params = [];
     // const
 
@@ -120,9 +122,7 @@ class SearchFilters extends Component {
           priceMin: pricemin || '',
           priceMax: pricemax || '',
       }));
-      if (sorting) {
-          store.dispatch(updateSorting({sorting: sorting}));
-      }
+      store.dispatch(updateSorting({sorting: sorting}));
     }
   }
 
@@ -208,6 +208,7 @@ class SearchFilters extends Component {
   }
 
   handleSortingSelect (e) {
+    console.log('e.target.value: ', e.target.value);
     this.setState({sorting: e.target.value}, () => this.updateUrlParams());
   }
 
@@ -219,6 +220,91 @@ class SearchFilters extends Component {
 
     console.log('sorting: ', sorting);
 
+    const sortOptions = {
+      'upcoming': [
+        {
+          label: 'Next sale date (older)',
+          value: 'date||asc'
+        },
+        {
+          label: 'Next sale date (newer)',
+          value: 'date||desc'
+        },
+        {
+          label: 'Estimate (low to high)',
+          value: 'price||asc'
+        },
+        {
+          label: 'Estimate (high to low)',
+          value: 'price||desc'
+        }
+      ],
+      'past': [
+        {
+          label: 'Past sale date (older)',
+          value: 'date||asc'
+        },
+        {
+          label: 'Past sale date (newer)',
+          value: 'date||desc'
+        },
+        {
+          label: 'Result price (low to high)',
+          value: 'price||asc'
+        },
+        {
+          label: 'Result price (high to low)',
+          value: 'price||desc'
+        }
+      ],
+      'auctions': [
+        {
+          label: 'Date (older)',
+          value: 'date||asc'
+        },
+        {
+          label: 'Date (newer)',
+          value: 'date||desc'
+        },
+        {
+          label: 'Title (Ascending)',
+          value: 'title||asc'
+        },
+        {
+          label: 'Title (Descending)',
+          value: 'title||desc'
+        },
+        {
+          label: 'Category (Ascending)',
+          value: 'category||asc'
+        },
+        {
+          label: 'Category (Descending)',
+          value: 'category||desc'
+        }
+      ],
+      'other': [
+        {
+          label: 'Date (older)',
+          value: 'date||asc'
+        },
+        {
+          label: 'Date (newer)',
+          value: 'date||desc'
+        },
+        {
+          label: 'Title (Ascending)',
+          value: 'title||asc'
+        },
+        {
+          label: 'Title (Descending)',
+          value: 'title||desc'
+        },
+      ],
+    };
+
+    const currentSortOptions = sortOptions[currentTab];
+
     return (
       <div className="pt-4 search-filter">
         <div className="d-flex justify-content-center justify-content-sm-between align-items-end">
@@ -227,9 +313,11 @@ class SearchFilters extends Component {
             !isMobile ?
             (<select onChange={this.handleSortingSelect} value={sorting}>
               <option value="">Sort by</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
+              {
+                currentSortOptions.map(opt => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))
+              }
             </select>)
           : ""
           }

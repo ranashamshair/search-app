@@ -4,9 +4,8 @@ import {
     GET_LOTS,
     GET_PAST_LOTS,
     GET_POSTS,
-    LOAD_MORE,
+    LOAD_MORE, NEXT_PAGE,
     UPDATE_FILTERS_NEW,
-    UPDATE_FILTERS_ONLY,
     UPDATE_SEARCH,
     UPDATE_SORTING,
     UPDATE_TAB
@@ -26,15 +25,6 @@ const requestOptions = {
         'id': 'V053C9yWvo45XsOxKB'
     }
 };
-
-export function updateFiltersOnly(payload = null) {
-    return function (dispatch) {
-        return dispatch({
-            type: UPDATE_FILTERS_ONLY,
-            payload: payload
-        });
-    }
-}
 
 export function getLots(payload = null) {
     return async (dispatch) => {
@@ -68,9 +58,6 @@ export function getOther(payload = null) {
     }
 }
 
-
-
-
 export function getCategories(payload = null) {
     return async (dispatch) => {
         try {
@@ -90,6 +77,12 @@ export function getCategories(payload = null) {
     }
 }
 
+const orderParams = (sorting = '') => {
+    if (sorting === '') return null;
+
+    const sort = sorting.split('||');
+    return `sort_by=${sort[0]}&sort_order=${sort[1]}`;
+};
 
 const lotFilter = (params) => {
     const { searchText = null, selectedCategories = [], priceMin = null, priceMax = null, pageSize = 20, page = 1, sorting = '' } = params;
@@ -102,7 +95,9 @@ const lotFilter = (params) => {
     qs.push('size=' + pageSize);
     qs.push('page=' + page);
 
-    return qs.length > 0 ? '?' + qs.join('&') : '';
+    const ord = orderParams(sorting);
+
+    return qs.length > 0 ? '?' + qs.join('&') + (ord ? '&' + ord : '') : '';
 };
 
 const auctionFilter = (params) => {
@@ -114,7 +109,9 @@ const auctionFilter = (params) => {
     qs.push('size=' + pageSize);
     qs.push('page=' + page);
 
-    return qs.length > 0 ? '?' + qs.join('&') : '';
+    const ord = orderParams(sorting);
+
+    return qs.length > 0 ? '?' + qs.join('&') + (ord ? '&' + ord : '') : '';
 };
 
 const otherFilter = (params) => {
@@ -126,32 +123,11 @@ const otherFilter = (params) => {
     qs.push('size=' + pageSize);
     qs.push('page=' + page);
 
-    return qs.length > 0 ? '?' + qs.join('&') : '';
+    const ord = orderParams(sorting);
+
+    return qs.length > 0 ? '?' + qs.join('&') + (ord ? '&' + ord : '') : '';
 };
 
-// const success = (params, info, refresh = false) => {
-//     if(info.data.length < pageSize) payload.page = -1;
-//
-//     if(refresh){
-//         params.items = info.data;
-//     }else{
-//         params.items = (params.items && (params.page > 0 || params.page === -1)) ? [...params.items, ...info.data] : info.data;
-//     }
-//     params.activeTabCounter = info.count;
-//
-//     return params;
-// };
-
-// const error = (params, errInfo, refresh = false) => {
-//     console.log(error);
-//
-//     params.items = (params.items && params.items > 0) ? params.items: [];
-//     params.page = -1;
-//
-//     if(params.items.length === 0 && errInfo.message) params.message = errInfo.message;
-//
-//     return params;
-// };
 
 // TODO new versions + new functions !!!
 async function getLotsNew(payload = null, refresh = false, past = false) {
@@ -256,6 +232,8 @@ export function updateSearch(payload = null) {
 }
 
 export function loadMore(payload = null, tab = 'upcoming') {
+    console.log('payload :  ', payload);
+
     return async (dispatch) => {
         let newParams = null;
 
@@ -268,4 +246,8 @@ export function loadMore(payload = null, tab = 'upcoming') {
 
         return dispatch({type: LOAD_MORE, payload: newParams});
     };
+}
+
+export function setNextPage() {
+    return (dispatch) => (dispatch({type: NEXT_PAGE, payload: {}}));
 }

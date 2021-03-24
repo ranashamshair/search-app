@@ -6,7 +6,7 @@ import BlockHeader from '../BlockHeader/BlockHeader';
 import Lot from '../Lot/Lot';
 import LotLoader from '../LotLoader/LotLoader';
 import {connect} from "react-redux";
-import {getPastLots} from '../../actions/index';
+import {getPastLots, loadMore, setNextPage} from '../../actions/index';
 import store from "../../store";
 
 class LotContainer extends Component {
@@ -25,7 +25,7 @@ class LotContainer extends Component {
             sorting: '',
         };
 
-        this.loadMorePast = this.loadMorePast.bind(this);
+        this.loadMore = this.loadMore.bind(this);
     }
 
     componentDidMount() {
@@ -36,15 +36,16 @@ class LotContainer extends Component {
 
             const {
                 searchText = '',
-                selectedCategories: [],
+                selectedCategories = [],
                 priceMin = '',
                 priceMax = '',
                 sorting = '',
+                page = 1
             } = storeState;
 
             const changes = {};
             if (searchText !== this.state.searchText) changes.searchText = searchText;
-            // if (selectedCategories !== this.state.selectedCategories) changes.selectedCategories = selectedCategories;
+            if (selectedCategories !== this.state.selectedCategories) changes.selectedCategories = selectedCategories;
             if (priceMin !== this.state.priceMin) changes.priceMin = priceMin;
             if (priceMax !== this.state.priceMax) changes.priceMax = priceMax;
             if (sorting !== this.state.sorting) changes.sorting = sorting;
@@ -52,19 +53,19 @@ class LotContainer extends Component {
             if (Object.keys(changes).length > 0) {
                 changes.loading = true;
                 this.setState(changes, () => this.props.getPastLots(Object.assign(storeState, changes)));
+            } else if (page > 1) {
+                store.dispatch( loadMore(storeState, storeState.currentTab) );
             }
         });
     }
 
 
-    loadMorePast(e) {
+    loadMore(e) {
         const st = store.getState();
 
         st.loading = true;
-        st.pagePast +=1;
 
-        // TODO load more !!!
-        // store.dispatch( getPastLots(st) );
+        store.dispatch( setNextPage() );
     }
 
     render() {
@@ -117,7 +118,7 @@ class LotContainer extends Component {
                 {
                     (this.props.pastLots.length && this.props.page !== -1) ? (
                         <div className="col-12 text-center">
-                            <button className="btn btn-load-more mt-3 mb-5" onClick={this.loadMorePast}>Load More</button>
+                            <button className="btn btn-load-more mt-3 mb-5" onClick={this.loadMore}>Load More</button>
                         </div>
                     ) : ''
                 }

@@ -1,6 +1,6 @@
 import {
-    GET_AUCTIONS, GET_CATEGORIES, GET_LOTS, GET_PAST_LOTS, GET_POSTS, LOAD_MORE, UPDATE_FILTERS_NEW,
-    UPDATE_FILTERS_ONLY, UPDATE_SEARCH, UPDATE_SORTING, UPDATE_TAB
+    GET_AUCTIONS, GET_CATEGORIES, GET_LOTS, GET_PAST_LOTS, GET_POSTS, LOAD_MORE, NEXT_PAGE, UPDATE_FILTERS_NEW,
+    UPDATE_SEARCH, UPDATE_SORTING, UPDATE_TAB
 } from "../constants/action-types";
 
 const initialState = {
@@ -52,7 +52,7 @@ const initialState = {
     lotsPast: [],
     auctionsNew: [],
     postsNew: [],
-    page: 0,
+    page: 1,
     dataChanged: false,
     message: '',
     searchText: '',
@@ -91,7 +91,7 @@ function rootReducer(state = initialState, action) {
         case GET_LOTS: {
             // TODO !!!
             let changes = {
-                page: 0,
+                page: 1,
                 loading: false,
             };
 
@@ -112,7 +112,7 @@ function rootReducer(state = initialState, action) {
         }
         case GET_PAST_LOTS: {
             let changes = {
-                page: 0,
+                page: 1,
                 loading: false,
             };
 
@@ -133,7 +133,7 @@ function rootReducer(state = initialState, action) {
         }
         case GET_AUCTIONS: {
             let changes = {
-                page: 0,
+                page: 1,
                 loading: false,
             };
 
@@ -154,7 +154,7 @@ function rootReducer(state = initialState, action) {
         }
         case GET_POSTS: {
             let changes = {
-                page: 0,
+                page: 1,
                 loading: false,
             };
 
@@ -177,43 +177,21 @@ function rootReducer(state = initialState, action) {
         case GET_CATEGORIES: {
             return Object.assign({}, state, { categories: action.payload.categories });
         }
-        case UPDATE_FILTERS_ONLY: {
-            return Object.assign({}, state, action.payload);
-        }
-
-
         case UPDATE_TAB: {
             const { currentTab = 'upcoming' } = action.payload;
 
-            console.log('tab reducer : ', currentTab);
-            console.log('tab action.payload : ', action.payload);
-
             let changes = {
-                // page: 0,
+                page: 1,
                 currentTab: currentTab,
-                // loading: false,
             };
 
-            // changes = reduceRefreshedData(changes, action.payload);
-            //
-            // if((tab === 'upcoming' || tab === 'past') && changes.items.length){
-            //     let uniqueItemsObj = changes.items.reduce( (c, e) => {
-            //         if (!c[e.ref]) c[e.ref] = e;
-            //         return c;
-            //     }, {});
-            //     changes.items = Object.values(uniqueItemsObj)
-            // }
-
-            // return Object.assign({}, state, { currentTab: action.payload.currentTab });
             return Object.assign({}, state, changes);
         }
         case UPDATE_FILTERS_NEW: {
             let changes = {
-                page: 0,
+                page: 1,
                 loading: false,
             };
-
-            // changes = reduceRefreshedData(changes, action.payload);
 
             return Object.assign({}, state, action.payload, changes);
         }
@@ -224,6 +202,7 @@ function rootReducer(state = initialState, action) {
             return Object.assign({}, state, { searchText: action.payload.searchText });
         }
         case LOAD_MORE: {
+            console.log('payload: ', action.payload);
         //     TODO load more (pagination) !!!
             let changes = {
                 loading: false,
@@ -243,6 +222,9 @@ function rootReducer(state = initialState, action) {
             }
 
             return Object.assign({}, state, changes);
+        }
+        case NEXT_PAGE: {
+            return Object.assign({}, state, {page: state.page + 1});
         }
         default: {
             return state;
