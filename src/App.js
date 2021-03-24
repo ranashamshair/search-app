@@ -10,18 +10,18 @@ import './App.css';
 
 import { Provider } from 'react-redux';
 import store from './store/index';
-import {getLots, getCategories, getPastLots, getAuctions, getEvents, getNews, updateTab} from './actions/index';
+import {getLots, getCategories, getPastLots, getAuctions, getOther, updateTab} from './actions/index';
 import PastLotContainer from "./components/PastLotContainer/PastLotContainer";
 import {updateFiltersNew} from "./actions";
-// import EventContainer from "./components/EventContainer/EventContainer"; work
+import AuctionsContainer from "./components/AuctionsContainer/AuctionsContainer";
 
 window.store = store;
 window.getLots = getLots;
 window.getPastLots = getPastLots;
 window.getCategories = getCategories;
 window.getAuctions = getAuctions;
-window.getEvents = getEvents;
-window.getNews = getNews;
+window.getOther = getOther;
+// window.getOther = loadMore;
 window.updateTab = updateTab;
 
 class App extends Component{
@@ -29,13 +29,6 @@ class App extends Component{
         super(props);
 
         this.state = {
-            upcomingOnly: false,
-            types: {
-                lots: false,
-                // auctions: false,
-                // events: false,
-                stories: false
-            },
             noResults: false,
             openTabs: "upcoming"
         };
@@ -57,19 +50,20 @@ class App extends Component{
             window.history.pushState({path:newUrl},'',newUrl);
         }
 
+        console.log('APP update tab openTabs: ', openTabs)
         store.dispatch(updateTab({currentTab: openTabs}));
         store.dispatch(updateFiltersNew({
             selectedCategories: [],
             priceMin: '',
             priceMax: '',
-        }));
+        }, openTabs));
     }
 
     componentDidMount() {
         store.subscribe(() => {
-            const {staticFilters, lots, pastLots, news, submited, currentTab} = store.getState();
+            // const {staticFilters, lots, pastLots, news, submited, currentTab} = store.getState();
 
-            this.setState({types: staticFilters.contentType, upcomingOnly: staticFilters.upcomingOnly, noResults: (!submited && !lots.length && !pastLots.length && !news.length), openTabs: currentTab})
+            // this.setState({types: staticFilters.contentType, upcomingOnly: staticFilters.upcomingOnly, noResults: (!submited && !lots.length && !pastLots.length && !news.length), openTabs: currentTab})
         });
     }
 
@@ -79,10 +73,19 @@ class App extends Component{
         this.setState({openTabs: e.target.name}, () => this.updateUrlParams());
     }
 
-    render() {
-        const { upcomingOnly, types, noResults } = this.state;
+    switchTabRenderer () {
+        const { openTabs = 'upcoming' } = this.state;
 
-        let allFiltersUnchecked = (!types.lots && !types.auctions && !types.events && !types.stories);
+        switch (openTabs) {
+            case 'upcoming': return <LotContainer />;
+            case 'past': return <PastLotContainer />;
+            case 'auctions': return <AuctionsContainer />;
+            case 'other': return <ArticleContainer />;
+        }
+    }
+
+    render() {
+        const { noResults } = this.state;
 
         return (
             <div className="App">
@@ -94,28 +97,8 @@ class App extends Component{
 
                             <div className="container">
                                 {
-                                    noResults ? (<p className="error-message">No results</p>) : ''
+                                    noResults ? (<p className="error-message">No results</p>) : this.switchTabRenderer()
                                 }
-
-                                {
-                                    (allFiltersUnchecked || types.lots) ? (
-                                        <>
-                                            <LotContainer tab={this.state.openTabs} />
-                                            {/*{*/}
-                                            {/*    (!upcomingOnly) ? (*/}
-                                            {/*        <PastLotContainer />*/}
-                                            {/*    ) : ''*/}
-                                            {/*}*/}
-                                        </>
-                                    ) : ''
-                                }
-
-                                {/*{ (allFiltersUnchecked || types.auctions) ? (<AuctionsContainer />) : '' }*/}
-
-                                {/*{ (allFiltersUnchecked || types.events) ? (<EventContainer />) : '' }*/}
-
-                                { (allFiltersUnchecked || types.stories) ? (<ArticleContainer />) : '' }
-
                             </div>
 
                         </section>

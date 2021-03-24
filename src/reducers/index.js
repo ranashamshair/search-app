@@ -1,5 +1,5 @@
 import {
-    GET_AUCTIONS, GET_CATEGORIES, GET_EVENTS, GET_LOTS, GET_NEWS, GET_PAST_LOTS, UPDATE_FILTERS_NEW,
+    GET_AUCTIONS, GET_CATEGORIES, GET_LOTS, GET_PAST_LOTS, GET_POSTS, LOAD_MORE, UPDATE_FILTERS_NEW,
     UPDATE_FILTERS_ONLY, UPDATE_SEARCH, UPDATE_SORTING, UPDATE_TAB
 } from "../constants/action-types";
 
@@ -9,7 +9,7 @@ const initialState = {
     // pageEvents: 0,
     pageNews: 0,
     searchQuery: '',
-    lots: [],
+
     pastLots: [],
     // auctions: [],
     // events: [],
@@ -48,7 +48,10 @@ const initialState = {
 
     // FOR NEW VERSION !!!
     loading: '',
-    items: [],
+    lotsNew: [],
+    lotsPast: [],
+    auctionsNew: [],
+    postsNew: [],
     page: 0,
     dataChanged: false,
     message: '',
@@ -58,7 +61,10 @@ const initialState = {
     priceMin: '',
     priceMax: '',
     sorting: '',
-    // lotsCount: 0,
+    lotsCount: 0,
+    pastLotsCount: 0,
+    auctionsCount: 0,
+    postsCount: 0,
     activeTabCounter: 0,
 };
 
@@ -83,43 +89,90 @@ const reduceRefreshedData = (changes = {}, payload) => {
 function rootReducer(state = initialState, action) {
     switch (action.type) {
         case GET_LOTS: {
-            const obj = Object.assign({}, state, action.payload);
+            // TODO !!!
+            let changes = {
+                page: 0,
+                loading: false,
+            };
 
-            if(obj.lots.length){
-                let uniqueLotsObj = obj.lots.reduce( (c, e) => {
-                    if (!c[e.itemView.ref]) c[e.itemView.ref] = e;
+            changes = reduceRefreshedData(changes, action.payload);
+
+            console.log('GET LOTS changes: ', changes);
+
+            if (changes.items.length) {
+                let uniqueItemsObj = changes.items.reduce( (c, e) => {
+                    if (!c[e.ref]) c[e.ref] = e;
                     return c;
                 }, {});
-                obj.lots = Object.values(uniqueLotsObj)
+                changes.lotsNew = Object.values(uniqueItemsObj);
+                changes.lotsCount = changes.activeTabCounter;
             }
 
-            return obj;
+            return Object.assign({}, state, changes);
         }
         case GET_PAST_LOTS: {
-            const obj = Object.assign({}, state, action.payload);
+            let changes = {
+                page: 0,
+                loading: false,
+            };
 
-            if(obj.pastLots.length){
-                let uniquePastLotsObj = obj.pastLots.reduce( (c, e) => {
-                    if (!c[e.itemView.ref]) c[e.itemView.ref] = e;
+            changes = reduceRefreshedData(changes, action.payload);
+
+            console.log('GET PAST LOTS changes: ', changes);
+
+            if (changes.items.length) {
+                let uniqueItemsObj = changes.items.reduce( (c, e) => {
+                    if (!c[e.ref]) c[e.ref] = e;
                     return c;
                 }, {});
-                obj.pastLots = Object.values(uniquePastLotsObj)
+                changes.lotsPast = Object.values(uniqueItemsObj);
+                changes.pastLotsCount = changes.activeTabCounter;
             }
 
-            return obj;
+            return Object.assign({}, state, changes);
         }
-        case GET_NEWS: {
-            const obj = Object.assign({}, state, action.payload);
+        case GET_AUCTIONS: {
+            let changes = {
+                page: 0,
+                loading: false,
+            };
 
-            if(obj.news.length){
-                let uniqueNewsObj = obj.news.reduce( (c, e) => {
-                    if (!c[e.id]) c[e.id] = e;
+            changes = reduceRefreshedData(changes, action.payload);
+
+            console.log('GET AUCTIONS changes: ', changes);
+
+            if (changes.items.length) {
+                let uniqueItemsObj = changes.items.reduce( (c, e) => {
+                    if (!c[e.title]) c[e.title] = e;
                     return c;
                 }, {});
-                obj.news = Object.values(uniqueNewsObj)
+                changes.auctionsNew = Object.values(uniqueItemsObj);
+                changes.auctionsCount = changes.activeTabCounter;
             }
 
-            return obj;
+            return Object.assign({}, state, changes);
+        }
+        case GET_POSTS: {
+            let changes = {
+                page: 0,
+                loading: false,
+            };
+
+            changes = reduceRefreshedData(changes, action.payload);
+
+            console.log('GET OTHER changes: ', changes);
+
+            if (changes.items.length) {
+            //     let uniqueItemsObj = changes.items.reduce( (c, e) => {
+            //         if (!c[e.title]) c[e.title] = e;
+            //         return c;
+            //     }, {});
+            //     changes.postsNew = Object.values(uniqueItemsObj);
+                changes.postsNew = changes.items;
+                changes.postsCount = changes.activeTabCounter;
+            }
+
+            return Object.assign({}, state, changes);
         }
         case GET_CATEGORIES: {
             return Object.assign({}, state, { categories: action.payload.categories });
@@ -130,23 +183,26 @@ function rootReducer(state = initialState, action) {
 
 
         case UPDATE_TAB: {
-            const { tab = 'upcoming' } = action.payload;
+            const { currentTab = 'upcoming' } = action.payload;
+
+            console.log('tab reducer : ', currentTab);
+            console.log('tab action.payload : ', action.payload);
 
             let changes = {
-                page: 0,
-                currentTab: tab,
-                loading: false,
+                // page: 0,
+                currentTab: currentTab,
+                // loading: false,
             };
 
-            changes = reduceRefreshedData(changes, action.payload);
-
-            if((tab === 'upcoming' || tab === 'past') && changes.items.length){
-                let uniqueItemsObj = changes.items.reduce( (c, e) => {
-                    if (!c[e.ref]) c[e.ref] = e;
-                    return c;
-                }, {});
-                changes.items = Object.values(uniqueItemsObj)
-            }
+            // changes = reduceRefreshedData(changes, action.payload);
+            //
+            // if((tab === 'upcoming' || tab === 'past') && changes.items.length){
+            //     let uniqueItemsObj = changes.items.reduce( (c, e) => {
+            //         if (!c[e.ref]) c[e.ref] = e;
+            //         return c;
+            //     }, {});
+            //     changes.items = Object.values(uniqueItemsObj)
+            // }
 
             // return Object.assign({}, state, { currentTab: action.payload.currentTab });
             return Object.assign({}, state, changes);
@@ -157,9 +213,9 @@ function rootReducer(state = initialState, action) {
                 loading: false,
             };
 
-            changes = reduceRefreshedData(changes, action.payload);
+            // changes = reduceRefreshedData(changes, action.payload);
 
-            return Object.assign({}, state, changes);
+            return Object.assign({}, state, action.payload, changes);
         }
         case UPDATE_SORTING: {
             return Object.assign({}, state, { sorting: action.payload.sorting });
@@ -173,7 +229,7 @@ function rootReducer(state = initialState, action) {
                 loading: false,
             };
 
-            const { items = [], count = 0, success = false, pageSize = 20, message = null } = payload;
+            const { items = [], count = 0, success = false, pageSize = 20, message = null } = action.payload;
 
             if (!success || items.length < pageSize) changes.page = -1;
 

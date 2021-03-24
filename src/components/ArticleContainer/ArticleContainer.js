@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import BlockHeader from '../BlockHeader/BlockHeader';
 import Article from '../Article/Article';
 import store from "../../store";
-import {getNews, updateFiltersOnly} from "../../actions";
+import {getOther, updateFiltersOnly} from "../../actions";
 import {connect} from "react-redux";
 import ArticleLoader from "../ArticleLoader/ArticleLoader";
 
@@ -19,18 +19,29 @@ class ArticleContainer extends Component {
     }
 
     componentDidMount() {
-        const st = store.getState();
+        this.props.getOther();
 
-        if(st.searchQuery){
-            this.props.getNews();
-        }
-        else{
-            st.news = [];
-            st.newsLoading = false;
-            st.newsMessage = "Empty search keyword";
+        store.subscribe(() => {
+            const storeState = store.getState();
 
-            store.dispatch(updateFiltersOnly(st));
-        }
+            const {
+                searchText = '',
+                selectedCategories: [],
+                priceMin = '',
+                priceMax = '',
+                sorting = '',
+            } = storeState;
+
+            const changes = {};
+            if (searchText !== this.state.searchText) changes.searchText = searchText;
+            // if (selectedCategories !== this.state.selectedCategories) changes.selectedCategories = selectedCategories;
+            if (sorting !== this.state.sorting) changes.sorting = sorting;
+
+            if (Object.keys(changes).length > 0) {
+                changes.loading = true;
+                this.setState(changes, () => this.props.getOther(Object.assign(storeState, changes)));
+            }
+        });
     }
 
 
@@ -40,7 +51,8 @@ class ArticleContainer extends Component {
         st.newsLoading = true;
         st.pageNews +=1;
 
-        store.dispatch( getNews(st) );
+        // TODO load more !!!
+        // store.dispatch( getOther(st) );
     }
 
     render() {
@@ -62,12 +74,13 @@ class ArticleContainer extends Component {
 
         if ( this.props.news.length )
         {
-            news = this.props.news.map(item =>
+            news = this.props.news.map((item, key)=>
                 <Article
-                    key={'article_' + item.id}
-                    link={item.link}
-                    articleTitle={(item.title) ? item.title.rendered : ''}
-                    imgSrc={item.image_url}
+                    key={'article_' + key}
+                    link={item.detailsUrl}
+                    excerpt={item.excerpt}
+                    articleTitle={item.title}
+                    imgSrc={item.photo}
                 />
             );
 
@@ -109,14 +122,14 @@ class ArticleContainer extends Component {
 
 function mapStateToProps(state) {
     return {
-        news: state.news ? state.news : [],
-        message: state.newsMessage,
-        page: state.pageNews,
-        loading: state.auctionsLoading
+        news: state.postsNew || [],
+        message: state.message,
+        page: state.page,
+        loading: state.loading
     };
 }
 
 export default connect(
     mapStateToProps,
-    { getNews }
+    { getOther }
 )(ArticleContainer);

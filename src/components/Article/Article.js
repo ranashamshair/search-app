@@ -3,6 +3,8 @@ import React from 'react';
 import './Article.css';
 
 function Article(props) {
+
+    // TODO excerpt !!!
     
     return (
         <>

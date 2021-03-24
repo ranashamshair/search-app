@@ -7,7 +7,7 @@ import Loader from 'react-loader-spinner';
 import './SearchBar.css';
 import store from "../../store";
 import {
-    getLots, getPastLots, getNews, updateFiltersOnly, updateSearch, getAuctions,
+    getLots, getPastLots, updateFiltersOnly, updateSearch, getAuctions,
 } from "../../actions"; //  getAuctions, getEvents,
 
 import SearchFiltersNew from '../SearchFiltersNew/SearchFiltersNew';
@@ -29,6 +29,11 @@ class SearchBar extends Component {
             categories: [],
             pricemin: '',
             pricemax: '',
+
+            lotsCount: 0,
+            pastLotsCount: 0,
+            auctionsCount: 0,
+            postsCount: 0,
         };
 
         this.delay = 0;
@@ -60,7 +65,22 @@ class SearchBar extends Component {
         const _this = this;
 
         store.subscribe(() => {
-            const {searchText, sorting, upcomingLoading, pastLoading, newsLoading, currentTab, selectedCategories, priceMin, priceMax } = store.getState();
+            const {
+                searchText,
+                sorting,
+                loading,
+                currentTab,
+                selectedCategories,
+                priceMin,
+                priceMax,
+
+                lotsCount,
+                pastLotsCount,
+                auctionsCount,
+                postsCount
+            } = store.getState();
+
+            console.log('STORE currentTab: ', currentTab);
 
             const stateChanges = {
                 query: searchText,
@@ -69,9 +89,13 @@ class SearchBar extends Component {
                 categories: selectedCategories,
                 pricemin: priceMin,
                 pricemax: priceMax,
+                lotsCount: lotsCount,
+                pastLotsCount: pastLotsCount,
+                auctionsCount: auctionsCount,
+                postsCount: postsCount,
             };
 
-            if(!upcomingLoading && !pastLoading && !newsLoading && _this.state.submited){
+            if(!loading && _this.state.submited){
                 stateChanges.submited = false;
             }
 
@@ -91,7 +115,14 @@ class SearchBar extends Component {
     handleSearchSubmit = (e) => {
         e.preventDefault();
 
-        const { currentTab, query, sorting, categories, pricemin, pricemax } = this.state;
+        const {
+            currentTab,
+            query,
+            sorting,
+            categories,
+            pricemin,
+            pricemax
+        } = this.state;
 
         // TODO finish URL params for search !!!
         if (window.history.pushState) {
@@ -123,54 +154,6 @@ class SearchBar extends Component {
         //     priceMax: '',
         // }));
         // store.dispatch(updateSorting({sorting: ''}));
-
-        // TODO remake this method !!!
-        // this.setState({submited: true}, () => {
-        //     const { query } = this.state;
-        //     const payload = store.getState();
-        //
-        //     payload.page = 0;
-        //     payload.upcomingLoading = true;
-        //     payload.searchQuery = query;
-        //     payload.pagePast = 0;
-        //     payload.pastLoading = true;
-        //     // payload.pageAuctions = 0;
-        //     // payload.auctionsLoading = true;
-        //     // payload.pageEvents = 0;
-        //     // payload.eventsLoading = true;
-        //     payload.pageNews = 0;
-        //     payload.newsLoading = true;
-        //     payload.changedLots = true;
-        //     payload.changedPastLots = true;
-        //     // payload.changedAuctions = true;
-        //     // payload.changedEvents = true;
-        //     payload.changedArticles = true;
-        //
-        //     let types = payload.staticFilters.contentType;
-        //     let allFiltersUnchecked = (!types.lots && !types.auctions && !types.events && !types.stories);
-        //
-        //     if(allFiltersUnchecked || types.lots) {
-        //         store.dispatch(getLots(payload));
-        //
-        //         if(!payload.staticFilters.upcomingOnly){
-        //             store.dispatch(getPastLots(payload));
-        //         }
-        //     }
-        //     store.dispatch( getAuctions(payload) );
-        //     // store.dispatch( getEvents(payload) );
-        //     if(allFiltersUnchecked || types.stories) {
-        //         if(payload.searchQuery){
-        //             store.dispatch(getNews(payload));
-        //         }
-        //         else{
-        //             payload.news = [];
-        //             payload.newsLoading = false;
-        //             payload.newsMessage = "Empty search keyword";
-        //
-        //             store.dispatch(updateFiltersOnly(payload));
-        //         }
-        //     }
-        // });
     };
 
     showSearchFilters = (e) => {
@@ -182,7 +165,15 @@ class SearchBar extends Component {
 
 
     render() {
-        const { currentTab } = this.state;
+        const {
+            currentTab,
+            lotsCount,
+            pastLotsCount,
+            auctionsCount,
+            postsCount
+        } = this.state;
+
+        console.log('currentTab: ', currentTab);
 
         return (
             <>
@@ -222,25 +213,25 @@ class SearchBar extends Component {
                                           className={'text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2' + (currentTab === 'upcoming' ? ' active' : '')}
                                           name="upcoming"
                                           onClick={this.props.handleTabSelect}>
-                                            Upcoming ({data.upcoming.count}) {/*get data from redux store about count of lots (count field)*/}
+                                            Upcoming ({lotsCount}) {/*get data from redux store about count of lots (count field)*/}
                                         </button>
                                         <button
                                           className={'text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2' + (currentTab === 'past' ? ' active' : '')}
                                           name="past"
                                           onClick={this.props.handleTabSelect}>
-                                            Past ({data.past.count}) {/*get data from redux store about count of lots (count field)*/}
+                                            Past ({pastLotsCount}) {/*get data from redux store about count of lots (count field)*/}
                                         </button>
                                         <button
                                           className={'text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2' + (currentTab === 'auctions' ? ' active' : '')}
                                           name="auctions"
                                           onClick={this.props.handleTabSelect}>
-                                            Auctions ({data.auctions.count}) {/*get data from redux store about count of lots (count field)*/}
+                                            Auctions ({auctionsCount}) {/*get data from redux store about count of lots (count field)*/}
                                         </button>
                                         <button
                                           className={'text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2' + (currentTab === 'other' ? ' active' : '')}
                                           name="other"
                                           onClick={this.props.handleTabSelect}>
-                                            Other ({data.other.count}) {/*get data from redux store about count of lots (count field)*/}
+                                            Other ({postsCount}) {/*get data from redux store about count of lots (count field)*/}
                                         </button>
                                     </div>
 

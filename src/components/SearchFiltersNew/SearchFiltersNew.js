@@ -68,6 +68,8 @@ class SearchFilters extends Component {
       // TODO remake for redux when API will be updated !!!
     const { tab = 'upcoming', search = '', categories = null, min_price = '', max_price = '', sort = '' } = this.parseUrl();
 
+    console.log('Filters from URL: ', tab);
+    
     if (this.state.currentTab !== tab) {
         store.dispatch(updateTab({currentTab: tab}));
     }
@@ -95,6 +97,7 @@ class SearchFilters extends Component {
     if (window.history.pushState) {
       let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
 
+      console.log('currentTab: ', currentTab);
       if (currentTab) params.push('tab=' + currentTab);
       if (search) params.push('search=' + search);
 
@@ -209,7 +212,7 @@ class SearchFilters extends Component {
   }
 
   render() {
-    const { pricemin, pricemax, sorting, isOpen, isMobile } = this.state;
+    const { currentTab, pricemin, pricemax, sorting, isOpen, isMobile } = this.state;
     const filtersPosition = [
     "Fine Art", "American Art", "Contemporary Art", "19th Centry European Pain", "Photographs", "Diamonds", "Fine Art1", "American Art1", "Contemporary Art1"
     ];
@@ -234,12 +237,18 @@ class SearchFilters extends Component {
         {
           isOpen &&
           <div className="col-12 pt-4 px-0 d-flex justify-content-center justify-content-md-between flex-wrap filter-container">
-            <div className="col-12 col-md-3 col-lg-2 pb-3 pb-md-0 px-md-0">
-              <input type="text" placeholder="Min price" value={pricemin} onChange={this.handleSetMinMax} name="pricemin" className="col-12 mb-2 py-1 px-3" />
-              <input type="text" placeholder="Max price" value={pricemax} onChange={this.handleSetMinMax} name="pricemax" className="col-12 py-1 px-3" />
-            </div>
+            {
+              (currentTab === 'upcoming' || currentTab === 'past') && (
+                  <div className="col-12 col-md-3 col-lg-2 pb-3 pb-md-0 px-md-0">
+                    <input type="text" placeholder="Min price" value={pricemin} onChange={this.handleSetMinMax} name="pricemin" className="col-12 mb-2 py-1 px-3" />
+                    <input type="text" placeholder="Max price" value={pricemax} onChange={this.handleSetMinMax} name="pricemax" className="col-12 py-1 px-3" />
+                  </div>
+              )
+            }
+
             <div className="col-12 col-md-9 d-flex flex-wrap">
               {
+                // TODO categories !!!
                 filtersPosition.map(item => (
                   <div className="ui checkbox col-12 col-lg-4 col-md-6 pb-2" key={item.replaceAll(' ','-')}>
                     <input

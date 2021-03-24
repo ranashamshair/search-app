@@ -15,7 +15,14 @@ class LotContainer extends Component {
         super(props);
 
         this.state = {
-            loading: true
+            loading: true,
+            // TODO for detecting changes !!!
+
+            searchText: '',
+            selectedCategories: [],
+            priceMin: '',
+            priceMax: '',
+            sorting: '',
         };
 
         this.loadMorePast = this.loadMorePast.bind(this);
@@ -23,16 +30,41 @@ class LotContainer extends Component {
 
     componentDidMount() {
         this.props.getPastLots();
+
+        store.subscribe(() => {
+            const storeState = store.getState();
+
+            const {
+                searchText = '',
+                selectedCategories: [],
+                priceMin = '',
+                priceMax = '',
+                sorting = '',
+            } = storeState;
+
+            const changes = {};
+            if (searchText !== this.state.searchText) changes.searchText = searchText;
+            // if (selectedCategories !== this.state.selectedCategories) changes.selectedCategories = selectedCategories;
+            if (priceMin !== this.state.priceMin) changes.priceMin = priceMin;
+            if (priceMax !== this.state.priceMax) changes.priceMax = priceMax;
+            if (sorting !== this.state.sorting) changes.sorting = sorting;
+
+            if (Object.keys(changes).length > 0) {
+                changes.loading = true;
+                this.setState(changes, () => this.props.getPastLots(Object.assign(storeState, changes)));
+            }
+        });
     }
 
 
     loadMorePast(e) {
         const st = store.getState();
 
-        st.pastLoading = true;
+        st.loading = true;
         st.pagePast +=1;
 
-        store.dispatch( getPastLots(st) );
+        // TODO load more !!!
+        // store.dispatch( getPastLots(st) );
     }
 
     render() {
@@ -51,14 +83,12 @@ class LotContainer extends Component {
             // console.log('this.props.pastLots:  ', this.props.pastLots);
 
             pastLots = this.props.pastLots.map(item =>
-                <React.Fragment key={'past_lot_' + item.itemView.ref}>
+                <React.Fragment key={'past_lot_' + item.ref}>
                     {
-                        (item.itemView) ? (
-                            <Lot
-                                lot={item.itemView}
-                                isPast={true}
-                            />
-                        ) : ''
+                        <Lot
+                            lot={item}
+                            isPast={true}
+                        />
                     }
                 </React.Fragment>
             );
@@ -100,10 +130,10 @@ class LotContainer extends Component {
 
 function mapStateToProps(state) {
     return {
-        pastLots: state.pastLots,
-        message: state.pastLotsMessage,
-        page: state.pagePast,
-        pastLoading: state.pastLoading
+        pastLots: state.lotsPast || [],
+        message: state.message,
+        page: state.page,
+        loading: state.loading
     };
 }
 

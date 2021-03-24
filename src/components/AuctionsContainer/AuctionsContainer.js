@@ -20,6 +20,26 @@ class AuctionsContainer extends Component {
 
     componentDidMount() {
         this.props.getAuctions();
+
+        store.subscribe(() => {
+            const storeState = store.getState();
+
+            const {
+                searchText = '',
+                selectedCategories: [],
+                sorting = '',
+            } = storeState;
+
+            const changes = {};
+            if (searchText !== this.state.searchText) changes.searchText = searchText;
+            // if (selectedCategories !== this.state.selectedCategories) changes.selectedCategories = selectedCategories;
+            if (sorting !== this.state.sorting) changes.sorting = sorting;
+
+            if (Object.keys(changes).length > 0) {
+                changes.loading = true;
+                this.setState(changes, () => this.props.getAuctions(Object.assign(storeState, changes)));
+            }
+        });
     }
 
 
@@ -29,7 +49,8 @@ class AuctionsContainer extends Component {
         st.auctionsLoading = true;
         st.pageAuctions +=1;
 
-        store.dispatch( getAuctions(st) );
+        // TODO load more !!!
+        // store.dispatch( getAuctions(st) );
     }
 
     render() {
@@ -43,15 +64,15 @@ class AuctionsContainer extends Component {
 
         if ( this.props.auctions.length )
         {
-            auctions = this.props.auctions.map(item =>
+            auctions = this.props.auctions.map((item, key) =>
                 <Auction
-                    key={'auction_' + item.id}
+                    key={'auction_' + key}
                     auctionId={item.id}
                     location={item.location}
-                    link={item.link}
-                    title={(item.title) ? item.title.rendered : ''}
+                    // link={item.link}
+                    title={item.title}
                     datetime={item.date}
-                    imgSrc={item.image_url}
+                    imgSrc={item.photo}
                 />
             );
 
@@ -91,10 +112,10 @@ class AuctionsContainer extends Component {
 
 function mapStateToProps(state) {
     return {
-        auctions: (state.auctions && state.auctions.auctions) ? state.auctions.auctions : [],
-        message: state.auctionsMessage,
-        page: state.pageAuctions,
-        loading: state.newsLoading
+        auctions: state.auctionsNew || [],
+        message: state.message,
+        page: state.page,
+        loading: state.loading
     };
 }
 

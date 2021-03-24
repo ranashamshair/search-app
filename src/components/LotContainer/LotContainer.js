@@ -7,8 +7,6 @@ import {connect} from "react-redux";
 import {getLots} from '../../actions/index';
 import store from "../../store";
 
-import data from '../../requestApi.json';
-
 class LotContainer extends Component {
 
     constructor(props) {
@@ -23,6 +21,30 @@ class LotContainer extends Component {
 
     componentDidMount() {
         this.props.getLots();
+
+        store.subscribe(() => {
+            const storeState = store.getState();
+
+            const {
+                searchText = '',
+                selectedCategories: [],
+                priceMin = '',
+                priceMax = '',
+                sorting = '',
+            } = storeState;
+
+            const changes = {};
+            if (searchText !== this.state.searchText) changes.searchText = searchText;
+            // if (selectedCategories !== this.state.selectedCategories) changes.selectedCategories = selectedCategories;
+            if (priceMin !== this.state.priceMin) changes.priceMin = priceMin;
+            if (priceMax !== this.state.priceMax) changes.priceMax = priceMax;
+            if (sorting !== this.state.sorting) changes.sorting = sorting;
+
+            if (Object.keys(changes).length > 0) {
+                changes.loading = true;
+                this.setState(changes, () => this.props.getLots(Object.assign(storeState, changes)));
+            }
+        });
     }
 
     loadMoreUpcoming(e) {
@@ -233,41 +255,31 @@ class LotContainer extends Component {
             }
         }
 
-        if (this.props.tab) {
-            lots = data[this.props.tab].data.map((item, index) => (
-              <React.Fragment key={item.ref ? 'lot_' + item.ref : 'lot_' + index}>
-                  {(item) ? (<Lot lot={item}/>) : ''}
-              </React.Fragment>
-            ));
-        }
-
         // restore this when api is ready to work maybe
-        // if ( this.props.lots.length )
-        // {
-        //     lots = this.props.lots.map(item =>
-        //         <React.Fragment key={'lot_' + item.itemView.ref} >
-        //         {
-        //             (item.itemView) ? (
-        //                 <Lot
-        //                     lot={item.itemView}
-        //                 />
-        //             ) : ''
-        //         }
-        //         </React.Fragment>
-        //     );
-        //
-        // } else {
-        //     if ( !this.props.loading ) {
-        //         if(!this.state.loading && this.props.message){
-        //             show = false;
-        //             // lots = <p className="error-message">{this.props.message}</p>;
-        //         }else{
-        //             setTimeout(() => {
-        //                 this.setState({loading: false});
-        //             }, 3000);
-        //         }
-        //     }
-        // }
+        if ( this.props.lots.length )
+        {
+            lots = this.props.lots.map(item =>
+                <React.Fragment key={'lot_' + item.ref} >
+                {
+                    <Lot
+                        lot={item}
+                    />
+                }
+                </React.Fragment>
+            );
+
+        } else {
+            if ( !this.props.loading ) {
+                if(!this.state.loading && this.props.message){
+                    show = false;
+                    // lots = <p className="error-message">{this.props.message}</p>;
+                }else{
+                    setTimeout(() => {
+                        this.setState({loading: false});
+                    }, 3000);
+                }
+            }
+        }
 
 
         return show ? (
@@ -295,10 +307,10 @@ class LotContainer extends Component {
 
 function mapStateToProps(state) {
     return {
-        lots: state.lots,
-        message: state.lotsMessage,
+        lots: state.lotsNew || [],
+        message: state.message,
         page: state.page,
-        upcomingLoading: state.upcomingLoading
+        loading: state.loading
     };
 }
 
