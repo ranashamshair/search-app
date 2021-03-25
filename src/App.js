@@ -12,7 +12,7 @@ import { Provider } from 'react-redux';
 import store from './store/index';
 import {getLots, getCategories, getPastLots, getAuctions, getOther, loadMore, updateTab, setNextPage} from './actions/index';
 import PastLotContainer from "./components/PastLotContainer/PastLotContainer";
-import {updateFiltersNew} from "./actions";
+import {updateFiltersNew, updateSearch, updateSorting} from "./actions";
 import AuctionsContainer from "./components/AuctionsContainer/AuctionsContainer";
 
 window.store = store;
@@ -29,11 +29,48 @@ class App extends Component{
     constructor(props) {
         super(props);
 
+        const params = this.parseUrl();
+
         this.state = {
             noResults: false,
-            openTabs: "upcoming"
+            openTabs: params.tab || "upcoming"
         };
+        this.getFiltersFromUrlParams(params);
         this.handleTabSelect = this.handleTabSelect.bind(this);
+    }
+
+    parseUrl() {
+        const url = window.location.search;
+        let query = url.substr(1);
+        let result = {};
+        query.split("&").forEach(function(part) {
+            let item = part.split("=");
+            result[item[0]] = decodeURIComponent(item[1]);
+        });
+        return result;
+    }
+
+    getFiltersFromUrlParams(params) {
+        if (!params) params = this.parseUrl();
+
+        const { tab = 'upcoming', search = '', categories = null, min_price = '', max_price = '', sort = '' } = params;
+
+        if (this.state.currentTab !== tab) {
+            store.dispatch(updateTab({currentTab: tab}));
+        }
+
+        store.dispatch(updateFiltersNew({
+            selectedCategories: categories ? categories.split(',') : [],
+            priceMin: min_price,
+            priceMax: max_price,
+        }, tab));
+
+        if (this.state.search !== search) {
+            store.dispatch(updateSearch({searchText: search}));
+        }
+        if (this.state.sorting !== sort) {
+            store.dispatch(updateSorting({sorting: sort}));
+        }
     }
 
     updateUrlParams() {
@@ -82,6 +119,16 @@ class App extends Component{
                 openTabs: currentTab
             })
         });
+
+        window.addEventListener('popstate', () => {
+            this.getFiltersFromUrlParams();
+        });
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('popstate', () => {
+            this.getFiltersFromUrlParams();
+        });
     }
 
     handleTabSelect (e) {
@@ -92,6 +139,8 @@ class App extends Component{
 
     switchTabRenderer () {
         const { openTabs = 'upcoming' } = this.state;
+
+        console.log('SWITCH openTabs  :  ', openTabs);
 
         switch (openTabs) {
             case 'upcoming': return <LotContainer />;
@@ -104,6 +153,7 @@ class App extends Component{
 
     render() {
         const { noResults } = this.state;
+        console.log('noResults: ', noResults);
 
         return (
             <div className="App">

@@ -10,7 +10,7 @@ import {
   updateSearch, updateSorting, updateTab
 } from "../../actions";
 import store from "../../store";
-// import Loader from "react-loader-spinner";
+import Loader from "react-loader-spinner";
 
 // TODO cleanup after API !!!
 class SearchFilters extends Component {
@@ -18,32 +18,21 @@ class SearchFilters extends Component {
   constructor(props) {
     super(props);
 
+    const storeState = store.getState();
+
     this.state = {
-      // submited: false,
-      submited: true,
+      submited: storeState.loading || true,
       isOpen: true, // work
       isMobile: false, // work
       setCategory: [], // work
-      upcoming: false,
 
-      pricemin: '',
-      pricemax: '',
+      pricemin: storeState.priceMin || '',
+      pricemax: storeState.priceMax || '',
+      categoriesSaved: storeState.selectedCategories || [],
 
-      categoriesSaved: [],
-
-      filterCounter: 0,
-
-      dropdowns: {
-        upcoming: false,
-        category: false,
-        other: false
-      },
-
-      // NEW DATA
-      currentTab: 'upcoming',
-      sorting: '',
-      search: '',
-
+      currentTab: storeState.currentTab || 'upcoming',
+      sorting: storeState.sorting || '',
+      search: storeState.searchText || '',
     };
 
     this.handleOpenClose = this.handleOpenClose.bind(this);
@@ -53,45 +42,8 @@ class SearchFilters extends Component {
     this.handleSortingSelect = this.handleSortingSelect.bind(this);
   }
 
-  parseUrl() {
-    const url = window.location.search;
-    let query = url.substr(1);
-    let result = {};
-    query.split("&").forEach(function(part) {
-      let item = part.split("=");
-      result[item[0]] = decodeURIComponent(item[1]);
-    });
-    return result;
-  }
-
-  getFiltersFromUrlParams() {
-      // TODO remake for redux when API will be updated !!!
-    const { tab = 'upcoming', search = '', categories = null, min_price = '', max_price = '', sort = '' } = this.parseUrl();
-
-    console.log('Filters from URL: ', tab);
-    
-    if (this.state.currentTab !== tab) {
-        store.dispatch(updateTab({currentTab: tab}));
-    }
-
-    store.dispatch(updateFiltersNew({
-        selectedCategories: categories ? categories.split(',') : [],
-        priceMin: min_price,
-        priceMax: max_price,
-    }));
-
-    if (this.state.search !== search) {
-        store.dispatch(updateSearch({searchText: search}));
-    }
-    if (this.state.sorting !== sort) {
-        store.dispatch(updateSorting({sorting: sort}));
-    }
-  }
-
   updateUrlParams() {
     const { search = '', currentTab, setCategory = [], pricemin = null, pricemax = null, sorting = null } = this.state;
-
-
 
     const params = [];
     // const
@@ -99,7 +51,6 @@ class SearchFilters extends Component {
     if (window.history.pushState) {
       let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
 
-      console.log('currentTab: ', currentTab);
       if (currentTab) params.push('tab=' + currentTab);
       if (search) params.push('search=' + search);
 
@@ -121,7 +72,7 @@ class SearchFilters extends Component {
           selectedCategories: setCategory,
           priceMin: pricemin || '',
           priceMax: pricemax || '',
-      }));
+      }, currentTab));
       store.dispatch(updateSorting({sorting: sorting}));
     }
   }
@@ -132,7 +83,7 @@ class SearchFilters extends Component {
     const _this = this;
 
     store.subscribe(() => {
-      const { upcomingLoading, pastLoading, newsLoading, currentTab, selectedCategories, priceMin, priceMax, sorting, searchText } = store.getState();
+      const { loading, currentTab, selectedCategories, priceMin, priceMax, sorting, searchText } = store.getState();
 
       const stateChanges = {
         currentTab: currentTab,
@@ -144,16 +95,9 @@ class SearchFilters extends Component {
         sorting: sorting,
       };
 
-      if(!upcomingLoading && !pastLoading && !newsLoading && _this.state.submited){
-        stateChanges.submited = false;
-      }
+      stateChanges.submited = (!loading && _this.state.submited) ? false : loading;
 
       this.setState(stateChanges);
-    });
-
-    this.getFiltersFromUrlParams();
-    window.addEventListener('popstate', () => {
-        this.getFiltersFromUrlParams();
     });
 
     if ( window.innerWidth < 576 ) {
@@ -161,12 +105,6 @@ class SearchFilters extends Component {
     } else {
       this.setState({isMobile: false});
     }
-  }
-
-  componentWillUnmount() {
-      window.removeEventListener('popstate', () => {
-          this.getFiltersFromUrlParams();
-      });
   }
 
   categorySelected = categoryId => (this.state.categoriesSaved.indexOf(categoryId) !== -1);
@@ -208,97 +146,78 @@ class SearchFilters extends Component {
   }
 
   handleSortingSelect (e) {
-    console.log('e.target.value: ', e.target.value);
     this.setState({sorting: e.target.value}, () => this.updateUrlParams());
   }
 
   render() {
-    const { currentTab, pricemin, pricemax, sorting, isOpen, isMobile } = this.state;
+    const { submited, currentTab, pricemin, pricemax, sorting, isOpen, isMobile } = this.state;
     const filtersPosition = [
     "Fine Art", "American Art", "Contemporary Art", "19th Centry European Pain", "Photographs", "Diamonds", "Fine Art1", "American Art1", "Contemporary Art1"
     ];
 
-    console.log('sorting: ', sorting);
+    // if(submited){
+    //   setTimeout(() => {
+    //     this.setState({submited: false})
+    //   }, 3000)
+    // }
+
 
     const sortOptions = {
       'upcoming': [
         {
-          label: 'Next sale date (older)',
+          label: 'Next Sale Date',
           value: 'date||asc'
         },
         {
-          label: 'Next sale date (newer)',
-          value: 'date||desc'
-        },
-        {
-          label: 'Estimate (low to high)',
+          label: 'Estimate - Low to High',
           value: 'price||asc'
         },
         {
-          label: 'Estimate (high to low)',
+          label: 'Estimate - High to Low',
           value: 'price||desc'
         }
       ],
       'past': [
         {
-          label: 'Past sale date (older)',
-          value: 'date||asc'
-        },
-        {
-          label: 'Past sale date (newer)',
+          label: 'Past Sale Date',
           value: 'date||desc'
         },
         {
-          label: 'Result price (low to high)',
+          label: 'Sold Price - Low to High',
           value: 'price||asc'
         },
         {
-          label: 'Result price (high to low)',
+          label: 'Sold Price - High to Low',
           value: 'price||desc'
         }
       ],
       'auctions': [
         {
-          label: 'Date (older)',
+          label: 'Date',
           value: 'date||asc'
         },
         {
-          label: 'Date (newer)',
-          value: 'date||desc'
-        },
-        {
-          label: 'Title (Ascending)',
+          label: 'Title',
           value: 'title||asc'
         },
+        //  TODO category sorting ???
         {
-          label: 'Title (Descending)',
-          value: 'title||desc'
-        },
-        {
-          label: 'Category (Ascending)',
+          label: 'Category',
           value: 'category||asc'
         },
-        {
-          label: 'Category (Descending)',
-          value: 'category||desc'
-        }
+        // {
+        //   label: 'Category (Descending)',
+        //   value: 'category||desc'
+        // }
       ],
       'other': [
         {
-          label: 'Date (older)',
-          value: 'date||asc'
-        },
-        {
-          label: 'Date (newer)',
+          label: 'Recent',
           value: 'date||desc'
         },
         {
-          label: 'Title (Ascending)',
+          label: 'Title',
           value: 'title||asc'
-        },
-        {
-          label: 'Title (Descending)',
-          value: 'title||desc'
         },
       ],
     };
@@ -306,64 +225,79 @@ class SearchFilters extends Component {
     const currentSortOptions = sortOptions[currentTab];
 
     return (
-      <div className="pt-4 search-filter">
-        <div className="d-flex justify-content-center justify-content-sm-between align-items-end">
-          <button className="py-2 px-4 text-uppercase font-weight-bold" onClick={this.handleOpenClose}>Filter <FontAwesomeIcon className="ml-3" icon={isOpen ? faArrowUp : faArrowDown}/></button>
-          {
-            !isMobile ?
-            (<select onChange={this.handleSortingSelect} value={sorting}>
-              <option value="">Sort by</option>
-              {
-                currentSortOptions.map(opt => (
-                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                ))
-              }
-            </select>)
-          : ""
-          }
-        </div>
-        {
-          isOpen &&
-          <div className="col-12 pt-4 px-0 d-flex justify-content-center justify-content-md-between flex-wrap filter-container">
+        <>
             {
-              (currentTab === 'upcoming' || currentTab === 'past') && (
-                  <div className="col-12 col-md-3 col-lg-2 pb-3 pb-md-0 px-md-0">
-                    <input type="text" placeholder="Min price" value={pricemin} onChange={this.handleSetMinMax} name="pricemin" className="col-12 mb-2 py-1 px-3" />
-                    <input type="text" placeholder="Max price" value={pricemax} onChange={this.handleSetMinMax} name="pricemax" className="col-12 py-1 px-3" />
-                  </div>
-              )
+                submited ? (
+                    <div className="preloader-blur">
+                        <Loader
+                            type="ThreeDots"
+                            color="#8C2828"
+                            height={50}
+                            width={50}
+                            timeout={3000}
+                        />
+                    </div>
+                ) : ''
             }
+            <div className="pt-4 search-filter">
+                <div className="d-flex justify-content-center justify-content-sm-between align-items-end">
+                    <button className="py-2 px-4 text-uppercase font-weight-bold" onClick={this.handleOpenClose}>Filter <FontAwesomeIcon className="ml-3" icon={isOpen ? faArrowUp : faArrowDown}/></button>
+                    {
+                        !isMobile ?
+                            (<select onChange={this.handleSortingSelect} value={sorting}>
+                                <option value="" disabled>Sort by</option>
+                                {
+                                    currentSortOptions.map(opt => (
+                                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                    ))
+                                }
+                            </select>)
+                            : ""
+                    }
+                </div>
+                {
+                    isOpen &&
+                    <div className="col-12 pt-4 px-0 d-flex justify-content-center justify-content-md-between flex-wrap filter-container">
+                        {
+                            (currentTab === 'upcoming' || currentTab === 'past') && (
+                                <div className="col-12 col-md-3 col-lg-2 pb-3 pb-md-0 px-md-0">
+                                    <input type="text" placeholder="Min price" value={pricemin} onChange={this.handleSetMinMax} name="pricemin" className="col-12 mb-2 py-1 px-3" />
+                                    <input type="text" placeholder="Max price" value={pricemax} onChange={this.handleSetMinMax} name="pricemax" className="col-12 py-1 px-3" />
+                                </div>
+                            )
+                        }
 
-            <div className="col-12 col-md-9 d-flex flex-wrap">
-              {
-                // TODO categories !!!
-                filtersPosition.map(item => (
-                  <div className="ui checkbox col-12 col-lg-4 col-md-6 pb-2" key={item.replaceAll(' ','-')}>
-                    <input
-                      type="checkbox"
-                      id={item.replaceAll(' ','-')}
-                      // defaultChecked={this.categorySelected(item.replaceAll(' ','-'))}
-                      checked={this.categorySelected(item.replaceAll(' ','-'))}
-                      value={item.replaceAll(' ','-')}
-                      onChange={this.handleCheckboxChange}
-                    />
-                    <label htmlFor={item.replaceAll(' ','-')}>{item}</label>
-                  </div>
-                ))
-                // this.props.categories.map(item => (
-                //   <div className="ui checkbox" key={'category_' + item.id}>
-                //     <input type="checkbox" data-input="categories_chechbox" id={'category_' + item.id} defaultChecked={this.categorySelected(item.id)} value={item.id} />
-                //     <label htmlFor={'category_' + item.id}>{item.name}</label>
-                //   </div>
-                // ))
-              }
+                        <div className="col-12 col-md-9 d-flex flex-wrap">
+                            {
+                                // TODO categories !!!
+                                filtersPosition.map(item => (
+                                    <div className="ui checkbox col-12 col-lg-4 col-md-6 pb-2" key={item.replaceAll(' ','-')}>
+                                        <input
+                                            type="checkbox"
+                                            id={item.replaceAll(' ','-')}
+                                            // defaultChecked={this.categorySelected(item.replaceAll(' ','-'))}
+                                            checked={this.categorySelected(item.replaceAll(' ','-'))}
+                                            value={item.replaceAll(' ','-')}
+                                            onChange={this.handleCheckboxChange}
+                                        />
+                                        <label htmlFor={item.replaceAll(' ','-')}>{item}</label>
+                                    </div>
+                                ))
+                                // this.props.categories.map(item => (
+                                //   <div className="ui checkbox" key={'category_' + item.id}>
+                                //     <input type="checkbox" data-input="categories_chechbox" id={'category_' + item.id} defaultChecked={this.categorySelected(item.id)} value={item.id} />
+                                //     <label htmlFor={'category_' + item.id}>{item.name}</label>
+                                //   </div>
+                                // ))
+                            }
+                        </div>
+                        <div className="col-12 d-flex justify-content-center p-3">
+                            <button type="submit" className="py-2 px-4 text-uppercase font-weight-bold" onClick={this.handleSubmitFilters}>Apply filters <FontAwesomeIcon className="ml-3" icon={faArrowRight}/></button>
+                        </div>
+                    </div>
+                }
             </div>
-            <div className="col-12 d-flex justify-content-center p-3">
-              <button type="submit" className="py-2 px-4 text-uppercase font-weight-bold" onClick={this.handleSubmitFilters}>Apply filters <FontAwesomeIcon className="ml-3" icon={faArrowRight}/></button>
-            </div>
-          </div>
-        }
-      </div>
+        </>
     );
   }
 }
@@ -380,49 +314,3 @@ export default connect(
   mapStateToProps,
   { getCategories }
 )(SearchFilters);
-
-
-// function SearchFiltersNew () {
-//
-//   let filterStyle = `${isOpen ? "d-flex" : "d-none"}`;
-//
-//   const filtersPosition = [
-//     "Fine Art", "American Art", "Contemporary Art", "19th Centry European Pain", "Photographs", "Diamonds", "Fine Art", "American Art", "Contemporary Art"
-//   ]
-//
-//   return (
-//     <div className="pt-4 search-filter">
-//       <div className="d-flex justify-content-between">
-//         <button className="py-2 px-4 text-uppercase" onClick={handleButtonClick}>Filter <FontAwesomeIcon className="ml-3" icon={isOpen ? faArrowUp : faArrowDown}/></button>
-//         <select>
-//           <option value="1">1</option>
-//           <option value="2">2</option>
-//           <option value="3">3</option>
-//           <option value="4">4</option>
-//         </select>
-//       </div>
-//       {
-//         isOpen &&
-//         <div className="col-12 py-4 px-0 d-flex justify-content-between">
-//           <div className="col-2 p-0">
-//             <input type="text" placeholder="Min price" className="col-12 mb-2 py-1 px-3" />
-//             <input type="text" placeholder="Max price" className="col-12 py-1 px-3" />
-//           </div>
-//           <div className="col-10">
-//             {
-//               filtersPosition.map((item) => {
-//                 const formatStr = item.replace(' ', '-');
-//                 return (
-//                   <div className="ui checkbox" key={'category_' + item.id}>
-//                     <input type="checkbox" data-input="categories_chechbox" id={'category_' + item.id} defaultChecked={categorySelected(item.id)} value={item.id} />
-//                     <label htmlFor={'category_' + item.id}>{item.name}</label>
-//                   </div>
-//                 )
-//               })
-//             }
-//           </div>
-//         </div>
-//       }
-//     </div>
-//   );
-// }

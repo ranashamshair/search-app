@@ -4,48 +4,6 @@ import {
 } from "../constants/action-types";
 
 const initialState = {
-    pagePast: 0,
-    // pageAuctions: 0,
-    // pageEvents: 0,
-    pageNews: 0,
-    searchQuery: '',
-
-    pastLots: [],
-    // auctions: [],
-    // events: [],
-    news: [],
-    lotsMessage: '',
-    pastLotsMessage: '',
-    // auctionsMessage: '',
-    // eventsMessage: '',
-    newsMessage: '',
-    categories: [],
-    // upcomingLoading: false,
-    upcomingLoading: true,
-    // pastLoading: false,
-    pastLoading: true,
-    // auctionsLoading: false,
-    // eventsLoading: false,
-    newsLoading: true,
-    // newsLoading: false,
-    staticFilters: {
-        upcomingOnly: false,
-        contentType: {
-            lots: false,
-            // auctions: false,
-            // events: false,
-            stories: false
-        },
-        categories: [],
-        pricemin: '',
-        pricemax: '',
-    },
-    changedLots: false,
-    changedPastLots: false,
-    // changedAuctions: false,
-    // changedEvents: false,
-    changedArticles: false,
-
     // FOR NEW VERSION !!!
     loading: '',
     lotsNew: [],
@@ -190,36 +148,60 @@ function rootReducer(state = initialState, action) {
         case UPDATE_FILTERS_NEW: {
             let changes = {
                 page: 1,
-                loading: false,
+                loading: true,
             };
 
             return Object.assign({}, state, action.payload, changes);
         }
         case UPDATE_SORTING: {
-            return Object.assign({}, state, { sorting: action.payload.sorting });
+            return Object.assign({}, state, { sorting: action.payload.sorting, loading: true });
         }
         case UPDATE_SEARCH: {
-            return Object.assign({}, state, { searchText: action.payload.searchText });
+            return Object.assign({}, state, { searchText: action.payload.searchText, loading: true });
         }
         case LOAD_MORE: {
-            console.log('payload: ', action.payload);
-        //     TODO load more (pagination) !!!
             let changes = {
                 loading: false,
             };
 
-            const { items = [], count = 0, success = false, pageSize = 20, message = null } = action.payload;
+            const { items = [], success = false, pageSize = 20, message = null, currentTab = 'upcoming' } = action.payload;
 
             if (!success || items.length < pageSize) changes.page = -1;
 
             if (success) {
-                changes.items = (state.items && (changes.page > 0 || changes.page === -1)) ? [...state.items, ...items] : items;
-                changes.activeTabCounter = count;
+                switch (currentTab) {
+                    case 'upcoming': changes.lotsNew = (state.lotsNew && state.lotsNew.length > 0) ? [...state.lotsNew, ...items] : items; break;
+                    case 'past': changes.lotsPast = (state.lotsPast && state.lotsPast.length > 0) ? [...state.lotsPast, ...items] : items; break;
+                    case 'auctions': changes.auctionsNew = (state.auctionsNew && state.auctionsNew.length > 0) ? [...state.auctionsNew, ...items] : items; break;
+                    case 'other': changes.postsNew = (state.postsNew && state.postsNew.length > 0) ? [...state.postsNew, ...items] : items; break;
+                }
+                delete changes.items;
             } else {
-                changes.items = (state.items && state.items > 0) ? state.items: [];
-
-                if (changes.items.length === 0 && message) changes.message = message;
+                switch (currentTab) {
+                    case 'upcoming': {
+                        changes.lotsNew = (state.lotsNew && state.lotsNew.length > 0) ? state.lotsNew: [];
+                        if (changes.lotsNew.length === 0 && message) changes.message = message;
+                        break;
+                    }
+                    case 'past': {
+                        changes.lotsPast = (state.lotsPast && state.lotsPast.length > 0) ? state.lotsPast: [];
+                        if (changes.lotsPast.length === 0 && message) changes.message = message;
+                        break;
+                    }
+                    case 'auctions': {
+                        changes.auctionsNew = (state.auctionsNew && state.auctionsNew.length > 0) ? state.auctionsNew: [];
+                        if (changes.auctionsNew.length === 0 && message) changes.message = message;
+                        break;
+                    }
+                    case 'other': {
+                        changes.postsNew = (state.postsNew && state.postsNew.length > 0) ? state.postsNew: [];
+                        if (changes.postsNew.length === 0 && message) changes.message = message;
+                        break;
+                    }
+                }
             }
+
+            console.log('LOAD_MORE reducer loading :', changes.loading);
 
             return Object.assign({}, state, changes);
         }

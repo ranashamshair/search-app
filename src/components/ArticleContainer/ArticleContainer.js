@@ -11,15 +11,22 @@ class ArticleContainer extends Component {
     constructor(props) {
         super(props);
 
+        const storeState = store.getState();
+
         this.state = {
-            loading: true
+            loading: true,
+            page: 1,
+            // for detecting changes !!!
+            searchText: storeState.searchText || '',
+            // selectedCategories: storeState.selectedCategories || [],
+            sorting: storeState.sorting || '',
         };
 
         this.loadMore = this.loadMore.bind(this);
     }
 
     componentDidMount() {
-        this.props.getOther();
+        this.props.getOther(this.state);
 
         store.subscribe(() => {
             const storeState = store.getState();
@@ -32,27 +39,26 @@ class ArticleContainer extends Component {
                 page = 1,
             } = storeState;
 
+            // const difference = selectedCategories
+            //     .filter(x => !this.state.selectedCategories.includes(x))
+            //     .concat(this.state.selectedCategories.filter(x => !selectedCategories.includes(x)));
+
             const changes = {};
             if (searchText !== this.state.searchText) changes.searchText = searchText;
-            // if (selectedCategories !== this.state.selectedCategories) changes.selectedCategories = selectedCategories;
+            // if (difference.length > 0) changes.selectedCategories = selectedCategories;
             if (sorting !== this.state.sorting) changes.sorting = sorting;
 
             if (Object.keys(changes).length > 0) {
                 changes.loading = true;
                 this.setState(changes, () => this.props.getOther(Object.assign(storeState, changes)));
-            } else if (page > 1) {
-                store.dispatch( loadMore(storeState, storeState.currentTab) );
+            } else if (page > 1 && page !== this.state.page) {
+                this.setState({page: page}, () => store.dispatch( loadMore(storeState, storeState.currentTab) ) );
             }
         });
     }
 
 
     loadMore(e) {
-        const st = store.getState();
-
-        st.loading = true;
-        st.page +=1;
-
         store.dispatch( setNextPage() );
     }
 

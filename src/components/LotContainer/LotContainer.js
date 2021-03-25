@@ -11,15 +11,24 @@ class LotContainer extends Component {
     constructor(props) {
         super(props);
 
+        const storeState = store.getState();
+
         this.state = {
-            loading: true
+            loading: true,
+            page: 1,
+            // for detecting changes !!!
+            searchText: storeState.searchText || '',
+            selectedCategories: storeState.selectedCategories || [],
+            priceMin: storeState.priceMin || '',
+            priceMax: storeState.priceMax || '',
+            sorting: storeState.sorting || '',
         };
 
         this.loadMore = this.loadMore.bind(this);
     }
 
     componentDidMount() {
-        this.props.getLots();
+        this.props.getLots(this.state);
 
         store.subscribe(() => {
             const storeState = store.getState();
@@ -33,10 +42,14 @@ class LotContainer extends Component {
                 page = 1
             } = storeState;
 
+            const difference = selectedCategories
+                .filter(x => !this.state.selectedCategories.includes(x))
+                .concat(this.state.selectedCategories.filter(x => !selectedCategories.includes(x)));
+
             const changes = {};
             if (searchText !== this.state.searchText) changes.searchText = searchText;
             // TODO category filter changes !!!
-            if (selectedCategories !== this.state.selectedCategories) changes.selectedCategories = selectedCategories;
+            if (difference.length > 0) changes.selectedCategories = selectedCategories;
             if (priceMin !== this.state.priceMin) changes.priceMin = priceMin;
             if (priceMax !== this.state.priceMax) changes.priceMax = priceMax;
             if (sorting !== this.state.sorting) changes.sorting = sorting;
@@ -44,211 +57,20 @@ class LotContainer extends Component {
             if (Object.keys(changes).length > 0) {
                 changes.loading = true;
                 this.setState(changes, () => this.props.getLots(Object.assign(storeState, changes)));
-            } else if (page > 1) {
-                store.dispatch( loadMore(storeState, storeState.currentTab) );
+            } else if (page > 1 && page !== this.state.page) {
+                this.setState({page: page}, () => store.dispatch( loadMore(storeState, storeState.currentTab) ) );
             }
         });
     }
 
     loadMore(e) {
-        const st = store.getState();
-
-        st.upcomingLoading = true;
-
         store.dispatch( setNextPage() );
     }
-
 
     render() {
         let lots = [];
 
         let show = true;
-
-        // const data = {
-        //     upcoming: {
-        //         data: [
-        //             {
-        //                 currencySymbol:
-        //                 "CAD",
-        //                 estimateHigh:
-        //                 60,
-        //                 estimateLow:
-        //                 30,
-        //                 lotNumber:
-        //                 35,
-        //                 photo:
-        //                 "https://image.invaluable.com/housePhotos/maynardsfineart/62/693662/H0759-L241284367.jpg",
-        //                 bid:
-        //                 20,
-        //                 ref:
-        //                 "6A74B5FB47",
-        //                 title:
-        //                 "David Mitchell, 'The Bone Clocks', first edition,",
-        //                 saleTitle:
-        //                 "David Mitchell, 'The Bone Clocks', first edition,",
-        //                 saleDate:
-        //                 "DATE CONVERTED TO UNIX_TIMESTAMP"
-        //             },
-        //             {
-        //                 currencySymbol: "CAD",
-        //                 estimateHigh: 60,
-        //                 estimateLow: 30,
-        //                 lotNumber: 35,
-        //                 photo: "",
-        //                 bid: 20,
-        //                 ref: "6A74B5FB48",
-        //                 title: "David Mitchell, 'The Bone Clocks', first edition,",
-        //                 saleTitle: "David Mitchell, 'The Bone Clocks', first edition,",
-        //                 saleDate: "DATE CONVERTED TO UNIX_TIMESTAMP"
-        //             },
-        //             {
-        //                 currencySymbol:
-        //                 "CAD",
-        //                 estimateHigh:
-        //                 60,
-        //                 estimateLow:
-        //                 30,
-        //                 lotNumber:
-        //                 35,
-        //                 photo:
-        //                 "https://image.invaluable.com/housePhotos/maynardsfineart/62/693662/H0759-L241284367.jpg",
-        //                 bid:
-        //                 20,
-        //                 ref:
-        //                 "6A74B5FB49",
-        //                 title:
-        //                 "David Mitchell, 'The Bone Clocks', first edition,",
-        //                 saleTitle:
-        //                 "David Mitchell, 'The Bone Clocks', first edition,",
-        //                 saleDate:
-        //                 "DATE CONVERTED TO UNIX_TIMESTAMP"
-        //             },
-        //         ],
-        //         count: 3,
-        //         used_categories: [
-        //             '123', '456', '789'
-        //         ],
-        //     },
-        //
-        //     past: {
-        //         data: [
-        //             {
-        //                 currencySymbol: "$",
-        //                 estimateHigh: 60,
-        //                 estimateLow: 40,
-        //                 lotNumber: 241,
-        //                 lotNumberExtension: "",
-        //                 photo: "",
-        //                 priceResult: 55,
-        //                 ref: "001D711C98",
-        //                 title: "A royal Worcester ewer of squat lenticular form,",
-        //                 saleTitle: "A royal Worcester ewer of squat lenticular form,",
-        //                 saleDate: "DATE CONVERTED TO UNIX_TIMESTAMP"
-        //             },
-        //             {
-        //                 currencySymbol: "$",
-        //                 estimateHigh: 60,
-        //                 estimateLow: 40,
-        //                 lotNumber: 241,
-        //                 lotNumberExtension: "",
-        //                 photo: "https://stageimg.invaluable.com/housePhotos/Maynards/33/468333/H0759-L41582879.jpg",
-        //                 priceResult: 0,
-        //                 ref: "001D711C99",
-        //                 title: "A royal Worcester ewer of squat lenticular form,",
-        //                 saleTitle: "A royal Worcester ewer of squat lenticular form,",
-        //                 saleDate: "DATE CONVERTED TO UNIX_TIMESTAMP"
-        //             },
-        //             {
-        //                 currencySymbol: "$",
-        //                 estimateHigh: 60,
-        //                 estimateLow: 40,
-        //                 lotNumber: 241,
-        //                 lotNumberExtension: "",
-        //                 photo: "https://stageimg.invaluable.com/housePhotos/Maynards/33/468333/H0759-L41582879.jpg",
-        //                 priceResult: 55,
-        //                 ref: "001D711B01",
-        //                 title: "A royal Worcester ewer of squat lenticular form,",
-        //                 saleTitle: "A royal Worcester ewer of squat lenticular form,",
-        //                 saleDate: "DATE CONVERTED TO UNIX_TIMESTAMP"
-        //             },
-        //         ],
-        //         count: 3,
-        //         used_categories: [
-        //             '123', '456', '789'
-        //         ],
-        //     },
-        //
-        //     auctions: {
-        //         data: [
-        //             {
-        //                 photo: "https://stageimg.invaluable.com/housePhotos/Maynards/33/468333/H0759-L41582879.jpg",
-        //                 ref: "001D711C97",
-        //                 title: "A royal Worcester ewer of squat lenticular form,",
-        //                 location: {
-        //                     city: "Kharkov",
-        //                     state: null,
-        //                     country: "ua"
-        //                 },
-        //                 date: "DATE CONVERTED TO UNIX_TIMESTAMP"
-        //             },
-        //             {
-        //                 photo: "https://stageimg.invaluable.com/housePhotos/Maynards/33/468333/H0759-L41582879.jpg",
-        //                 ref: "001D711C98",
-        //                 title: "A royal Worcester ewer of squat lenticular form,",
-        //                 location: {
-        //                     city: "Kharkov",
-        //                     state: "12432",
-        //                     country: "ua"
-        //                 },
-        //                 date: "DATE CONVERTED TO UNIX_TIMESTAMP"
-        //             },
-        //             {
-        //                 photo: "https://stageimg.invaluable.com/housePhotos/Maynards/33/468333/H0759-L41582879.jpg",
-        //                 ref: "001D711C99",
-        //                 title: "A royal Worcester ewer of squat lenticular form,",
-        //                 location: {
-        //                     city: "Kharkov",
-        //                     state: null,
-        //                     country: "ua"
-        //                 },
-        //                 date: "DATE CONVERTED TO UNIX_TIMESTAMP"
-        //             },
-        //         ],
-        //         count: 3,
-        //         used_categories: [
-        //             '123', '456', '789'
-        //         ],
-        //     },
-        //
-        //     other: {
-        //         data: [
-        //             {
-        //                 title: "Test title",
-        //                 photo: "https://stageimg.invaluable.com/housePhotos/Maynards/33/468333/H0759-L41582879.jpg",
-        //                 except: "--------test test-----------------",
-        //                 detailsUrl: "http://test.com"
-        //             },
-        //             {
-        //                 title: "Test title2",
-        //                 photo: "https://stageimg.invaluable.com/housePhotos/Maynards/33/468333/H0759-L41582879.jpg",
-        //                 except: "--------test test2-----------------",
-        //                 detailsUrl: "http://test.com"
-        //             },
-        //             {
-        //                 title: "Test title3",
-        //                 photo: "https://stageimg.invaluable.com/housePhotos/Maynards/33/468333/H0759-L41582879.jpg",
-        //                 except: "--------test test3-----------------",
-        //                 detailsUrl: "http://test.com"
-        //             },
-        //         ],
-        //         count: 3,
-        //         used_categories: [
-        //             '123', '456', '789'
-        //         ],
-        //     }
-        // };
-
-        // console.log('lot loading: ', this.state.loading);
 
         if ( this.state.loading ) {
             for (let i = 0; i < 4; i++) {

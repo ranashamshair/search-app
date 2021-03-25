@@ -14,22 +14,24 @@ class LotContainer extends Component {
     constructor(props) {
         super(props);
 
+        const storeState = store.getState();
+
         this.state = {
             loading: true,
-            // TODO for detecting changes !!!
-
-            searchText: '',
-            selectedCategories: [],
-            priceMin: '',
-            priceMax: '',
-            sorting: '',
+            page: 1,
+            // for detecting changes !!!
+            searchText: storeState.searchText || '',
+            selectedCategories: storeState.selectedCategories || [],
+            priceMin: storeState.priceMin || '',
+            priceMax: storeState.priceMax || '',
+            sorting: storeState.sorting || '',
         };
 
         this.loadMore = this.loadMore.bind(this);
     }
 
     componentDidMount() {
-        this.props.getPastLots();
+        this.props.getPastLots(this.state);
 
         store.subscribe(() => {
             const storeState = store.getState();
@@ -43,9 +45,13 @@ class LotContainer extends Component {
                 page = 1
             } = storeState;
 
+            const difference = selectedCategories
+                .filter(x => !this.state.selectedCategories.includes(x))
+                .concat(this.state.selectedCategories.filter(x => !selectedCategories.includes(x)));
+
             const changes = {};
             if (searchText !== this.state.searchText) changes.searchText = searchText;
-            if (selectedCategories !== this.state.selectedCategories) changes.selectedCategories = selectedCategories;
+            if (difference.length > 0) changes.selectedCategories = selectedCategories;
             if (priceMin !== this.state.priceMin) changes.priceMin = priceMin;
             if (priceMax !== this.state.priceMax) changes.priceMax = priceMax;
             if (sorting !== this.state.sorting) changes.sorting = sorting;
@@ -53,18 +59,15 @@ class LotContainer extends Component {
             if (Object.keys(changes).length > 0) {
                 changes.loading = true;
                 this.setState(changes, () => this.props.getPastLots(Object.assign(storeState, changes)));
-            } else if (page > 1) {
-                store.dispatch( loadMore(storeState, storeState.currentTab) );
+            } else if (page > 1 && page !== this.state.page) {
+                this.setState({page: page}, () => store.dispatch( loadMore(storeState, storeState.currentTab) ) );
             }
+
         });
     }
 
 
     loadMore(e) {
-        const st = store.getState();
-
-        st.loading = true;
-
         store.dispatch( setNextPage() );
     }
 

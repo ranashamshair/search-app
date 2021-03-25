@@ -18,8 +18,6 @@ import axios from "axios";
 const baseUrl = 'http://hksndev2.co.uk/contemporary/wp-json';
 // const baseUrl = '/wp-json';
 
-const pageSize = 20;
-
 const requestOptions = {
     headers: {
         'id': 'V053C9yWvo45XsOxKB'
@@ -77,14 +75,25 @@ export function getCategories(payload = null) {
     }
 }
 
-const orderParams = (sorting = '') => {
-    if (sorting === '') return null;
+const orderParams = (sorting = '', type = null) => {
+    if (sorting === '') {
+        if (!type) return '';
+
+        else {
+            switch (type) {
+                case 'upcoming': return 'sort_by=date&sort_order=asc';
+                case 'past': return 'sort_by=date&sort_order=desc';
+                case 'auctions': return 'sort_by=date&sort_order=asc';
+                case 'other': return 'sort_by=date&sort_order=desc';
+            }
+        }
+    }
 
     const sort = sorting.split('||');
     return `sort_by=${sort[0]}&sort_order=${sort[1]}`;
 };
 
-const lotFilter = (params) => {
+const lotFilter = (params, isPast = false) => {
     const { searchText = null, selectedCategories = [], priceMin = null, priceMax = null, pageSize = 20, page = 1, sorting = '' } = params;
 
     const qs = [];
@@ -95,7 +104,7 @@ const lotFilter = (params) => {
     qs.push('size=' + pageSize);
     qs.push('page=' + page);
 
-    const ord = orderParams(sorting);
+    const ord = orderParams(sorting, isPast ? 'past' : 'upcoming');
 
     return qs.length > 0 ? '?' + qs.join('&') + (ord ? '&' + ord : '') : '';
 };
@@ -109,7 +118,7 @@ const auctionFilter = (params) => {
     qs.push('size=' + pageSize);
     qs.push('page=' + page);
 
-    const ord = orderParams(sorting);
+    const ord = orderParams(sorting, 'auctions');
 
     return qs.length > 0 ? '?' + qs.join('&') + (ord ? '&' + ord : '') : '';
 };
@@ -123,7 +132,7 @@ const otherFilter = (params) => {
     qs.push('size=' + pageSize);
     qs.push('page=' + page);
 
-    const ord = orderParams(sorting);
+    const ord = orderParams(sorting, 'other');
 
     return qs.length > 0 ? '?' + qs.join('&') + (ord ? '&' + ord : '') : '';
 };
@@ -132,7 +141,7 @@ const otherFilter = (params) => {
 // TODO new versions + new functions !!!
 async function getLotsNew(payload = null, refresh = false, past = false) {
 
-    let route = baseUrl + (past ? '/searchlots/inv/past' : '/searchlots/inv/upcoming') + (payload ? lotFilter(payload) : '');
+    let route = baseUrl + (past ? '/searchlots/inv/past' : '/searchlots/inv/upcoming') + (payload ? lotFilter(payload, past) : '');
     const params = payload ? { ...payload } : {};
 
     try {

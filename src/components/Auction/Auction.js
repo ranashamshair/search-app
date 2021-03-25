@@ -31,7 +31,7 @@ function getDate(datetime) {
 
 
 function Auction(props) {
-    const dateT = new Date(props.datetime);
+    const dateT = new Date(props.datetime * 1000);
 
     let date = getDate(dateT);
     let time = dateT.toLocaleTimeString('en-US');

@@ -17,21 +17,23 @@ class SearchBar extends Component {
     constructor(props) {
         super(props);
 
+        const storeState = store.getState();
+
         this.state = {
             searchFiltersActive: true,
             query: '',
             submited: false,
             count: 1, // delete this when api return count of lots,
-            currentTab: 'upcoming',
-            sorting: '',
-            categories: [],
-            pricemin: '',
-            pricemax: '',
+            currentTab: storeState.currentTab || 'upcoming',
+            sorting: storeState.sorting || '',
+            categories: storeState.selectedCategories || [],
+            pricemin: storeState.priceMin || '',
+            pricemax: storeState.priceMax || '',
 
-            lotsCount: 0,
-            pastLotsCount: 0,
-            auctionsCount: 0,
-            postsCount: 0,
+            lotsCount: storeState.lotsCount || 0,
+            pastLotsCount: storeState.pastLotsCount || 0,
+            auctionsCount: storeState.auctionsCount || 0,
+            postsCount: storeState.postsCount || 0,
         };
 
         this.delay = 0;
@@ -77,8 +79,6 @@ class SearchBar extends Component {
                 auctionsCount,
                 postsCount
             } = store.getState();
-
-            console.log('STORE currentTab: ', currentTab);
 
             const stateChanges = {
                 query: searchText,
@@ -171,7 +171,7 @@ class SearchBar extends Component {
             postsCount
         } = this.state;
 
-        console.log('currentTab: ', currentTab);
+        // console.log('currentTab: ', currentTab);
 
         return (
             <>
