@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import BlockHeader from '../BlockHeader/BlockHeader';
 import Auction from '../Auction/Auction';
 import {connect} from "react-redux";
-import {getAuctions} from '../../actions/index';
+import {getAuctions, loadMore, setNextPage} from '../../actions/index';
 import store from "../../store";
 import AuctionLoader from "../AuctionLoader/AuctionLoader";
 
@@ -11,25 +11,54 @@ class AuctionsContainer extends Component {
     constructor(props) {
         super(props);
 
+        const storeState = store.getState();
+
         this.state = {
-            loading: true
+            loading: true,
+            page: 1,
+            // for detecting changes !!!
+            searchText: storeState.searchText || '',
+            selectedCategories: storeState.selectedCategories || [],
+            sorting: storeState.sorting || '',
         };
 
         this.loadMore = this.loadMore.bind(this);
     }
 
     componentDidMount() {
-        this.props.getAuctions();
+        this.props.getAuctions(this.state);
+
+        store.subscribe(() => {
+            const storeState = store.getState();
+
+            const {
+                searchText = '',
+                selectedCategories = [],
+                sorting = '',
+                page = 1
+            } = storeState;
+
+            const difference = selectedCategories
+                .filter(x => !this.state.selectedCategories.includes(x))
+                .concat(this.state.selectedCategories.filter(x => !selectedCategories.includes(x)));
+
+            const changes = {};
+            if (searchText !== this.state.searchText) changes.searchText = searchText;
+            if (difference.length > 0) changes.selectedCategories = selectedCategories;
+            if (sorting !== this.state.sorting) changes.sorting = sorting;
+
+            if (Object.keys(changes).length > 0) {
+                changes.loading = true;
+                this.setState(changes, () => this.props.getAuctions(Object.assign(storeState, changes)));
+            } else if (page > 1 && page !== this.state.page) {
+                this.setState({page: page}, () => store.dispatch( loadMore(storeState, storeState.currentTab) ) );
+            }
+        });
     }
 
 
     loadMore(e) {
-        const st = store.getState();
-
-        st.auctionsLoading = true;
-        st.pageAuctions +=1;
-
-        store.dispatch( getAuctions(st) );
+        store.dispatch( setNextPage() );
     }
 
     render() {
@@ -43,15 +72,15 @@ class AuctionsContainer extends Component {
 
         if ( this.props.auctions.length )
         {
-            auctions = this.props.auctions.map(item =>
+            auctions = this.props.auctions.map((item, key) =>
                 <Auction
-                    key={'auction_' + item.id}
+                    key={'auction_' + key}
                     auctionId={item.id}
                     location={item.location}
-                    link={item.link}
-                    title={(item.title) ? item.title.rendered : ''}
+                    // link={item.link}
+                    title={item.title}
                     datetime={item.date}
-                    imgSrc={item.image_url}
+                    imgSrc={item.photo}
                 />
             );
 
@@ -91,10 +120,10 @@ class AuctionsContainer extends Component {
 
 function mapStateToProps(state) {
     return {
-        auctions: (state.auctions && state.auctions.auctions) ? state.auctions.auctions : [],
-        message: state.auctionsMessage,
-        page: state.pageAuctions,
-        loading: state.newsLoading
+        auctions: state.auctionsNew || [],
+        message: state.message,
+        page: state.page,
+        loading: state.loading
     };
 }
 

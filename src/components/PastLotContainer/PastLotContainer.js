@@ -6,7 +6,7 @@ import BlockHeader from '../BlockHeader/BlockHeader';
 import Lot from '../Lot/Lot';
 import LotLoader from '../LotLoader/LotLoader';
 import {connect} from "react-redux";
-import {getPastLots} from '../../actions/index';
+import {getPastLots, loadMore, setNextPage} from '../../actions/index';
 import store from "../../store";
 
 class LotContainer extends Component {
@@ -14,25 +14,61 @@ class LotContainer extends Component {
     constructor(props) {
         super(props);
 
+        const storeState = store.getState();
+
         this.state = {
-            loading: true
+            loading: true,
+            page: 1,
+            // for detecting changes !!!
+            searchText: storeState.searchText || '',
+            selectedCategories: storeState.selectedCategories || [],
+            priceMin: storeState.priceMin || '',
+            priceMax: storeState.priceMax || '',
+            sorting: storeState.sorting || '',
         };
 
-        this.loadMorePast = this.loadMorePast.bind(this);
+        this.loadMore = this.loadMore.bind(this);
     }
 
     componentDidMount() {
-        this.props.getPastLots();
+        this.props.getPastLots(this.state);
+
+        store.subscribe(() => {
+            const storeState = store.getState();
+
+            const {
+                searchText = '',
+                selectedCategories = [],
+                priceMin = '',
+                priceMax = '',
+                sorting = '',
+                page = 1
+            } = storeState;
+
+            const difference = selectedCategories
+                .filter(x => !this.state.selectedCategories.includes(x))
+                .concat(this.state.selectedCategories.filter(x => !selectedCategories.includes(x)));
+
+            const changes = {};
+            if (searchText !== this.state.searchText) changes.searchText = searchText;
+            if (difference.length > 0) changes.selectedCategories = selectedCategories;
+            if (priceMin !== this.state.priceMin) changes.priceMin = priceMin;
+            if (priceMax !== this.state.priceMax) changes.priceMax = priceMax;
+            if (sorting !== this.state.sorting) changes.sorting = sorting;
+
+            if (Object.keys(changes).length > 0) {
+                changes.loading = true;
+                this.setState(changes, () => this.props.getPastLots(Object.assign(storeState, changes)));
+            } else if (page > 1 && page !== this.state.page) {
+                this.setState({page: page}, () => store.dispatch( loadMore(storeState, storeState.currentTab) ) );
+            }
+
+        });
     }
 
 
-    loadMorePast(e) {
-        const st = store.getState();
-
-        st.pastLoading = true;
-        st.pagePast +=1;
-
-        store.dispatch( getPastLots(st) );
+    loadMore(e) {
+        store.dispatch( setNextPage() );
     }
 
     render() {
@@ -51,14 +87,12 @@ class LotContainer extends Component {
             // console.log('this.props.pastLots:  ', this.props.pastLots);
 
             pastLots = this.props.pastLots.map(item =>
-                <React.Fragment key={'past_lot_' + item.itemView.ref}>
+                <React.Fragment key={'past_lot_' + item.ref}>
                     {
-                        (item.itemView) ? (
-                            <Lot
-                                lot={item.itemView}
-                                isPast={true}
-                            />
-                        ) : ''
+                        <Lot
+                            lot={item}
+                            isPast={true}
+                        />
                     }
                 </React.Fragment>
             );
@@ -87,7 +121,7 @@ class LotContainer extends Component {
                 {
                     (this.props.pastLots.length && this.props.page !== -1) ? (
                         <div className="col-12 text-center">
-                            <button className="btn btn-load-more mt-3 mb-5" onClick={this.loadMorePast}>Load More</button>
+                            <button className="btn btn-load-more mt-3 mb-5" onClick={this.loadMore}>Load More</button>
                         </div>
                     ) : ''
                 }
@@ -100,10 +134,10 @@ class LotContainer extends Component {
 
 function mapStateToProps(state) {
     return {
-        pastLots: state.pastLots,
-        message: state.pastLotsMessage,
-        page: state.pagePast,
-        pastLoading: state.pastLoading
+        pastLots: state.lotsPast || [],
+        message: state.message,
+        page: state.page,
+        loading: state.loading
     };
 }
 

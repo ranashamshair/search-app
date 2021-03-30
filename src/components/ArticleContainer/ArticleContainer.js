@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import BlockHeader from '../BlockHeader/BlockHeader';
 import Article from '../Article/Article';
 import store from "../../store";
-import {getNews, updateFiltersOnly} from "../../actions";
+import {getOther, loadMore, setNextPage} from "../../actions";
 import {connect} from "react-redux";
 import ArticleLoader from "../ArticleLoader/ArticleLoader";
 
@@ -11,36 +11,55 @@ class ArticleContainer extends Component {
     constructor(props) {
         super(props);
 
+        const storeState = store.getState();
+
         this.state = {
-            loading: true
+            loading: true,
+            page: 1,
+            // for detecting changes !!!
+            searchText: storeState.searchText || '',
+            // selectedCategories: storeState.selectedCategories || [],
+            sorting: storeState.sorting || '',
         };
 
         this.loadMore = this.loadMore.bind(this);
     }
 
     componentDidMount() {
-        const st = store.getState();
+        this.props.getOther(this.state);
 
-        if(st.searchQuery){
-            this.props.getNews();
-        }
-        else{
-            st.news = [];
-            st.newsLoading = false;
-            st.newsMessage = "Empty search keyword";
+        store.subscribe(() => {
+            const storeState = store.getState();
 
-            store.dispatch(updateFiltersOnly(st));
-        }
+            // TODO ???
+            const {
+                searchText = '',
+                // selectedCategories = [],
+                sorting = '',
+                page = 1,
+            } = storeState;
+
+            // const difference = selectedCategories
+            //     .filter(x => !this.state.selectedCategories.includes(x))
+            //     .concat(this.state.selectedCategories.filter(x => !selectedCategories.includes(x)));
+
+            const changes = {};
+            if (searchText !== this.state.searchText) changes.searchText = searchText;
+            // if (difference.length > 0) changes.selectedCategories = selectedCategories;
+            if (sorting !== this.state.sorting) changes.sorting = sorting;
+
+            if (Object.keys(changes).length > 0) {
+                changes.loading = true;
+                this.setState(changes, () => this.props.getOther(Object.assign(storeState, changes)));
+            } else if (page > 1 && page !== this.state.page) {
+                this.setState({page: page}, () => store.dispatch( loadMore(storeState, storeState.currentTab) ) );
+            }
+        });
     }
 
 
     loadMore(e) {
-        const st = store.getState();
-
-        st.newsLoading = true;
-        st.pageNews +=1;
-
-        store.dispatch( getNews(st) );
+        store.dispatch( setNextPage() );
     }
 
     render() {
@@ -62,12 +81,13 @@ class ArticleContainer extends Component {
 
         if ( this.props.news.length )
         {
-            news = this.props.news.map(item =>
+            news = this.props.news.map((item, key)=>
                 <Article
-                    key={'article_' + item.id}
-                    link={item.link}
-                    articleTitle={(item.title) ? item.title.rendered : ''}
-                    imgSrc={item.image_url}
+                    key={'article_' + key}
+                    link={item.detailsUrl}
+                    excerpt={item.excerpt}
+                    articleTitle={item.title}
+                    imgSrc={item.photo}
                 />
             );
 
@@ -109,14 +129,14 @@ class ArticleContainer extends Component {
 
 function mapStateToProps(state) {
     return {
-        news: state.news ? state.news : [],
-        message: state.newsMessage,
-        page: state.pageNews,
-        loading: state.auctionsLoading
+        news: state.postsNew || [],
+        message: state.message,
+        page: state.page,
+        loading: state.loading
     };
 }
 
 export default connect(
     mapStateToProps,
-    { getNews }
+    { getOther }
 )(ArticleContainer);

@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import SearchFilters from '../SearchFilters/SearchFilters';
+import React, {Component} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
@@ -7,24 +6,40 @@ import Loader from 'react-loader-spinner';
 
 import './SearchBar.css';
 import store from "../../store";
-import {getLots, getPastLots, getAuctions, getEvents, getNews, updateFiltersOnly} from "../../actions";
+import {updateSearch,} from "../../actions"; //  getAuctions, getEvents,
+
+import SearchFiltersNew from '../SearchFiltersNew/SearchFiltersNew';
+
+// import data from '../../requestApi.json';
 
 class SearchBar extends Component {
 
     constructor(props) {
         super(props);
 
+        const storeState = store.getState();
+
         this.state = {
             searchFiltersActive: true,
             query: '',
-            submited: false
+            submited: false,
+            count: 1, // delete this when api return count of lots,
+            currentTab: storeState.currentTab || 'upcoming',
+            sorting: storeState.sorting || '',
+            categories: storeState.selectedCategories || [],
+            pricemin: storeState.priceMin || '',
+            pricemax: storeState.priceMax || '',
+
+            lotsCount: storeState.lotsCount || 0,
+            pastLotsCount: storeState.pastLotsCount || 0,
+            auctionsCount: storeState.auctionsCount || 0,
+            postsCount: storeState.postsCount || 0,
         };
 
         this.delay = 0;
 
         this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
         this.showSearchFilters = this.showSearchFilters.bind(this);
-
     }
 
     componentDidMount() {
@@ -50,72 +65,93 @@ class SearchBar extends Component {
         const _this = this;
 
         store.subscribe(() => {
-            const {searchQuery,  upcomingLoading, pastLoading, newsLoading } = store.getState();
+            const {
+                searchText,
+                sorting,
+                loading,
+                currentTab,
+                selectedCategories,
+                priceMin,
+                priceMax,
 
-            console.log('LOADING: ', upcomingLoading, pastLoading, newsLoading);
-            console.log('LOADING RES: ', (!upcomingLoading && !pastLoading && !newsLoading && _this.state.submited));
+                lotsCount,
+                pastLotsCount,
+                auctionsCount,
+                postsCount
+            } = store.getState();
 
-            if(!upcomingLoading && !pastLoading && !newsLoading && _this.state.submited){
-                this.setState({query: searchQuery, submited: false})
-            }else{
-                this.setState({query: searchQuery})
+            const stateChanges = {
+                query: searchText,
+                currentTab: currentTab,
+                sorting: sorting,
+                categories: selectedCategories,
+                pricemin: priceMin,
+                pricemax: priceMax,
+                lotsCount: lotsCount,
+                pastLotsCount: pastLotsCount,
+                auctionsCount: auctionsCount,
+                postsCount: postsCount,
+            };
+
+            if(!loading && _this.state.submited){
+                stateChanges.submited = false;
             }
+
+            this.setState(stateChanges);
         });
 
         // this.showSearchFilters();
     }
 
+    handleButtonClick = (e) => {
+        const buttons = document.querySelectorAll('.tabs button');
+        buttons.map = [].map;
+        buttons.map((item) => item.classList.contains('active') ? item.classList.remove('active') : '');
+        e.target.classList.add('active');
+    };
 
     handleSearchSubmit = (e) => {
         e.preventDefault();
 
-        this.setState({submited: true}, () => {
-            const { query } = this.state;
-            const payload = store.getState();
+        const {
+            currentTab,
+            query,
+            sorting,
+            categories,
+            pricemin,
+            pricemax
+        } = this.state;
 
-            payload.page = 0;
-            payload.upcomingLoading = true;
-            payload.searchQuery = query;
-            payload.pagePast = 0;
-            payload.pastLoading = true;
-            // payload.pageAuctions = 0;
-            // payload.auctionsLoading = true;
-            // payload.pageEvents = 0;
-            // payload.eventsLoading = true;
-            payload.pageNews = 0;
-            payload.newsLoading = true;
-            payload.changedLots = true;
-            payload.changedPastLots = true;
-            // payload.changedAuctions = true;
-            // payload.changedEvents = true;
-            payload.changedArticles = true;
+        // TODO finish URL params for search !!!
+        if (window.history.pushState) {
+            let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            const params = [];
 
-            let types = payload.staticFilters.contentType;
-            let allFiltersUnchecked = (!types.lots && !types.auctions && !types.events && !types.stories);
+            if (currentTab) params.push('tab=' + currentTab);
+            if (query) params.push('search=' + query);
 
-            if(allFiltersUnchecked || types.lots) {
-                store.dispatch(getLots(payload));
-
-                if(!payload.staticFilters.upcomingOnly){
-                    store.dispatch(getPastLots(payload));
-                }
+            if (categories.length) {
+                params.push('categories=' + categories.join(','));
             }
-            // store.dispatch( getAuctions(payload) );
-            // store.dispatch( getEvents(payload) );
-            if(allFiltersUnchecked || types.stories) {
-                if(payload.searchQuery){
-                    store.dispatch(getNews(payload));
-                }
-                else{
-                    payload.news = [];
-                    payload.newsLoading = false;
-                    payload.newsMessage = "Empty search keyword";
 
-                    store.dispatch(updateFiltersOnly(payload));
-                }
+            if (pricemin) params.push('min_price=' + pricemin);
+            if (pricemax) params.push('max_price=' + pricemax);
+            if (sorting) params.push('sort=' + sorting);
+
+            if (params.length) {
+                newUrl += '?' + params.join('&');
             }
-        })
-        
+
+            window.history.pushState({path:newUrl},'',newUrl);
+        }
+
+        store.dispatch(updateSearch({searchText: query }));
+        // store.dispatch(updateFiltersNew({
+        //     selectedCategories: [],
+        //     priceMin: '',
+        //     priceMax: '',
+        // }));
+        // store.dispatch(updateSorting({sorting: ''}));
     };
 
     showSearchFilters = (e) => {
@@ -125,12 +161,17 @@ class SearchBar extends Component {
         menu_btn.classList.add('open');
     };
 
+
     render() {
-        // if(this.state.submited){
-        //     setTimeout(() => {
-        //         this.setState({submited: false})
-        //     }, 2000)
-        // }
+        const {
+            currentTab,
+            lotsCount,
+            pastLotsCount,
+            auctionsCount,
+            postsCount
+        } = this.state;
+
+        // console.log('currentTab: ', currentTab);
 
         return (
             <>
@@ -148,24 +189,51 @@ class SearchBar extends Component {
                     ) : ''
                 }
 
-                <div className="collapse position-fixed h-site-search--search-wrap show" id="searchBox">
+                <div className="collapse h-site-search--search-wrap show" id="searchBox"> {/*position - fixed  searchBox change id to remove action hide filter block*/}
 
-                    <section className="searchBox h-site-search--search">
+                    <section className="searchBox h-site-search--search p-0 pt-4 px-md-4 pt-md-5">
 
-                        <form action="/" className="h-site-search--form" onSubmit={this.handleSearchSubmit}>
+                        <form action="/" className="h-site-search--form">
                             <div className="container">
-                                <div className="row justify-content-center">
+                                <div className="column justify-content-center">
 
-                                    <div className="col-12 col-lg-4 form-group form-item h-form-group h-form-item d-flex flex-column flex-lg-row align-items-lg-center">
+                                    <div className="mx-auto pb-5 col-12 col-md-6 col-lg-6 col-xl-4 form-group form-item h-form-group h-form-item d-flex flex-column flex-lg-row align-items-lg-center">
                                         <div className="ui icon input">
                                             <label htmlFor="search" className="sr-only">Search Auctions/Lots</label>
                                             <input type="text" id="search" className="form-control h-form-control" placeholder="Enter the terms you wish to search for" value={this.state.query} onChange={e => this.setState({query: e.target.value})} />
-                                            <button type="submit" className="position-relative"><FontAwesomeIcon icon={faSearch} size="sm" /></button>
+                                            <button type="submit" className="position-relative w-25" onClick={this.handleSearchSubmit}><FontAwesomeIcon icon={faSearch} size="sm" /></button>
                                         </div>
                                     </div>
 
-                                    <SearchFilters searchFiltersActive={this.showSearchFilters} />
+                                    <div className="tabs mx-auto col-12 d-flex justify-content-center">
+                                        {/*when click save type of lots and get request to api and save to redux*/}
+                                        <button
+                                          className={'text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2' + (currentTab === 'upcoming' ? ' active' : '')}
+                                          name="upcoming"
+                                          onClick={this.props.handleTabSelect}>
+                                            Upcoming ({lotsCount}) {/*get data from redux store about count of lots (count field)*/}
+                                        </button>
+                                        <button
+                                          className={'text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2' + (currentTab === 'past' ? ' active' : '')}
+                                          name="past"
+                                          onClick={this.props.handleTabSelect}>
+                                            Past ({pastLotsCount}) {/*get data from redux store about count of lots (count field)*/}
+                                        </button>
+                                        <button
+                                          className={'text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2' + (currentTab === 'auctions' ? ' active' : '')}
+                                          name="auctions"
+                                          onClick={this.props.handleTabSelect}>
+                                            Auctions ({auctionsCount}) {/*get data from redux store about count of lots (count field)*/}
+                                        </button>
+                                        <button
+                                          className={'text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2' + (currentTab === 'other' ? ' active' : '')}
+                                          name="other"
+                                          onClick={this.props.handleTabSelect}>
+                                            Other ({postsCount}) {/*get data from redux store about count of lots (count field)*/}
+                                        </button>
+                                    </div>
 
+                                    <SearchFiltersNew />
                                 </div>
                             </div>
                         </form>
@@ -177,9 +245,9 @@ class SearchBar extends Component {
             </>
         );
     }
-    
-    
-    
+
+
+
 }
 
 export default SearchBar;

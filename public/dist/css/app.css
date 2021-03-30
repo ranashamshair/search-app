@@ -223,8 +223,9 @@ button {
 }
 
 button:focus {
-  outline: 1px dotted;
-  outline: 5px auto -webkit-focus-ring-color;
+  /*outline: 1px dotted;*/
+  /*outline: 5px auto -webkit-focus-ring-color; work*/
+  outline: none;
 }
 
 input,
@@ -10418,6 +10419,7 @@ body {
 }
 
 .main-content > section:first-of-type:not(.section-introduction) {
+  /*padding-top: 0;*/
   padding-top: 2rem;
 }
 
@@ -10740,6 +10742,11 @@ a:hover {
   padding-right: 0rem;
 }
 
+.App .main-content {
+  padding: 0;
+  min-height: 100px;
+}
+
 @media (min-width: 768px) {
   .section-introduction {
     margin-bottom: 3rem;
@@ -10751,7 +10758,8 @@ a:hover {
     margin-bottom: 3rem;
   }
   .main-content > section:first-of-type:not(.section-introduction) {
-    padding-top: 3rem;
+    padding-top: 2rem;
+    /*padding-top: 0;*/
   }
   section.page-block + section:not(.page-block) {
     margin-top: 3rem;
@@ -10784,7 +10792,8 @@ a:hover {
     display: none !important;
   }
   .main-content > section:first-of-type:not(.section-introduction) {
-    padding-top: 5rem;
+    /*padding-top: 0;*/
+    padding-top: 2rem;
   }
   .main-content > section:first-child.section-introduction {
     margin-top: 5rem;
@@ -12554,7 +12563,7 @@ button[type="submit"] {
 }
 
 .hero-empty {
-  min-height: 4.375rem;
+  min-height: 5.375rem;
 }
 
 .hero-arrow {
@@ -16510,6 +16519,14 @@ h1:not(.site-title):before, h2:before {
   }
 }
 
+@media screen and (max-width: 576px) {
+  .container {
+    padding: 0;
+  }
+  .row {
+    margin: 0;
+  }
+}
 @media (min-width: 1200px) {
   .search__teaser {
     padding: 3rem 3.75rem 3.75rem;

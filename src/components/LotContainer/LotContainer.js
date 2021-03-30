@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 
-import BlockHeader from '../BlockHeader/BlockHeader';
 import Lot from '../Lot/Lot';
 import LotLoader from '../LotLoader/LotLoader';
 import {connect} from "react-redux";
-import {getLots} from '../../actions/index';
+import {getLots, loadMore, setNextPage} from '../../actions/index';
 import store from "../../store";
 
 class LotContainer extends Component {
@@ -12,33 +11,66 @@ class LotContainer extends Component {
     constructor(props) {
         super(props);
 
+        const storeState = store.getState();
+
         this.state = {
-            loading: true
+            loading: true,
+            page: 1,
+            // for detecting changes !!!
+            searchText: storeState.searchText || '',
+            selectedCategories: storeState.selectedCategories || [],
+            priceMin: storeState.priceMin || '',
+            priceMax: storeState.priceMax || '',
+            sorting: storeState.sorting || '',
         };
 
-        this.loadMoreUpcoming = this.loadMoreUpcoming.bind(this);
+        this.loadMore = this.loadMore.bind(this);
     }
 
     componentDidMount() {
-        this.props.getLots();
+        this.props.getLots(this.state);
+
+        store.subscribe(() => {
+            const storeState = store.getState();
+
+            const {
+                searchText = '',
+                selectedCategories = [],
+                priceMin = '',
+                priceMax = '',
+                sorting = '',
+                page = 1
+            } = storeState;
+
+            const difference = selectedCategories
+                .filter(x => !this.state.selectedCategories.includes(x))
+                .concat(this.state.selectedCategories.filter(x => !selectedCategories.includes(x)));
+
+            const changes = {};
+            if (searchText !== this.state.searchText) changes.searchText = searchText;
+            // TODO category filter changes !!!
+            if (difference.length > 0) changes.selectedCategories = selectedCategories;
+            if (priceMin !== this.state.priceMin) changes.priceMin = priceMin;
+            if (priceMax !== this.state.priceMax) changes.priceMax = priceMax;
+            if (sorting !== this.state.sorting) changes.sorting = sorting;
+
+            if (Object.keys(changes).length > 0) {
+                changes.loading = true;
+                this.setState(changes, () => this.props.getLots(Object.assign(storeState, changes)));
+            } else if (page > 1 && page !== this.state.page) {
+                this.setState({page: page}, () => store.dispatch( loadMore(storeState, storeState.currentTab) ) );
+            }
+        });
     }
 
-    loadMoreUpcoming(e) {
-        const st = store.getState();
-
-        st.upcomingLoading = true;
-        st.page +=1;
-
-        store.dispatch( getLots(st) );
+    loadMore(e) {
+        store.dispatch( setNextPage() );
     }
-
 
     render() {
         let lots = [];
 
         let show = true;
-
-        // console.log('lot loading: ', this.state.loading);
 
         if ( this.state.loading ) {
             for (let i = 0; i < 4; i++) {
@@ -46,26 +78,19 @@ class LotContainer extends Component {
             }
         }
 
-        // let i = 0;
-        // while (this.state.loading) {
-        //     lots.push(<LotLoader key={i}/>);
-        //     ++i;
-        // }
-
+        // restore this when api is ready to work maybe
         if ( this.props.lots.length )
         {
             lots = this.props.lots.map(item =>
-                <React.Fragment key={'lot_' + item.itemView.ref} >
+                <React.Fragment key={'lot_' + item.ref} >
                 {
-                    (item.itemView) ? (
-                        <Lot
-                            lot={item.itemView}
-                        />
-                    ) : ''
+                    <Lot
+                        lot={item}
+                    />
                 }
                 </React.Fragment>
             );
-            
+
         } else {
             if ( !this.props.loading ) {
                 if(!this.state.loading && this.props.message){
@@ -81,8 +106,8 @@ class LotContainer extends Component {
 
 
         return show ? (
-            <div>
-                <BlockHeader title="Upcoming Lots" />
+            <div className="px-0 py-1 px-md-4">
+                {/*<BlockHeader title="Upcoming Lots" />*/}
 
                 <div className="row row-spacing">
                     {lots}
@@ -91,7 +116,8 @@ class LotContainer extends Component {
                 {
                     (this.props.lots.length && this.props.page !== -1) ? (
                         <div className="col-12 text-center">
-                            <button className="btn btn-load-more mt-3 mb-5" onClick={this.loadMoreUpcoming}>Load More</button>
+                            {/*change click function to load needed type of lots*/}
+                            <button className="btn btn-load-more mt-3 mb-5" onClick={this.loadMore}>Load More</button>
                         </div>
                     ) : ''
                 }
@@ -104,10 +130,10 @@ class LotContainer extends Component {
 
 function mapStateToProps(state) {
     return {
-        lots: state.lots,
-        message: state.lotsMessage,
+        lots: state.lotsNew || [],
+        message: state.message,
         page: state.page,
-        upcomingLoading: state.upcomingLoading
+        loading: state.loading
     };
 }
 

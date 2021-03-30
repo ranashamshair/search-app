@@ -1,0 +1,24 @@
+.imgContainer {
+    background-color: #F3F3F3;
+}
+
+.search-lot--content {
+    background-color: #FFFFFF;
+}
+
+.subtitle {
+    color: #968a8a;
+}
+
+.emptyPhoto {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 250px;
+}
+
+@media screen and (max-width: 576px) {
+    .emptyPhoto {
+        height: auto;
+    }
+}
