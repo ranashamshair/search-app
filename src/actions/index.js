@@ -98,8 +98,18 @@ const lotFilter = (params, isPast = false) => {
 
     const qs = [];
     if (searchText) qs.push('keyword=' + searchText);
-    if (priceMin) qs.push('pricemin=' + priceMin);
-    if (priceMax) qs.push('pricemax=' + priceMax);
+    if (priceMin || priceMax) {
+        if (priceMin && !priceMax) {
+            qs.push('pricemin=' + priceMin);
+            qs.push('pricemax=99999');
+        } else if (!priceMin && priceMax) {
+            qs.push('pricemin=0');
+            qs.push('pricemax=' + priceMax);
+        } else {
+            qs.push('pricemin=' + priceMin);
+            qs.push('pricemax=' + priceMax);
+        }
+    }
     if(selectedCategories.length > 0) qs.push('categories=' + selectedCategories.join(' '));
     qs.push('size=' + pageSize);
     qs.push('page=' + page);
