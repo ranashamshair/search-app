@@ -58,3 +58,9 @@ body div[aria-busy=true]{
     position: fixed;
     z-index: 100;
 }
+
+.widget-fluid .widget-fluid--image img, .imgContainer img{
+    object-fit: cover;
+    object-position: center;
+}
+
