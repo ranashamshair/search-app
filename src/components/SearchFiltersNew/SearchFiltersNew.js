@@ -12,7 +12,6 @@ import {
 import store from "../../store";
 import Loader from "react-loader-spinner";
 
-// TODO cleanup after API !!!
 class SearchFilters extends Component {
 
   constructor(props) {
@@ -21,6 +20,8 @@ class SearchFilters extends Component {
     const storeState = store.getState();
 
     this.state = {
+      noResult: false,
+      availableCategories: storeState.availableCategories,
       submited: storeState.loading || true,
       isOpen: true, // work
       isMobile: false, // work
@@ -46,7 +47,6 @@ class SearchFilters extends Component {
     const { search = '', currentTab, setCategory = [], pricemin = null, pricemax = null, sorting = null } = this.state;
 
     const params = [];
-    // const
 
     if (window.history.pushState) {
       let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
@@ -83,17 +83,28 @@ class SearchFilters extends Component {
     const _this = this;
 
     store.subscribe(() => {
-      const { loading, currentTab, selectedCategories, priceMin, priceMax, sorting, searchText } = store.getState();
+      const { availableCategories, loading, currentTab, selectedCategories, priceMin, priceMax, sorting, searchText, lotsCount, pastLotsCount, auctionsCount, postsCount } = store.getState();
 
       const stateChanges = {
         currentTab: currentTab,
         search: searchText,
+        availableCategories: availableCategories,
         categoriesSaved: selectedCategories,
         setCategory: selectedCategories,
         pricemin: priceMin,
         pricemax: priceMax,
         sorting: sorting,
+        noResults: (!loading &&
+          (
+            (currentTab === 'upcoming' && lotsCount === 0) ||
+            (currentTab === 'past' && pastLotsCount === 0) ||
+            (currentTab === 'auctions' && auctionsCount === 0) ||
+            (currentTab === 'other' && postsCount === 0)
+          )
+        ),
       };
+
+
 
       stateChanges.submited = (!loading && _this.state.submited) ? false : loading;
 
@@ -107,7 +118,7 @@ class SearchFilters extends Component {
     }
   }
 
-  categorySelected = categoryId => (this.state.categoriesSaved.indexOf(categoryId) !== -1);
+  categorySelected = categoryId => (this.state.categoriesSaved.indexOf(categoryId.toString()) !== -1);
 
   handleOpenClose (e) {
     e.preventDefault();
@@ -122,17 +133,16 @@ class SearchFilters extends Component {
   }
 
   handleCheckboxChange ({target}) {
-    // TODO remake for redux when API will be updated !!!
     const {setCategory} = this.state;
 
     const newCategories = [...setCategory];
     if (target.checked) {
-      newCategories.push(target.value);
+      newCategories.push(target.value.toString());
     } else {
-      const idx = setCategory.indexOf(target.value);
+      const idx = setCategory.indexOf(target.value.toString());
 
       if (idx !== -1) {
-        newCategories.splice(setCategory.indexOf(target.value), 1)
+        newCategories.splice(idx, 1);
       }
     }
 
@@ -150,10 +160,7 @@ class SearchFilters extends Component {
   }
 
   render() {
-    const { submited, currentTab, pricemin, pricemax, sorting, isOpen, isMobile } = this.state;
-    const filtersPosition = [
-    "Fine Art", "American Art", "Contemporary Art", "19th Centry European Pain", "Photographs", "Diamonds", "Fine Art1", "American Art1", "Contemporary Art1"
-    ];
+    const { noResults, availableCategories, submited, currentTab, pricemin, pricemax, sorting, isOpen, isMobile } = this.state;
 
     // if(submited){
     //   setTimeout(() => {
@@ -200,7 +207,6 @@ class SearchFilters extends Component {
           label: 'Title',
           value: 'title||asc'
         },
-        //  TODO category sorting ???
         {
           label: 'Category',
           value: 'category||asc'
@@ -223,6 +229,8 @@ class SearchFilters extends Component {
     };
 
     const currentSortOptions = sortOptions[currentTab];
+
+    console.log('noResults: ', noResults);
 
     return (
         <>
@@ -269,18 +277,17 @@ class SearchFilters extends Component {
 
                         <div className="col-12 col-md-9 d-flex flex-wrap">
                             {
-                                // TODO categories !!!
-                                filtersPosition.map(item => (
-                                    <div className="ui checkbox col-12 col-lg-4 col-md-6 pb-2" key={item.replaceAll(' ','-')}>
+                                (currentTab !== 'past' && !noResults) && availableCategories.map(item => (
+                                    <div className="ui checkbox col-12 col-lg-4 col-md-6 pb-2" key={'category_' + item.id}>
                                         <input
                                             type="checkbox"
-                                            id={item.replaceAll(' ','-')}
+                                            id={'category_' + item.id}
                                             // defaultChecked={this.categorySelected(item.replaceAll(' ','-'))}
-                                            checked={this.categorySelected(item.replaceAll(' ','-'))}
-                                            value={item.replaceAll(' ','-')}
+                                            checked={this.categorySelected(item.id)}
+                                            value={item.id}
                                             onChange={this.handleCheckboxChange}
                                         />
-                                        <label htmlFor={item.replaceAll(' ','-')}>{item}</label>
+                                        <label htmlFor={'category_' + item.id}>{item.name}</label>
                                     </div>
                                 ))
                                 // this.props.categories.map(item => (
@@ -306,7 +313,7 @@ function mapStateToProps(state) {
   // console.log('store state: ', state);
 
   return {
-    categories: state.categories
+      availableCategories: state.availableCategories
   };
 }
 

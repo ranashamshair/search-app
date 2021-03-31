@@ -48,7 +48,6 @@ class LotContainer extends Component {
 
             const changes = {};
             if (searchText !== this.state.searchText) changes.searchText = searchText;
-            // TODO category filter changes !!!
             if (difference.length > 0) changes.selectedCategories = selectedCategories;
             if (priceMin !== this.state.priceMin) changes.priceMin = priceMin;
             if (priceMax !== this.state.priceMax) changes.priceMax = priceMax;

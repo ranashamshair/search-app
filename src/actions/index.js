@@ -61,12 +61,10 @@ export function getCategories(payload = null) {
         try {
             const response = await axios.get( baseUrl + '/searchlots/inv/categories', requestOptions);
 
-            // TODO fix categories !!!
             return dispatch({
                 type: GET_CATEGORIES,
                 payload: {
                     categories: response.data || []
-                    // isLoading: false
                 }
             });
         } catch (error) {
@@ -120,11 +118,11 @@ const lotFilter = (params, isPast = false) => {
 };
 
 const auctionFilter = (params) => {
-    const { searchText = null, pageSize = 20, page = 1, sorting = '' } = params;
+    const { searchText = null, selectedCategories = [], pageSize = 20, page = 1, sorting = '' } = params;
 
-    // TODO finish !!!
     const qs = [];
     if (searchText) qs.push('keyword=' + searchText);
+    if(selectedCategories.length > 0) qs.push('categories=' + selectedCategories.join(' '));
     qs.push('size=' + pageSize);
     qs.push('page=' + page);
 
@@ -134,11 +132,11 @@ const auctionFilter = (params) => {
 };
 
 const otherFilter = (params) => {
-    const { searchText = null, pageSize = 20, page = 1, sorting = '' } = params;
+    const { searchText = null, selectedCategories = [], pageSize = 20, page = 1, sorting = '' } = params;
 
-    // TODO finish !!!
     const qs = [];
     if (searchText) qs.push('keyword=' + searchText);
+    if(selectedCategories.length > 0) qs.push('categories=' + selectedCategories.join(' '));
     qs.push('size=' + pageSize);
     qs.push('page=' + page);
 
@@ -147,20 +145,16 @@ const otherFilter = (params) => {
     return qs.length > 0 ? '?' + qs.join('&') + (ord ? '&' + ord : '') : '';
 };
 
-
-// TODO new versions + new functions !!!
 async function getLotsNew(payload = null, refresh = false, past = false) {
-
     let route = baseUrl + (past ? '/searchlots/inv/past' : '/searchlots/inv/upcoming') + (payload ? lotFilter(payload, past) : '');
     const params = payload ? { ...payload } : {};
 
     try {
         const response = await axios.get(route, requestOptions);
 
-        console.log('response: ', response);
-
         params.items = response.data.data;
         params.count = response.data.count;
+        if (!past) params.categoryIds = response.data.used_categories;
         params.success = true;
     } catch (error) {
         console.log(error);
@@ -180,6 +174,7 @@ async function getAuctionsNew(payload = null, refresh = false) {
 
         params.items = response.data.data;
         params.count = response.data.count;
+        params.categoryIds = response.data.used_categories;
         params.success = true;
     } catch (error) {
         console.log(error);
@@ -199,6 +194,7 @@ async function getOtherNew(payload = null, refresh = false) {
 
         params.items = response.data.data;
         params.count = response.data.count;
+        params.categoryIds = response.data.used_categories;
         params.success = true;
     } catch (error) {
         console.log(error);
@@ -209,37 +205,12 @@ async function getOtherNew(payload = null, refresh = false) {
 }
 
 
-// TODO save URL params changes in store !!!
 export function updateTab(payload = null) {
-    return async (dispatch) => {
-        // let newParams = null;
-
-        // switch (payload.currentTab) {
-        //     case 'upcoming': newParams = await getLotsNew(payload, true); break;
-        //     case 'past': newParams = await getLotsNew(payload, true, true); break;
-        //     case 'auctions': newParams = await getAuctionsNew(payload, true); break;
-        //     case 'other': newParams = await getOtherNew(payload, true); break;
-        // }
-
-        console.log('newTAB: ', payload);
-
-        return dispatch({type: UPDATE_TAB, payload: payload});
-    }
+    return async (dispatch) => (dispatch({type: UPDATE_TAB, payload: payload}));
 }
 
 export function updateFiltersNew(payload = null, tab = 'upcoming') {
-    return async (dispatch) => {
-        // let newParams = null;
-
-        // switch (tab) {
-        //     case 'upcoming': newParams = await getLotsNew(payload, true); break;
-        //     case 'past': newParams = await getLotsNew(payload, true, true); break;
-        //     case 'auctions': newParams = await getAuctionsNew(payload, true); break;
-        //     case 'other': newParams = await getOtherNew(payload, true); break;
-        // }
-
-        return dispatch({type: UPDATE_FILTERS_NEW, payload: payload});
-    };
+    return async (dispatch) => (dispatch({type: UPDATE_FILTERS_NEW, payload: payload}));
 }
 
 export function updateSorting(payload = null) {
@@ -251,8 +222,6 @@ export function updateSearch(payload = null) {
 }
 
 export function loadMore(payload = null, tab = 'upcoming') {
-    console.log('payload :  ', payload);
-
     return async (dispatch) => {
         let newParams = null;
 

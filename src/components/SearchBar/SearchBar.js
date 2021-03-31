@@ -122,7 +122,6 @@ class SearchBar extends Component {
             pricemax
         } = this.state;
 
-        // TODO finish URL params for search !!!
         if (window.history.pushState) {
             let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
             const params = [];

@@ -107,6 +107,9 @@ class App extends Component{
                 postsCount = 0,
             } = store.getState();
 
+            console.log('loading: ', loading);
+            console.log('lotsCount: ', lotsCount);
+
             this.setState({
                 noResults: (!loading &&
                     (

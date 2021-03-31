@@ -18,7 +18,7 @@ class ArticleContainer extends Component {
             page: 1,
             // for detecting changes !!!
             searchText: storeState.searchText || '',
-            // selectedCategories: storeState.selectedCategories || [],
+            selectedCategories: storeState.selectedCategories || [],
             sorting: storeState.sorting || '',
         };
 
@@ -31,21 +31,20 @@ class ArticleContainer extends Component {
         store.subscribe(() => {
             const storeState = store.getState();
 
-            // TODO ???
             const {
                 searchText = '',
-                // selectedCategories = [],
+                selectedCategories = [],
                 sorting = '',
                 page = 1,
             } = storeState;
 
-            // const difference = selectedCategories
-            //     .filter(x => !this.state.selectedCategories.includes(x))
-            //     .concat(this.state.selectedCategories.filter(x => !selectedCategories.includes(x)));
+            const difference = selectedCategories
+                .filter(x => !this.state.selectedCategories.includes(x))
+                .concat(this.state.selectedCategories.filter(x => !selectedCategories.includes(x)));
 
             const changes = {};
             if (searchText !== this.state.searchText) changes.searchText = searchText;
-            // if (difference.length > 0) changes.selectedCategories = selectedCategories;
+            if (difference.length > 0) changes.selectedCategories = selectedCategories;
             if (sorting !== this.state.sorting) changes.sorting = sorting;
 
             if (Object.keys(changes).length > 0) {
