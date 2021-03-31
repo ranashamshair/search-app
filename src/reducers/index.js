@@ -152,6 +152,7 @@ function rootReducer(state = initialState, action) {
             let changes = {
                 page: 1,
                 currentTab: currentTab,
+                loading: true,
             };
 
             return Object.assign({}, state, changes);

@@ -33,10 +33,11 @@ class App extends Component{
 
         this.state = {
             noResults: false,
-            openTabs: params.tab || "upcoming"
+            openTabs: params.tab || 'upcoming'
         };
         this.getFiltersFromUrlParams(params);
         this.handleTabSelect = this.handleTabSelect.bind(this);
+        this._isMounted = false;
     }
 
     parseUrl() {
@@ -75,75 +76,80 @@ class App extends Component{
 
     updateUrlParams() {
         const { openTabs = 'upcoming' } = this.state;
+        const { currentTab = 'upcoming' } = store.getState();
 
-        if (window.history.pushState) {
-            let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-            const params = [];
+        if (openTabs !== currentTab) {
+            if (window.history.pushState) {
+                let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                const params = [];
 
-            if (openTabs) params.push('tab=' + openTabs);
+                if (openTabs) params.push('tab=' + openTabs);
 
-            if (params.length) {
-                newUrl += '?' + params.join('&');
+                if (params.length) {
+                    newUrl += '?' + params.join('&');
+                }
+                window.history.pushState({path:newUrl},'',newUrl);
             }
-            window.history.pushState({path:newUrl},'',newUrl);
-        }
 
-        store.dispatch(updateTab({currentTab: openTabs}));
-        store.dispatch(updateFiltersNew({
-            selectedCategories: [],
-            priceMin: '',
-            priceMax: '',
-        }, openTabs));
+            store.dispatch(updateTab({currentTab: openTabs}));
+            store.dispatch(updateFiltersNew({
+                selectedCategories: [],
+                priceMin: '',
+                priceMax: '',
+            }, openTabs));
+        }
     }
 
     componentDidMount() {
+        this._isMounted = true;
+
         store.subscribe(() => {
-            const {
-                currentTab,
-                loading = false,
-                lotsCount = 0,
-                pastLotsCount = 0,
-                auctionsCount = 0,
-                postsCount = 0,
-            } = store.getState();
+            if (this._isMounted) {
+                const {
+                    currentTab,
+                    loading = false,
+                    lotsCount = 0,
+                    pastLotsCount = 0,
+                    auctionsCount = 0,
+                    postsCount = 0,
+                } = store.getState();
 
-            console.log('loading: ', loading);
-            console.log('lotsCount: ', lotsCount);
-
-            this.setState({
-                noResults: (!loading &&
-                    (
-                        (currentTab === 'upcoming' && lotsCount === 0) ||
-                        (currentTab === 'past' && pastLotsCount === 0) ||
-                        (currentTab === 'auctions' && auctionsCount === 0) ||
-                        (currentTab === 'other' && postsCount === 0)
-                    )
-                ),
-                openTabs: currentTab
-            })
+                this.setState({
+                    noResults: (!loading &&
+                        (
+                            (currentTab === 'upcoming' && lotsCount === 0) ||
+                            (currentTab === 'past' && pastLotsCount === 0) ||
+                            (currentTab === 'auctions' && auctionsCount === 0) ||
+                            (currentTab === 'other' && postsCount === 0)
+                        )
+                    ),
+                    openTabs: currentTab
+                })
+            }
         });
 
         window.addEventListener('popstate', () => {
-            this.getFiltersFromUrlParams();
+            if(this._isMounted) this.getFiltersFromUrlParams();
         });
     }
 
     componentWillUnmount() {
+        this._isMounted = false;
         window.removeEventListener('popstate', () => {
-            this.getFiltersFromUrlParams();
+            if(this._isMounted) this.getFiltersFromUrlParams();
         });
     }
 
     handleTabSelect (e) {
         e.preventDefault();
 
-        this.setState({openTabs: e.target.name}, () => this.updateUrlParams());
+        this.setState({openTabs: e.target.name}, () => {
+            if (this._isMounted) this.updateUrlParams();
+        });
     }
 
     switchTabRenderer () {
         const { openTabs = 'upcoming' } = this.state;
-
-        console.log('SWITCH openTabs  :  ', openTabs);
 
         switch (openTabs) {
             case 'upcoming': return <LotContainer />;
@@ -156,7 +162,6 @@ class App extends Component{
 
     render() {
         const { noResults } = this.state;
-        console.log('noResults: ', noResults);
 
         return (
             <div className="App">

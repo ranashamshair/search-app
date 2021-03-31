@@ -41,7 +41,7 @@ function Auction(props) {
 
     let slug = props.title.replace(/ /g, "-");
     let url = `/auction-catalog/${slug}_${props.auctionId}`;
-    // console.log(url);
+    console.log(url);
 
     return (
         <>

@@ -2,9 +2,24 @@ import React, {useEffect, useState} from 'react';
 import FadeIn from 'react-fade-in';
 import './Lot.css';
 
+function getDate(datetime) {
+    const dateT = new Date(datetime * 1000);
+
+    const darr = dateT.toDateString().split(' ');
+    darr.shift();
+    switch (darr[1]) {
+        case '1': darr[1] += 'st'; break;
+        case '2': darr[1] += 'nd'; break;
+        case '3': darr[1] += 'rd'; break;
+        default: darr[1] += 'st';
+    }
+
+    return darr.join(' ');
+}
+
 function Lot(props) {
     // console.log('lot props: ', props);
-    const { ref, title, photo, saleTitle, currencySymbol, saleDate, estimateHigh ,estimateLow,
+    const { ref, title, photo, saleTitle, currencySymbol, saleDate, estimate ,estimateLow,
         lotNumber, bid, lotNumberExtension, priceResult, location, date, except, detailsUrl } = props.lot;
 
     // let seller = lot ? lot.sellerName : '';  maybe need to change this place to api result
@@ -48,12 +63,12 @@ function Lot(props) {
                             {saleTitle && <h4 className="my-3 subtitle"><u>{saleTitle}</u></h4>}
                         </a>
                         {currencySymbol && <p>currencySymbol: {currencySymbol}</p>}
-                        {estimateHigh && <p>estimateHigh: {estimateHigh}</p>}
+                        {estimate && <p>estimateHigh: {estimate}</p>}
                         {estimateLow && <p>estimateLow: {estimateLow}</p>}
                         {lotNumber && <p>lotNumber: {lotNumber}</p>}
                         {bid && <p>bid: {bid}</p>}
                         {ref && <p>ref: {ref}</p>}
-                        {saleDate && <p>saleDate: {saleDate}</p>}
+                        {saleDate && <p>saleDate: {getDate(saleDate)}</p>}
                         {/*this add in past fields */}
                         {lotNumberExtension && <p>lotNumberExtension: {lotNumberExtension}</p>}
                         {priceResult && <p>priceResult: {priceResult}</p>} {/*priceResult is number*/}

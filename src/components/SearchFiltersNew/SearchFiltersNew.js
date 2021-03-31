@@ -6,8 +6,7 @@ import { faArrowUp, faArrowDown, faArrowRight } from '@fortawesome/free-solid-sv
 
 import {connect} from "react-redux";
 import {
-  getCategories, updateFiltersNew,
-  updateSearch, updateSorting, updateTab
+  getCategories, updateFiltersNew, updateSorting
 } from "../../actions";
 import store from "../../store";
 import Loader from "react-loader-spinner";
@@ -20,7 +19,7 @@ class SearchFilters extends Component {
     const storeState = store.getState();
 
     this.state = {
-      noResult: false,
+      noResult: true,
       availableCategories: storeState.availableCategories,
       submited: storeState.loading || true,
       isOpen: true, // work
@@ -35,6 +34,7 @@ class SearchFilters extends Component {
       sorting: storeState.sorting || '',
       search: storeState.searchText || '',
     };
+    this._isMounted = false;
 
     this.handleOpenClose = this.handleOpenClose.bind(this);
     this.handleSetMinMax = this.handleSetMinMax.bind(this);
@@ -46,38 +46,53 @@ class SearchFilters extends Component {
   updateUrlParams() {
     const { search = '', currentTab, setCategory = [], pricemin = null, pricemax = null, sorting = null } = this.state;
 
-    const params = [];
+    const storeState = store.getState();
 
-    if (window.history.pushState) {
-      let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+    const difference = storeState.selectedCategories
+      .filter(x => !this.state.setCategory.includes(x))
+      .concat(this.state.setCategory.filter(x => !storeState.selectedCategories.includes(x)));
 
-      if (currentTab) params.push('tab=' + currentTab);
-      if (search) params.push('search=' + search);
+    if (
+        storeState.currentTab !== currentTab ||
+        storeState.sorting !== sorting ||
+        difference.length > 0 ||
+        storeState.priceMin !== pricemin ||
+        storeState.priceMax !== pricemax
+    ) {
+      const params = [];
 
-      if (setCategory.length) {
-        params.push('categories=' + setCategory.join(','));
-      }
+      if (window.history.pushState) {
+        let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
 
-      if (pricemin) params.push('min_price=' + pricemin);
-      if (pricemax) params.push('max_price=' + pricemax);
-      if (sorting) params.push('sort=' + sorting);
+        if (currentTab) params.push('tab=' + currentTab);
+        if (search) params.push('search=' + search);
 
-      if (params.length) {
-        newUrl += '?' + params.join('&');
-      }
+        if (setCategory.length) {
+          params.push('categories=' + setCategory.join(','));
+        }
 
-      window.history.pushState({path:newUrl},'',newUrl);
+        if (pricemin) params.push('min_price=' + pricemin);
+        if (pricemax) params.push('max_price=' + pricemax);
+        if (sorting) params.push('sort=' + sorting);
 
-      store.dispatch(updateFiltersNew({
+        if (params.length) {
+          newUrl += '?' + params.join('&');
+        }
+
+        window.history.pushState({path:newUrl},'',newUrl);
+
+        store.dispatch(updateFiltersNew({
           selectedCategories: setCategory,
           priceMin: pricemin || '',
           priceMax: pricemax || '',
-      }, currentTab));
-      store.dispatch(updateSorting({sorting: sorting}));
+        }, currentTab));
+        store.dispatch(updateSorting({sorting: sorting}));
+      }
     }
   }
 
   componentDidMount() {
+    this._isMounted = true;
     this.props.getCategories();
 
     const _this = this;
@@ -101,21 +116,26 @@ class SearchFilters extends Component {
             (currentTab === 'auctions' && auctionsCount === 0) ||
             (currentTab === 'other' && postsCount === 0)
           )
-        ),
+        ) || loading,
+        // ) || (loading && this.state.currentTab !== currentTab),
       };
-
-
 
       stateChanges.submited = (!loading && _this.state.submited) ? false : loading;
 
-      this.setState(stateChanges);
+      if (this._isMounted) this.setState(stateChanges);
     });
 
-    if ( window.innerWidth < 576 ) {
-      this.setState({isMobile: true});
-    } else {
-      this.setState({isMobile: false});
+    if (this._isMounted) {
+      if ( window.innerWidth < 576 ) {
+        this.setState({isMobile: true});
+      } else {
+        this.setState({isMobile: false});
+      }
     }
+  }
+
+  componentWillUnmount() {
+      this._isMounted = false;
   }
 
   categorySelected = categoryId => (this.state.categoriesSaved.indexOf(categoryId.toString()) !== -1);
@@ -123,40 +143,44 @@ class SearchFilters extends Component {
   handleOpenClose (e) {
     e.preventDefault();
 
-    this.setState({isOpen: !this.state.isOpen});
+    if (this._isMounted) this.setState({isOpen: !this.state.isOpen});
   }
 
   handleSetMinMax ({target:{value, name}}) {
-    if ( !isNaN(value) ) {
+    if ( !isNaN(value) && this._isMounted ) {
       this.setState({[name]: value})
     }
   }
 
   handleCheckboxChange ({target}) {
-    const {setCategory} = this.state;
+    if (this._isMounted) {
+      const {setCategory} = this.state;
 
-    const newCategories = [...setCategory];
-    if (target.checked) {
-      newCategories.push(target.value.toString());
-    } else {
-      const idx = setCategory.indexOf(target.value.toString());
+      const newCategories = [...setCategory];
+      if (target.checked) {
+        newCategories.push(target.value.toString());
+      } else {
+        const idx = setCategory.indexOf(target.value.toString());
 
-      if (idx !== -1) {
-        newCategories.splice(idx, 1);
+        if (idx !== -1) {
+          newCategories.splice(idx, 1);
+        }
       }
-    }
 
-    this.setState({setCategory: newCategories, categoriesSaved: newCategories})
+      this.setState({setCategory: newCategories, categoriesSaved: newCategories})
+    }
   }
 
   handleSubmitFilters (e) {
     e.preventDefault();
 
-    this.updateUrlParams();
+    if (this._isMounted) this.updateUrlParams();
   }
 
   handleSortingSelect (e) {
-    this.setState({sorting: e.target.value}, () => this.updateUrlParams());
+    this.setState({sorting: e.target.value}, () => {
+      if (this._isMounted)  this.updateUrlParams()
+    });
   }
 
   render() {
@@ -229,8 +253,6 @@ class SearchFilters extends Component {
     };
 
     const currentSortOptions = sortOptions[currentTab];
-
-    console.log('noResults: ', noResults);
 
     return (
         <>
