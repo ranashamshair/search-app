@@ -23,44 +23,51 @@ class LotContainer extends Component {
             priceMax: storeState.priceMax || '',
             sorting: storeState.sorting || '',
         };
+        this._isMounted = false;
 
         this.loadMore = this.loadMore.bind(this);
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.props.getLots(this.state);
 
         store.subscribe(() => {
-            const storeState = store.getState();
+            if (this._isMounted) {
+                const storeState = store.getState();
 
-            const {
-                searchText = '',
-                selectedCategories = [],
-                priceMin = '',
-                priceMax = '',
-                sorting = '',
-                page = 1
-            } = storeState;
+                const {
+                    searchText = '',
+                    selectedCategories = [],
+                    priceMin = '',
+                    priceMax = '',
+                    sorting = '',
+                    page = 1
+                } = storeState;
 
-            const difference = selectedCategories
-                .filter(x => !this.state.selectedCategories.includes(x))
-                .concat(this.state.selectedCategories.filter(x => !selectedCategories.includes(x)));
+                const difference = selectedCategories
+                    .filter(x => !this.state.selectedCategories.includes(x))
+                    .concat(this.state.selectedCategories.filter(x => !selectedCategories.includes(x)));
 
-            const changes = {};
-            if (searchText !== this.state.searchText) changes.searchText = searchText;
-            // TODO category filter changes !!!
-            if (difference.length > 0) changes.selectedCategories = selectedCategories;
-            if (priceMin !== this.state.priceMin) changes.priceMin = priceMin;
-            if (priceMax !== this.state.priceMax) changes.priceMax = priceMax;
-            if (sorting !== this.state.sorting) changes.sorting = sorting;
+                const changes = {};
+                if (searchText !== this.state.searchText) changes.searchText = searchText;
+                if (difference.length > 0) changes.selectedCategories = selectedCategories;
+                if (priceMin !== this.state.priceMin) changes.priceMin = priceMin;
+                if (priceMax !== this.state.priceMax) changes.priceMax = priceMax;
+                if (sorting !== this.state.sorting) changes.sorting = sorting;
 
-            if (Object.keys(changes).length > 0) {
-                changes.loading = true;
-                this.setState(changes, () => this.props.getLots(Object.assign(storeState, changes)));
-            } else if (page > 1 && page !== this.state.page) {
-                this.setState({page: page}, () => store.dispatch( loadMore(storeState, storeState.currentTab) ) );
+                if (Object.keys(changes).length > 0) {
+                    changes.loading = true;
+                    this.setState(changes, () => this.props.getLots(Object.assign(storeState, changes)));
+                } else if (page > 1 && page !== this.state.page) {
+                    this.setState({page: page}, () => store.dispatch( loadMore(storeState, storeState.currentTab) ) );
+                }
             }
         });
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     loadMore(e) {
@@ -98,7 +105,7 @@ class LotContainer extends Component {
                     // lots = <p className="error-message">{this.props.message}</p>;
                 }else{
                     setTimeout(() => {
-                        this.setState({loading: false});
+                        if (this._isMounted) this.setState({loading: false});
                     }, 3000);
                 }
             }

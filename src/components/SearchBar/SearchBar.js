@@ -35,6 +35,7 @@ class SearchBar extends Component {
             auctionsCount: storeState.auctionsCount || 0,
             postsCount: storeState.postsCount || 0,
         };
+        this._isMounted = false;
 
         this.delay = 0;
 
@@ -42,73 +43,78 @@ class SearchBar extends Component {
         this.showSearchFilters = this.showSearchFilters.bind(this);
     }
 
+    toggleFilter(menu_btn) {
+        const el = document.getElementById('searchBox');
+
+        if(el && el.classList.contains('show')){
+            menu_btn.classList.remove('open');
+            menu_btn.querySelector('#to_open').style.display = "block";
+        }
+        else{
+            menu_btn.classList.add('open');
+            menu_btn.querySelector('#to_open').style.display = "none";
+        }
+    }
+
     componentDidMount() {
+        this._isMounted = true;
         const menu_btn = document.getElementById('menu_search_form_btn');
 
         if(menu_btn){
             menu_btn.querySelector('#to_open').style.display = "none";
 
-            menu_btn.addEventListener('click', e => {
-                const el = document.getElementById('searchBox');
-
-                if(el && el.classList.contains('show')){
-                    menu_btn.classList.remove('open');
-                    menu_btn.querySelector('#to_open').style.display = "block";
-                }
-                else{
-                    menu_btn.classList.add('open');
-                    menu_btn.querySelector('#to_open').style.display = "none";
-                }
-            });
+            menu_btn.addEventListener('click', e => this.toggleFilter(menu_btn));
         }
 
         const _this = this;
 
         store.subscribe(() => {
-            const {
-                searchText,
-                sorting,
-                loading,
-                currentTab,
-                selectedCategories,
-                priceMin,
-                priceMax,
+            if (this._isMounted) {
+                const {
+                    searchText,
+                    sorting,
+                    loading,
+                    currentTab,
+                    selectedCategories,
+                    priceMin,
+                    priceMax,
 
-                lotsCount,
-                pastLotsCount,
-                auctionsCount,
-                postsCount
-            } = store.getState();
+                    lotsCount,
+                    pastLotsCount,
+                    auctionsCount,
+                    postsCount
+                } = store.getState();
 
-            const stateChanges = {
-                query: searchText,
-                currentTab: currentTab,
-                sorting: sorting,
-                categories: selectedCategories,
-                pricemin: priceMin,
-                pricemax: priceMax,
-                lotsCount: lotsCount,
-                pastLotsCount: pastLotsCount,
-                auctionsCount: auctionsCount,
-                postsCount: postsCount,
-            };
+                const stateChanges = {
+                    query: searchText,
+                    currentTab: currentTab,
+                    sorting: sorting,
+                    categories: selectedCategories,
+                    pricemin: priceMin,
+                    pricemax: priceMax,
+                    lotsCount: lotsCount,
+                    pastLotsCount: pastLotsCount,
+                    auctionsCount: auctionsCount,
+                    postsCount: postsCount,
+                };
 
-            if(!loading && _this.state.submited){
-                stateChanges.submited = false;
+                if(!loading && _this.state.submited){
+                    stateChanges.submited = false;
+                }
+
+                this.setState(stateChanges);
             }
-
-            this.setState(stateChanges);
         });
-
-        // this.showSearchFilters();
     }
 
-    handleButtonClick = (e) => {
-        const buttons = document.querySelectorAll('.tabs button');
-        buttons.map = [].map;
-        buttons.map((item) => item.classList.contains('active') ? item.classList.remove('active') : '');
-        e.target.classList.add('active');
-    };
+    componentWillUnmount() {
+        this._isMounted = false;
+
+        const menu_btn = document.getElementById('menu_search_form_btn');
+        if (menu_btn) {
+            menu_btn.removeEventListener('click', e => this.toggleFilter(menu_btn));
+        }
+    }
 
     handleSearchSubmit = (e) => {
         e.preventDefault();
@@ -122,40 +128,42 @@ class SearchBar extends Component {
             pricemax
         } = this.state;
 
-        // TODO finish URL params for search !!!
-        if (window.history.pushState) {
-            let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-            const params = [];
+        const storeState = store.getState();
 
-            if (currentTab) params.push('tab=' + currentTab);
-            if (query) params.push('search=' + query);
+        if (
+            storeState.currentTab !== currentTab ||
+            storeState.searchText !== query ||
+            storeState.sorting !== sorting ||
+            storeState.priceMin !== pricemin ||
+            storeState.priceMax !== pricemax
+        ) {
+            if (window.history.pushState) {
+                let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                const params = [];
 
-            if (categories.length) {
-                params.push('categories=' + categories.join(','));
+                if (currentTab) params.push('tab=' + currentTab);
+                if (query) params.push('search=' + query);
+
+                if (categories.length) {
+                    params.push('categories=' + categories.join(','));
+                }
+
+                if (pricemin) params.push('min_price=' + pricemin);
+                if (pricemax) params.push('max_price=' + pricemax);
+                if (sorting) params.push('sort=' + sorting);
+
+                if (params.length) {
+                    newUrl += '?' + params.join('&');
+                }
+
+                window.history.pushState({path:newUrl},'',newUrl);
             }
 
-            if (pricemin) params.push('min_price=' + pricemin);
-            if (pricemax) params.push('max_price=' + pricemax);
-            if (sorting) params.push('sort=' + sorting);
-
-            if (params.length) {
-                newUrl += '?' + params.join('&');
-            }
-
-            window.history.pushState({path:newUrl},'',newUrl);
+            store.dispatch(updateSearch({searchText: query }));
         }
-
-        store.dispatch(updateSearch({searchText: query }));
-        // store.dispatch(updateFiltersNew({
-        //     selectedCategories: [],
-        //     priceMin: '',
-        //     priceMax: '',
-        // }));
-        // store.dispatch(updateSorting({sorting: ''}));
     };
 
     showSearchFilters = (e) => {
-
         const menu_btn = document.getElementById('menu_search_form_btn');
 
         menu_btn.classList.add('open');
@@ -170,8 +178,6 @@ class SearchBar extends Component {
             auctionsCount,
             postsCount
         } = this.state;
-
-        // console.log('currentTab: ', currentTab);
 
         return (
             <>
