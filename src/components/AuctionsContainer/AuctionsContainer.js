@@ -88,7 +88,7 @@ class AuctionsContainer extends Component {
                     key={'auction_' + key}
                     auctionId={item.id}
                     location={item.location}
-                    // link={item.link}
+                    link={item.permalink}
                     title={item.title}
                     datetime={item.date}
                     imgSrc={item.photo}

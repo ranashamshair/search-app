@@ -39,19 +39,14 @@ function Auction(props) {
     const addr = props.location;
     let addrShow = addr.city + (addr.state ? ', ' + addr.state : '');
 
-    let slug = props.title.replace(/ /g, "-");
-    let url = `/auction-catalog/${slug}_${props.auctionId}`;
-    console.log(url);
-
     return (
         <>
-            
             <div className="col-12 col-lg-6 search-auction-result anim-search-result">
                 <div className="widget-fluid mb-3 d-flex flex-column flex-md-row text-center justify-content-lg-center align-items-center w-100">
                     <div className="widget-fluid--body bg-white">
                         <span className="widget-fluid--body__tag text-uppercase">{addrShow}</span>
                         <h4 className="widget-fluid--body__headline">
-                            <a href={props.url} target="_blank" className="link-overlay font-weight-bold">{props.title}</a>
+                            <a href={props.link} target="_blank" className="link-overlay font-weight-bold">{props.title}</a>
                         </h4>
                         <span className="widget-fluid--body__date">{date}</span>
                         <span className="widget-fluid--body__date d-block text-grey">{time}</span>
@@ -59,7 +54,7 @@ function Auction(props) {
                     {
                         (props.imgSrc) ? (
                             <div className="widget-fluid--image">
-                                <a href={props.url} target="_blank">
+                                <a href={props.link} target="_blank">
                                     <figure>
                                         <img src={props.imgSrc} alt="Prints &amp; Multiples" className="mw-100" width="260" height="300" />
                                     </figure>
@@ -69,7 +64,6 @@ function Auction(props) {
                     }
                 </div>
             </div>
-
         </>
     );
     
