@@ -332,8 +332,6 @@ class SearchFilters extends Component {
 }
 
 function mapStateToProps(state) {
-  // console.log('store state: ', state);
-
   return {
       availableCategories: state.availableCategories
   };

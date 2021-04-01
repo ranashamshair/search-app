@@ -1,5 +1,5 @@
 import {
-    GET_AUCTIONS, GET_CATEGORIES, GET_LOTS, GET_PAST_LOTS, GET_POSTS, INIT_COUNTERS, LOAD_MORE, NEXT_PAGE,
+    GET_AUCTIONS, GET_CATEGORIES, GET_LOTS, GET_PAST_LOTS, GET_POSTS, LOAD_MORE, NEXT_PAGE,
     UPDATE_FILTERS_NEW,
     UPDATE_SEARCH, UPDATE_SORTING, UPDATE_TAB
 } from "../constants/action-types";
@@ -127,7 +127,6 @@ function rootReducer(state = initialState, action) {
             if (state.allCategories.length > 0 && action.payload.categoryIds) {
                 changes.availableCategories = state.allCategories.filter(item => action.payload.categoryIds.indexOf(item.id) !== -1);
             }
-            console.log('changes.availableCategories: ', changes.availableCategories);
 
             changes = reduceRefreshedData(changes, action.payload);
 
@@ -214,15 +213,10 @@ function rootReducer(state = initialState, action) {
                 }
             }
 
-            console.log('LOAD_MORE reducer loading :', changes.loading);
-
             return Object.assign({}, state, changes);
         }
         case NEXT_PAGE: {
             return Object.assign({}, state, {page: state.page + 1});
-        }
-        case INIT_COUNTERS: {
-            return Object.assign({}, state, action.payload);
         }
         default: {
             return state;
