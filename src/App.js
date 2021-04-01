@@ -10,7 +10,7 @@ import './App.css';
 
 import { Provider } from 'react-redux';
 import store from './store/index';
-import {getLots, getCategories, getPastLots, getAuctions, getOther, loadMore, updateTab, setNextPage} from './actions/index';
+import {getLots, getCategories, getPastLots, getAuctions, getOther, loadMore, updateTab, setNextPage, initCounters} from './actions/index';
 import PastLotContainer from "./components/PastLotContainer/PastLotContainer";
 import {updateFiltersNew, updateSearch, updateSorting} from "./actions";
 import AuctionsContainer from "./components/AuctionsContainer/AuctionsContainer";
@@ -24,11 +24,13 @@ window.getOther = getOther;
 window.loadMore = loadMore;
 window.updateTab = updateTab;
 window.setNextPage = setNextPage;
+window.initCounters = initCounters;
 
 class App extends Component{
     constructor(props) {
         super(props);
 
+        store.dispatch( initCounters() );
         const params = this.parseUrl();
 
         this.state = {

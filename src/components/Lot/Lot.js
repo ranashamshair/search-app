@@ -3,33 +3,29 @@ import FadeIn from 'react-fade-in';
 import './Lot.css';
 
 function getDate(datetime) {
-    const dateT = new Date(datetime * 1000);
+    const dateT = new Date(datetime);
 
     const darr = dateT.toDateString().split(' ');
     darr.shift();
+    darr[1] = parseInt(darr[1]);
     switch (darr[1]) {
-        case '1': darr[1] += 'st'; break;
-        case '2': darr[1] += 'nd'; break;
-        case '3': darr[1] += 'rd'; break;
-        default: darr[1] += 'st';
+        case 1: darr[1] += 'st'; break;
+        case 2: darr[1] += 'nd'; break;
+        case 3: darr[1] += 'rd'; break;
+        default: darr[1] += 'th';
     }
 
     return darr.join(' ');
 }
 
 function Lot(props) {
-    // console.log('lot props: ', props);
     const { ref, title, photo, saleTitle, currencySymbol, saleDate, estimate ,estimateLow,
-        lotNumber, bid, lotNumberExtension, priceResult, location, date, except, detailsUrl } = props.lot;
+        lotNumber, bid, lotNumberExtension, priceResult } = props.lot;
 
-    // let seller = lot ? lot.sellerName : '';  maybe need to change this place to api result
-
-    // let curr = lot.currencySymbol ? lot.currencySymbol : '$';
-    // let estimate = (lot.estimateLow === lot.estimate) ? `Estimate: ${curr + lot.estimateLow}` : `Estimate: ${curr + lot.estimateLow} - ${curr + lot.estimate}`;
 
     let slug = title.replace(/ /g, "-");  // maybe need to change this place to api result
     let url = `/auction-lot/${slug}_${ref}`; // maybe need to change this place to api result
-    // console.log(url);
+
     const [isMobile, setIsMobile] = useState(false);
     useEffect(() => {
         if ( window.innerWidth < 576 ) {
@@ -37,7 +33,10 @@ function Lot(props) {
         } else {
             setIsMobile(false);
         }
-    }, [])
+    }, []);
+
+    let estimatePrice = (((estimateLow || estimate) && currencySymbol) || '') + ' ' + ((estimateLow && estimate && `${estimateLow} - ${estimate}`) || estimateLow || estimate || '');
+
     return (
         <>
             <div className="col-12 col-md-6 col-lg-3 pb-4">
@@ -62,28 +61,12 @@ function Lot(props) {
                             <h3 className="font-weight-bold text-grey">{title}</h3>
                             {saleTitle && <h4 className="my-3 subtitle"><u>{saleTitle}</u></h4>}
                         </a>
-                        {currencySymbol && <p>currencySymbol: {currencySymbol}</p>}
-                        {estimate && <p>estimateHigh: {estimate}</p>}
-                        {estimateLow && <p>estimateLow: {estimateLow}</p>}
-                        {lotNumber && <p>lotNumber: {lotNumber}</p>}
-                        {bid && <p>bid: {bid}</p>}
-                        {ref && <p>ref: {ref}</p>}
-                        {saleDate && <p>saleDate: {getDate(saleDate)}</p>}
+                        {estimatePrice !== '' && <p>Estimate: {estimatePrice}</p>}
+                        {lotNumber && <p>Lot number: {lotNumber} {(props.isPast && lotNumberExtension) || ''}</p>}
+                        {(bid && <p>Bid: {bid}</p>) || ''}
+                        {(saleDate && <p>Sale date: {getDate(saleDate)}</p>) || ''}
                         {/*this add in past fields */}
-                        {lotNumberExtension && <p>lotNumberExtension: {lotNumberExtension}</p>}
-                        {priceResult && <p>priceResult: {priceResult}</p>} {/*priceResult is number*/}
-                        {/*this add in auctions fields */}
-                        {date && <p>date: {date}</p>}
-                        {location &&
-                            <>
-                                {location.city && <p>city: {location.city}</p>}
-                                {location.state && <p>state: {location.state}</p>}
-                                {location.country && <p>country: {location.country}</p>}
-                            </>
-                        }
-                        {/*this add in other fields */}
-                        {except && <p>except: {except}</p>}
-                        {detailsUrl && <p>detailsUrl: {detailsUrl}</p>}
+                        {(props.isPast) && <p>Result price: {priceResult || 'Unsold'}</p>}
                     </aside>
                 </FadeIn>
             </div>

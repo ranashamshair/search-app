@@ -93,6 +93,7 @@ class LotContainer extends Component {
                 {
                     <Lot
                         lot={item}
+                        isPast={false}
                     />
                 }
                 </React.Fragment>

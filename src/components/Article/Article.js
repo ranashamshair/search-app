@@ -20,6 +20,7 @@ function Article(props) {
                     }
                     <div className="favourite-content p-3 flex-1">
                         <h3 className="font-weight-bold"><a href={props.link} className="link-overlay">{props.articleTitle}</a></h3>
+                        {props.excerpt && <p>excerpt: {props.excerpt}</p>}
                     </div>
                 </aside>
             </div>

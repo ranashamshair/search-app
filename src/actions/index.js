@@ -3,7 +3,7 @@ import {
     GET_CATEGORIES,
     GET_LOTS,
     GET_PAST_LOTS,
-    GET_POSTS,
+    GET_POSTS, INIT_COUNTERS,
     LOAD_MORE, NEXT_PAGE,
     UPDATE_FILTERS_NEW,
     UPDATE_SEARCH,
@@ -238,4 +238,35 @@ export function loadMore(payload = null, tab = 'upcoming') {
 
 export function setNextPage() {
     return (dispatch) => (dispatch({type: NEXT_PAGE, payload: {}}));
+}
+
+async function getCounters() {
+    try {
+        console.log('GET_COUNTERS');
+        const responses = await axios.all([
+            axios.get(`${baseUrl}/searchlots/inv/upcoming`, requestOptions),
+            // axios.get(`${baseUrl}/searchlots/inv/past`, requestOptions),
+            axios.get(`${baseUrl}/searchlots/inv/auctions`, requestOptions)
+        ]);
+        console.log('COUNTER RESPONSES :  ', responses)
+
+        // TODO !!!
+        return {
+            lotsCount: responses[0].data.count,
+            // pastLotsCount: responses[1].data.count,
+            // auctionsCount: responses[2].data.count
+            auctionsCount: responses[1].data.count
+        }
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
+export function initCounters() {
+    console.log('INIT COUNTERS !!!');
+    return async (dispatch) => {
+        const params = await getCounters();
+        dispatch({ type: INIT_COUNTERS, payload: params || {} });
+    }
 }

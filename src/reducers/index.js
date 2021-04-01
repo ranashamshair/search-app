@@ -1,5 +1,6 @@
 import {
-    GET_AUCTIONS, GET_CATEGORIES, GET_LOTS, GET_PAST_LOTS, GET_POSTS, LOAD_MORE, NEXT_PAGE, UPDATE_FILTERS_NEW,
+    GET_AUCTIONS, GET_CATEGORIES, GET_LOTS, GET_PAST_LOTS, GET_POSTS, INIT_COUNTERS, LOAD_MORE, NEXT_PAGE,
+    UPDATE_FILTERS_NEW,
     UPDATE_SEARCH, UPDATE_SORTING, UPDATE_TAB
 } from "../constants/action-types";
 
@@ -219,6 +220,9 @@ function rootReducer(state = initialState, action) {
         }
         case NEXT_PAGE: {
             return Object.assign({}, state, {page: state.page + 1});
+        }
+        case INIT_COUNTERS: {
+            return Object.assign({}, state, action.payload);
         }
         default: {
             return state;

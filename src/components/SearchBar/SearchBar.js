@@ -235,7 +235,8 @@ class SearchBar extends Component {
                                           className={'text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2' + (currentTab === 'other' ? ' active' : '')}
                                           name="other"
                                           onClick={this.props.handleTabSelect}>
-                                            Other ({postsCount}) {/*get data from redux store about count of lots (count field)*/}
+                                            {/*Other ({postsCount}) /!*get data from redux store about count of lots (count field)*!/*/}
+                                            Other
                                         </button>
                                     </div>
 
