@@ -66,7 +66,7 @@ function Lot(props) {
                         {(bid && <p>Bid: {bid}</p>) || ''}
                         {(saleDate && <p>Sale date: {getDate(saleDate)}</p>) || ''}
                         {/*this add in past fields */}
-                        {(props.isPast) && <p>Result price: {priceResult || 'Unsold'}</p>}
+                        {(props.isPast) && <p>Result price: {(priceResult && ((currencySymbol || '') + ' ' + priceResult)) || 'Unsold'}</p>}
                     </aside>
                 </FadeIn>
             </div>
