@@ -217,25 +217,25 @@ class SearchBar extends Component {
                                           className={'text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2' + (currentTab === 'upcoming' ? ' active' : '')}
                                           name="upcoming"
                                           onClick={this.props.handleTabSelect}>
-                                            Upcoming ({lotsCount}) {/*get data from redux store about count of lots (count field)*/}
+                                            Upcoming {(lotsCount && `(${lotsCount})`) || ''} {/*get data from redux store about count of lots (count field)*/}
                                         </button>
                                         <button
                                           className={'text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2' + (currentTab === 'past' ? ' active' : '')}
                                           name="past"
                                           onClick={this.props.handleTabSelect}>
-                                            Past ({pastLotsCount}) {/*get data from redux store about count of lots (count field)*/}
+                                            Past {(pastLotsCount && `(${pastLotsCount})`) || ''} {/*get data from redux store about count of lots (count field)*/}
                                         </button>
                                         <button
                                           className={'text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2' + (currentTab === 'auctions' ? ' active' : '')}
                                           name="auctions"
                                           onClick={this.props.handleTabSelect}>
-                                            Auctions ({auctionsCount}) {/*get data from redux store about count of lots (count field)*/}
+                                            Auctions {(auctionsCount && `(${auctionsCount})`) || ''} {/*get data from redux store about count of lots (count field)*/}
                                         </button>
                                         <button
                                           className={'text-uppercase py-2 px-lg-5 mr-md-3 mr-2 px-md-2' + (currentTab === 'other' ? ' active' : '')}
                                           name="other"
                                           onClick={this.props.handleTabSelect}>
-                                            Other ({postsCount}) {/*get data from redux store about count of lots (count field)*/}
+                                            Other {(postsCount && `(${postsCount})`) || ''} {/*get data from redux store about count of lots (count field)*/}
                                         </button>
                                     </div>
 

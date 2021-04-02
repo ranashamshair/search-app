@@ -19,11 +19,12 @@ import './Auction.css';
 function getDate(datetime) {
     const darr = datetime.toDateString().split(' ');
     darr.shift();
+    darr[1] = parseInt(darr[1]);
     switch (darr[1]) {
-        case '1': darr[1] += 'st'; break;
-        case '2': darr[1] += 'nd'; break;
-        case '3': darr[1] += 'rd'; break;
-        default: darr[1] += 'st';
+        case 1: darr[1] += 'st'; break;
+        case 2: darr[1] += 'nd'; break;
+        case 3: darr[1] += 'rd'; break;
+        default: darr[1] += 'th';
     }
 
     return darr.join(' ');

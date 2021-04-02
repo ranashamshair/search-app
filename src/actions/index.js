@@ -239,3 +239,4 @@ export function loadMore(payload = null, tab = 'upcoming') {
 export function setNextPage() {
     return (dispatch) => (dispatch({type: NEXT_PAGE, payload: {}}));
 }
+
