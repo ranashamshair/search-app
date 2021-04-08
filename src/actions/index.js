@@ -20,7 +20,7 @@ const baseUrl = 'http://hksndev2.co.uk/contemporary/wp-json';
 
 const requestOptions = {
     headers: {
-        'id': 'V053C9yWvo45XsOxKB'
+        'id': 'V053C9yWvo45XsOxKB',
     }
 };
 
@@ -157,8 +157,8 @@ async function getLotsNew(payload = null, refresh = false, past = false) {
         if (!past) params.categoryIds = response.data.used_categories;
         params.success = true;
     } catch (error) {
-        console.log(error);
-        params.message = error.response.data.message;
+        console.log('error: ', error);
+        params.message = (typeof error === 'string') ? error : ((error.hasOwnProperty('response') && error.response)  ? error.response.data.message : '');
     }
 
     return params;
@@ -178,7 +178,7 @@ async function getAuctionsNew(payload = null, refresh = false) {
         params.success = true;
     } catch (error) {
         console.log(error);
-        params.message = error.response.data.message;
+        params.message = (typeof error === 'string') ? error : ((error.hasOwnProperty('response') && error.response)  ? error.response.data.message : '');
     }
 
     return params;
@@ -198,7 +198,7 @@ async function getOtherNew(payload = null, refresh = false) {
         params.success = true;
     } catch (error) {
         console.log(error);
-        params.message = error.response.data.message;
+        params.message = (typeof error === 'string') ? error : ((error.hasOwnProperty('response') && error.response)  ? error.response.data.message : '');
     }
 
     return params;
