@@ -155,6 +155,13 @@ function rootReducer(state = initialState, action) {
                 loading: true,
             };
 
+            if (currentTab !== state.currentTab) {
+                changes.searchText = '';
+                changes.selectedCategories= [];
+                changes.priceMin= '';
+                changes.priceMax= '';
+            }
+
             return Object.assign({}, state, changes);
         }
         case UPDATE_FILTERS_NEW: {

@@ -22,7 +22,7 @@ class SearchFilters extends Component {
       noResult: true,
       availableCategories: storeState.availableCategories,
       submited: storeState.loading || true,
-      isOpen: true, // work
+      isOpen: false, // work
       isMobile: false, // work
       setCategory: [], // work
 
@@ -231,14 +231,6 @@ class SearchFilters extends Component {
           label: 'Title',
           value: 'title||asc'
         },
-        {
-          label: 'Category',
-          value: 'category||asc'
-        },
-        // {
-        //   label: 'Category (Descending)',
-        //   value: 'category||desc'
-        // }
       ],
       'other': [
         {
