@@ -6,8 +6,15 @@
     background-color: #FFFFFF;
 }
 
+.title {
+    font-size: 26px;
+    line-height: 28px;
+}
+
 .subtitle {
     color: #968a8a;
+    font-size: 20px;
+    line-height: 28px;
 }
 
 .emptyPhoto {
