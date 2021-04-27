@@ -92,11 +92,11 @@ class App extends Component{
             }
 
             store.dispatch(updateTab({currentTab: openTabs}));
-            store.dispatch(updateFiltersNew({
-                selectedCategories: [],
-                priceMin: '',
-                priceMax: '',
-            }, openTabs));
+            // store.dispatch(updateFiltersNew({
+            //     selectedCategories: [],
+            //     priceMin: '',
+            //     priceMax: '',
+            // }, openTabs));
         }
     }
 
