@@ -17,7 +17,7 @@ function Article(props) {
 
     return (
         <>
-          <div className="col-12 col-md-6 col-lg-3 pb-4 search-auction-result anim-search-result">
+          <div className="col-12 col-md-6 col-lg-3 pb-4 search-auction-result anim-search-result lot-container">
             <FadeIn>
               <a href={props.link} target="_blank">
                 <figure className="text-center imgContainer">
@@ -36,7 +36,7 @@ function Article(props) {
               </a>
               <aside className="search-lot--content py-4 px-4 text-left">
                 <a href={props.link} target="_blank">
-                  <h3 className="font-weight-bold text-grey title">{props.articleTitle}</h3>
+                  <h3 className="font-weight-normal text-grey title">{props.articleTitle}</h3>
                 </a>
                 {props.excerpt !== '' && <p className='m-0'>Excerpt: {props.excerpt}</p>}
               </aside>

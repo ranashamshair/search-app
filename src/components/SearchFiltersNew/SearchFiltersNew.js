@@ -263,7 +263,7 @@ class SearchFilters extends Component {
             }
             <div className="pt-4 search-filter">
                 <div className="d-flex justify-content-center justify-content-sm-between align-items-end">
-                    <button className="py-2 px-4 text-uppercase font-weight-bold" onClick={this.handleOpenClose}>Filter <FontAwesomeIcon className="ml-3" icon={isOpen ? faArrowUp : faArrowDown}/></button>
+                    <button className="py-2 px-4 text-uppercase font-weight-extra-bold" onClick={this.handleOpenClose}>Filter <FontAwesomeIcon className="ml-3" icon={isOpen ? faArrowUp : faArrowDown}/></button>
                     {
                         !isMobile ?
                             (<select onChange={this.handleSortingSelect} value={sorting}>
@@ -313,7 +313,7 @@ class SearchFilters extends Component {
                             }
                         </div>
                         <div className="col-12 d-flex justify-content-center p-3">
-                            <button type="submit" className="py-2 px-4 text-uppercase font-weight-bold" onClick={this.handleSubmitFilters}>Apply filters <FontAwesomeIcon className="ml-3" icon={faArrowRight}/></button>
+                            <button type="submit" className="py-2 px-4 text-uppercase font-weight-extra-bold" onClick={this.handleSubmitFilters}>Apply filters <FontAwesomeIcon className="ml-3" icon={faArrowRight}/></button>
                         </div>
                     </div>
                 }

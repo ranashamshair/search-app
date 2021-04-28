@@ -53,7 +53,7 @@ function Auction(props) {
     // <div className="col-12 col-lg-6 search-auction-result anim-search-result">
     return (
         <>
-            <div className="col-12 col-md-6 col-lg-3 pb-4 search-auction-result anim-search-result">
+            <div className="col-12 col-md-6 col-lg-3 pb-4 search-auction-result anim-search-result lot-container">
                 <FadeIn>
                     <a href={props.link} target="_blank">
                         <figure className="text-center imgContainer">
@@ -72,8 +72,8 @@ function Auction(props) {
                     </a>
                     <aside className="search-lot--content py-4 px-4 text-left">
                         <a href={props.link} target="_blank">
-                            <h3 className="font-weight-bold text-grey title">{addrShow}</h3>
-                            {props.title && <h4 className="my-3 subtitle"><u>{props.title}</u></h4>}
+                            <h3 className="font-weight-normal text-grey title">{addrShow}</h3>
+                            {props.title && <h4 className="my-3 font-weight-normal subtitle"><u>{props.title}</u></h4>}
                         </a>
                         {date !== '' && <p className='m-0'>{date}</p>}
                         {time !== '' && <p className='m-0'>{time}</p>}
