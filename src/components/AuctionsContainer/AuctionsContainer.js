@@ -15,7 +15,7 @@ class AuctionsContainer extends Component {
 
         this.state = {
             loading: true,
-            page: 1,
+            page: 0,
             // for detecting changes !!!
             searchText: storeState.searchText || '',
             selectedCategories: storeState.selectedCategories || [],
@@ -38,7 +38,7 @@ class AuctionsContainer extends Component {
                     searchText = '',
                     selectedCategories = [],
                     sorting = '',
-                    page = 1
+                    page = 0
                 } = storeState;
 
                 const difference = selectedCategories
@@ -55,7 +55,7 @@ class AuctionsContainer extends Component {
                     this.setState(changes, () => {
                         if (this._isMounted) this.props.getAuctions(Object.assign(storeState, changes))
                     });
-                } else if (page > 1 && page !== this.state.page) {
+                } else if (page > 0 && page !== this.state.page) {
                     this.setState({page: page}, () => {
                         if (this._isMounted) store.dispatch( loadMore(storeState, storeState.currentTab) )
                     });

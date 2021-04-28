@@ -13,7 +13,7 @@ const initialState = {
     lotsPast: [],
     auctionsNew: [],
     postsNew: [],
-    page: 1,
+    page: 0,
     dataChanged: false,
     message: '',
     searchText: '',
@@ -51,7 +51,7 @@ function rootReducer(state = initialState, action) {
     switch (action.type) {
         case GET_LOTS: {
             let changes = {
-                page: 1,
+                page: 0,
                 loading: false,
             };
 
@@ -76,7 +76,7 @@ function rootReducer(state = initialState, action) {
         }
         case GET_PAST_LOTS: {
             let changes = {
-                page: 1,
+                page: 0,
                 loading: false,
             };
 
@@ -96,7 +96,7 @@ function rootReducer(state = initialState, action) {
         }
         case GET_AUCTIONS: {
             let changes = {
-                page: 1,
+                page: 0,
                 loading: false,
             };
 
@@ -120,7 +120,7 @@ function rootReducer(state = initialState, action) {
         }
         case GET_POSTS: {
             let changes = {
-                page: 1,
+                page: 0,
                 loading: false,
             };
 
@@ -150,7 +150,7 @@ function rootReducer(state = initialState, action) {
             const { currentTab = 'upcoming' } = action.payload;
 
             let changes = {
-                page: 1,
+                page: 0,
                 currentTab: currentTab,
                 loading: true,
             };
@@ -166,7 +166,7 @@ function rootReducer(state = initialState, action) {
         }
         case UPDATE_FILTERS_NEW: {
             let changes = {
-                page: 1,
+                page: 0,
                 loading: true,
             };
 
@@ -189,8 +189,26 @@ function rootReducer(state = initialState, action) {
 
             if (success) {
                 switch (currentTab) {
-                    case 'upcoming': changes.lotsNew = (state.lotsNew && state.lotsNew.length > 0) ? [...state.lotsNew, ...items] : items; break;
-                    case 'past': changes.lotsPast = (state.lotsPast && state.lotsPast.length > 0) ? [...state.lotsPast, ...items] : items; break;
+                    case 'upcoming': {
+                        changes.lotsNew = (state.lotsNew && state.lotsNew.length > 0) ? [...state.lotsNew, ...items] : items;
+
+                        let uniqueItemsObj = changes.lotsNew.reduce( (c, e) => {
+                            if (!c[e.ref]) c[e.ref] = e;
+                            return c;
+                        }, {});
+
+                        changes.lotsNew = uniqueItemsObj ? Object.values(uniqueItemsObj) : [];
+                    } break;
+                    case 'past': {
+                        changes.lotsPast = (state.lotsPast && state.lotsPast.length > 0) ? [...state.lotsPast, ...items] : items;
+
+                        let uniqueItemsObj = changes.lotsPast.reduce( (c, e) => {
+                            if (!c[e.ref]) c[e.ref] = e;
+                            return c;
+                        }, {});
+
+                        changes.lotsPast = uniqueItemsObj ? Object.values(uniqueItemsObj) : [];
+                    } break;
                     case 'auctions': changes.auctionsNew = (state.auctionsNew && state.auctionsNew.length > 0) ? [...state.auctionsNew, ...items] : items; break;
                     case 'other': changes.postsNew = (state.postsNew && state.postsNew.length > 0) ? [...state.postsNew, ...items] : items; break;
                 }

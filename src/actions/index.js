@@ -92,7 +92,7 @@ const orderParams = (sorting = '', type = null) => {
 };
 
 const lotFilter = (params, isPast = false) => {
-    const { searchText = null, selectedCategories = [], priceMin = null, priceMax = null, pageSize = 20, page = 1, sorting = '' } = params;
+    const { searchText = null, selectedCategories = [], priceMin = null, priceMax = null, pageSize = 20, page = 0, sorting = '' } = params;
 
     const qs = [];
     if (searchText) qs.push('keyword=' + searchText);
@@ -118,7 +118,7 @@ const lotFilter = (params, isPast = false) => {
 };
 
 const auctionFilter = (params) => {
-    const { searchText = null, selectedCategories = [], pageSize = 20, page = 1, sorting = '' } = params;
+    const { searchText = null, selectedCategories = [], pageSize = 20, page = 0, sorting = '' } = params;
 
     const qs = [];
     if (searchText) qs.push('keyword=' + searchText);
@@ -132,7 +132,7 @@ const auctionFilter = (params) => {
 };
 
 const otherFilter = (params) => {
-    const { searchText = null, selectedCategories = [], pageSize = 20, page = 1, sorting = '' } = params;
+    const { searchText = null, selectedCategories = [], pageSize = 20, page = 0, sorting = '' } = params;
 
     const qs = [];
     if (searchText) qs.push('keyword=' + searchText);

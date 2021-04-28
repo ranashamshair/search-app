@@ -15,7 +15,7 @@ class LotContainer extends Component {
 
         this.state = {
             loading: true,
-            page: 1,
+            page: 0,
             // for detecting changes !!!
             searchText: storeState.searchText || '',
             selectedCategories: storeState.selectedCategories || [],
@@ -42,7 +42,7 @@ class LotContainer extends Component {
                     priceMin = '',
                     priceMax = '',
                     sorting = '',
-                    page = 1
+                    page = 0
                 } = storeState;
 
                 const difference = selectedCategories
@@ -59,7 +59,7 @@ class LotContainer extends Component {
                 if (Object.keys(changes).length > 0) {
                     changes.loading = true;
                     this.setState(changes, () => this.props.getLots(Object.assign(storeState, changes)));
-                } else if (page > 1 && page !== this.state.page) {
+                } else if (page > 0 && page !== this.state.page) {
                     this.setState({page: page}, () => store.dispatch( loadMore(storeState, storeState.currentTab) ) );
                 }
             }
