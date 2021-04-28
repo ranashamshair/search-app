@@ -42,6 +42,8 @@ a.btn.btn-sm{
 .error-message{
     font-size: 40px;
     margin-left: 0.875rem;
+    text-align: center;
+    padding: 40px 0 60px;
 }
 
 .preloader-blur{

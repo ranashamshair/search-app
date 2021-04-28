@@ -39,7 +39,7 @@ function Lot(props) {
 
     return (
         <>
-            <div className="col-12 col-md-6 col-lg-3 pb-4">
+            <div className="col-12 col-md-6 col-lg-3 pb-4 lot-container">
                 <FadeIn>
                     <a href={url} target="_blank">
                         <figure className="text-center imgContainer">
@@ -58,15 +58,15 @@ function Lot(props) {
                     </a>
                     <aside className="search-lot--content py-4 px-4 text-left">
                         <a href={url} target="_blank">
-                            <h3 className="font-weight-bold text-grey">{title}</h3>
-                            {saleTitle && <h4 className="my-3 subtitle"><u>{saleTitle}</u></h4>}
+                            <h3 className="font-weight-normal text-grey title">{title}</h3>
+                            {saleTitle && <h4 className="my-3 font-weight-normal subtitle"><u>{saleTitle}</u></h4>}
                         </a>
-                        {estimatePrice !== '' && <p>Estimate: {estimatePrice}</p>}
-                        {lotNumber && <p>Lot number: {lotNumber} {(props.isPast && lotNumberExtension) || ''}</p>}
-                        {(bid && <p>Bid: {bid}</p>) || ''}
-                        {(saleDate && <p>Sale date: {getDate(saleDate)}</p>) || ''}
+                        {estimatePrice !== '' && <p className='m-0'>Estimate: {estimatePrice}</p>}
+                        {lotNumber && <p className='m-0'>Lot number: {lotNumber} {(props.isPast && lotNumberExtension) || ''}</p>}
+                        {(bid && <p className='m-0'>Bid: {bid}</p>) || ''}
+                        {(saleDate && <p className='m-0'>Sale date: {getDate(saleDate)}</p>) || ''}
                         {/*this add in past fields */}
-                        {(props.isPast) && <p>Result price: {(priceResult && ((currencySymbol || '') + ' ' + priceResult)) || 'Unsold'}</p>}
+                        {(props.isPast) && <p className='m-0'>Result price: {(priceResult && ((currencySymbol || '') + ' ' + priceResult)) || 'Unsold'}</p>}
                     </aside>
                 </FadeIn>
             </div>

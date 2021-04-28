@@ -3,6 +3,7 @@
     color: #FFFFFF;
     font-size: 16px;
     line-height: 26px;
+    letter-spacing: 1px;
 }
 .search-filter button[type="submit"] {
     background-color: #000000;
