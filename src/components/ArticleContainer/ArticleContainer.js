@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import BlockHeader from '../BlockHeader/BlockHeader';
 import Article from '../Article/Article';
 import store from "../../store";
-import {getOther, loadMore, setNextPage} from "../../actions";
+import {getOther, loadMore, setInitialized, setNextPage} from "../../actions";
 import {connect} from "react-redux";
 import ArticleLoader from "../ArticleLoader/ArticleLoader";
 
@@ -28,7 +28,11 @@ class ArticleContainer extends Component {
 
     componentDidMount() {
         this._isMounted = true;
-        this.props.getOther(this.state);
+        const { firstInitialized } = store.getState();
+        if (!firstInitialized) {
+            this.props.getOther(this.state);
+            this.props.setInitialized();
+        }
 
         store.subscribe(() => {
             if (this._isMounted) {
@@ -144,5 +148,5 @@ function mapStateToProps(state) {
 
 export default connect(
     mapStateToProps,
-    { getOther }
+    { getOther, setInitialized }
 )(ArticleContainer);

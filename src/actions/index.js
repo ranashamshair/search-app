@@ -4,7 +4,7 @@ import {
     GET_LOTS,
     GET_PAST_LOTS,
     GET_POSTS,
-    LOAD_MORE, NEXT_PAGE,
+    LOAD_MORE, NEXT_PAGE, UPDATE_ALL_FROM_URL,
     UPDATE_FILTERS_NEW,
     UPDATE_SEARCH,
     UPDATE_SORTING,
@@ -204,13 +204,20 @@ async function getOtherNew(payload = null, refresh = false) {
     return params;
 }
 
+export function updateFromURL(payload = null) {
+    return (dispatch) => (dispatch({type: UPDATE_ALL_FROM_URL, payload: payload}));
+}
+
+export function setInitialized(payload = null) {
+    return (dispatch) => (dispatch({type: UPDATE_ALL_FROM_URL, payload: {firstInitialized: true}}));
+}
 
 export function updateTab(payload = null) {
-    return async (dispatch) => (dispatch({type: UPDATE_TAB, payload: payload}));
+    return (dispatch) => (dispatch({type: UPDATE_TAB, payload: payload}));
 }
 
 export function updateFiltersNew(payload = null, tab = 'upcoming') {
-    return async (dispatch) => (dispatch({type: UPDATE_FILTERS_NEW, payload: payload}));
+    return (dispatch) => (dispatch({type: UPDATE_FILTERS_NEW, payload: payload}));
 }
 
 export function updateSorting(payload = null) {

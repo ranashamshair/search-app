@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Lot from '../Lot/Lot';
 import LotLoader from '../LotLoader/LotLoader';
 import {connect} from "react-redux";
-import {getLots, loadMore, setNextPage} from '../../actions/index';
+import {getLots, loadMore, setInitialized, setNextPage} from '../../actions/index';
 import store from "../../store";
 
 class LotContainer extends Component {
@@ -30,7 +30,11 @@ class LotContainer extends Component {
 
     componentDidMount() {
         this._isMounted = true;
-        this.props.getLots(this.state);
+        const { firstInitialized } = store.getState();
+        if (!firstInitialized) {
+            this.props.getLots(this.state);
+            this.props.setInitialized();
+        }
 
         store.subscribe(() => {
             if (this._isMounted) {
@@ -147,5 +151,5 @@ function mapStateToProps(state) {
 
 export default connect(
     mapStateToProps,
-    { getLots }
+    { getLots, setInitialized }
 )(LotContainer);

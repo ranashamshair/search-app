@@ -6,7 +6,7 @@ import BlockHeader from '../BlockHeader/BlockHeader';
 import Lot from '../Lot/Lot';
 import LotLoader from '../LotLoader/LotLoader';
 import {connect} from "react-redux";
-import {getPastLots, loadMore, setNextPage} from '../../actions/index';
+import {getPastLots, loadMore, setInitialized, setNextPage} from '../../actions/index';
 import store from "../../store";
 
 class LotContainer extends Component {
@@ -33,7 +33,11 @@ class LotContainer extends Component {
 
     componentDidMount() {
         this._isMounted = true;
-        this.props.getPastLots(this.state);
+        const { firstInitialized } = store.getState();
+        if (!firstInitialized) {
+            this.props.getPastLots(this.state);
+            this.props.setInitialized();
+        }
 
         store.subscribe(() => {
             if (this._isMounted) {
@@ -149,5 +153,5 @@ function mapStateToProps(state) {
 
 export default connect(
     mapStateToProps,
-    { getPastLots }
+    { getPastLots, setInitialized }
 )(LotContainer);
