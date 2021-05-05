@@ -10,7 +10,17 @@ import './App.css';
 
 import { Provider } from 'react-redux';
 import store from './store/index';
-import {getLots, getCategories, getPastLots, getAuctions, getOther, loadMore, updateTab, setNextPage} from './actions/index';
+import {
+    getLots,
+    getCategories,
+    getPastLots,
+    getAuctions,
+    getOther,
+    loadMore,
+    updateTab,
+    setNextPage,
+    updateFromURL
+} from './actions/index';
 import PastLotContainer from "./components/PastLotContainer/PastLotContainer";
 import {updateFiltersNew, updateSearch, updateSorting} from "./actions";
 import AuctionsContainer from "./components/AuctionsContainer/AuctionsContainer";
@@ -56,22 +66,33 @@ class App extends Component{
 
         const { tab = 'upcoming', search = '', categories = null, min_price = '', max_price = '', sort = '' } = params;
 
-        if (this.state.currentTab !== tab) {
-            store.dispatch(updateTab({currentTab: tab}));
-        }
-
-        store.dispatch(updateFiltersNew({
+        const changes = {
             selectedCategories: categories ? categories.split(',') : [],
             priceMin: min_price,
             priceMax: max_price,
-        }, tab));
+            loading: true
+        };
+
+        if (this.state.currentTab !== tab) {
+            changes.currentTab = tab;
+        }
+
+        // store.dispatch(updateFiltersNew({
+        //     selectedCategories: categories ? categories.split(',') : [],
+        //     priceMin: min_price,
+        //     priceMax: max_price,
+        // }, tab));
 
         if (this.state.search !== search) {
-            store.dispatch(updateSearch({searchText: search}));
+            // store.dispatch(updateSearch({searchText: search}));
+            changes.searchText = search;
         }
         if (this.state.sorting !== sort) {
-            store.dispatch(updateSorting({sorting: sort}));
+            changes.sorting = sort
+            // store.dispatch(updateSorting({sorting: sort}));
         }
+
+        store.dispatch(updateFromURL(changes));
     }
 
     updateUrlParams() {

@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import BlockHeader from '../BlockHeader/BlockHeader';
 import Auction from '../Auction/Auction';
 import {connect} from "react-redux";
-import {getAuctions, loadMore, setNextPage} from '../../actions/index';
+import {getAuctions, loadMore, setInitialized, setNextPage} from '../../actions/index';
 import store from "../../store";
 import AuctionLoader from "../AuctionLoader/AuctionLoader";
 
@@ -28,7 +28,11 @@ class AuctionsContainer extends Component {
 
     componentDidMount() {
         this._isMounted = true;
-        this.props.getAuctions(this.state);
+        const { firstInitialized } = store.getState();
+        if (!firstInitialized) {
+            this.props.getAuctions(this.state);
+            this.props.setInitialized();
+        }
 
         store.subscribe(() => {
             if (this._isMounted) {
@@ -140,5 +144,5 @@ function mapStateToProps(state) {
 
 export default connect(
     mapStateToProps,
-    { getAuctions }
+    { getAuctions, setInitialized }
 )(AuctionsContainer);

@@ -9,3 +9,4 @@ export const UPDATE_SORTING = "UPDATE_SORTING";
 export const UPDATE_SEARCH = "UPDATE_SEARCH";
 export const LOAD_MORE = "LOAD_MORE";
 export const NEXT_PAGE = "NEXT_PAGE";
+export const UPDATE_ALL_FROM_URL = "UPDATE_ALL_FROM_URL";

@@ -1,5 +1,5 @@
 import {
-    GET_AUCTIONS, GET_CATEGORIES, GET_LOTS, GET_PAST_LOTS, GET_POSTS, LOAD_MORE, NEXT_PAGE,
+    GET_AUCTIONS, GET_CATEGORIES, GET_LOTS, GET_PAST_LOTS, GET_POSTS, LOAD_MORE, NEXT_PAGE, UPDATE_ALL_FROM_URL,
     UPDATE_FILTERS_NEW,
     UPDATE_SEARCH, UPDATE_SORTING, UPDATE_TAB
 } from "../constants/action-types";
@@ -8,6 +8,7 @@ const initialState = {
     allCategories: [],
     availableCategories: [],
     // FOR NEW VERSION !!!
+    firstInitialized: false,
     loading: '',
     lotsNew: [],
     lotsPast: [],
@@ -242,6 +243,9 @@ function rootReducer(state = initialState, action) {
         }
         case NEXT_PAGE: {
             return Object.assign({}, state, {page: state.page + 1});
+        }
+        case UPDATE_ALL_FROM_URL: {
+            return Object.assign({}, state, action.payload);
         }
         default: {
             return state;
