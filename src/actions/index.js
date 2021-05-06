@@ -1,10 +1,7 @@
 import {
-    GET_AUCTIONS,
     GET_CATEGORIES,
-    GET_LOTS,
-    GET_PAST_LOTS,
-    GET_POSTS,
-    LOAD_MORE, NEXT_PAGE,
+    INIT_DATA,
+    LOAD_MORE, UPDATE_ALL_FROM_URL,
     UPDATE_FILTERS_NEW,
     UPDATE_SEARCH,
     UPDATE_SORTING,
@@ -24,37 +21,6 @@ const requestOptions = {
     }
 };
 
-export function getLots(payload = null) {
-    return async (dispatch) => {
-        const newParams = await getLotsNew(payload, true);
-
-        return dispatch({type: GET_LOTS, payload: newParams});
-    }
-}
-
-export function getPastLots(payload = null) {
-    return async (dispatch) => {
-        const newParams = await getLotsNew(payload, true, true);
-
-        return dispatch({type: GET_PAST_LOTS, payload: newParams});
-    }
-}
-
-export function getAuctions(payload = null) {
-    return async (dispatch) => {
-        const newParams = await getAuctionsNew(payload, true, true);
-
-        return dispatch({type: GET_AUCTIONS, payload: newParams});
-    }
-}
-
-export function getOther(payload = null) {
-    return async (dispatch) => {
-        const newParams = await getOtherNew(payload, true, true);
-
-        return dispatch({type: GET_POSTS, payload: newParams});
-    }
-}
 
 export function getCategories(payload = null) {
     return async (dispatch) => {
@@ -146,7 +112,7 @@ const otherFilter = (params) => {
 };
 
 async function getLotsNew(payload = null, refresh = false, past = false) {
-    let route = baseUrl + (past ? '/searchlots/inv/past' : '/searchlots/inv/upcoming') + (payload ? lotFilter(payload, past) : '');
+    let route = baseUrl + (past ? '/searchlots/inv/past' : '/searchlots/inv/upcoming') + ((payload && !refresh) ? lotFilter(payload, past) : `?${orderParams('', past ? 'past': 'upcoming')}`);
     const params = payload ? { ...payload } : {};
 
     try {
@@ -165,7 +131,7 @@ async function getLotsNew(payload = null, refresh = false, past = false) {
 }
 
 async function getAuctionsNew(payload = null, refresh = false) {
-    let route = baseUrl + '/searchlots/inv/auctions' + (payload ? auctionFilter(payload) : '');
+    let route = baseUrl + '/searchlots/inv/auctions' + ((payload && !refresh) ? auctionFilter(payload) : `?${orderParams('', 'auctions')}`);
 
     const params = payload ? { ...payload } : {};
 
@@ -185,7 +151,7 @@ async function getAuctionsNew(payload = null, refresh = false) {
 }
 
 async function getOtherNew(payload = null, refresh = false) {
-    let route = baseUrl + '/searchlots/inv/search' + (payload ? otherFilter(payload) : '');
+    let route = baseUrl + '/searchlots/inv/search' + ((payload && !refresh) ? otherFilter(payload) : `?${orderParams('', 'other')}`);
 
     const params = payload ? { ...payload } : {};
 
@@ -196,6 +162,8 @@ async function getOtherNew(payload = null, refresh = false) {
         params.count = response.data.count;
         params.categoryIds = response.data.used_categories;
         params.success = true;
+
+
     } catch (error) {
         console.log(error);
         params.message = (typeof error === 'string') ? error : ((error.hasOwnProperty('response') && error.response)  ? error.response.data.message : '');
@@ -205,25 +173,95 @@ async function getOtherNew(payload = null, refresh = false) {
 }
 
 
-export function updateTab(payload = null) {
-    return async (dispatch) => (dispatch({type: UPDATE_TAB, payload: payload}));
+
+export function updateFromURL(payload = null) {
+    return async (dispatch) => {
+        const { currentTab = 'upcoming' } = payload;
+
+        let newParams = null;
+
+        switch (currentTab) {
+            case 'upcoming': newParams = await getLotsNew(payload); break;
+            case 'past': newParams = await getLotsNew(payload, false, true); break;
+            case 'auctions': newParams = await getAuctionsNew(payload); break;
+            case 'other': newParams = await getOtherNew(payload); break;
+        }
+
+        return dispatch({type: UPDATE_ALL_FROM_URL, payload: newParams});
+    }
 }
 
-export function updateFiltersNew(payload = null, tab = 'upcoming') {
-    return async (dispatch) => (dispatch({type: UPDATE_FILTERS_NEW, payload: payload}));
+export function updateTab(payload = {}) {
+    return async (dispatch) => {
+        const { currentTab = 'upcoming' } = payload;
+
+        let newParams = null;
+
+        switch (currentTab) {
+            case 'upcoming': newParams = await getLotsNew(payload, true); break;
+            case 'past': newParams = await getLotsNew(payload, true, true); break;
+            case 'auctions': newParams = await getAuctionsNew(payload, true); break;
+            case 'other': newParams = await getOtherNew(payload, true); break;
+        }
+
+        return dispatch({type: UPDATE_TAB, payload: newParams});
+    }
+}
+
+export function updateFiltersNew(payload = {}, tab = 'upcoming') {
+    return async (dispatch) => {
+        let newParams = null;
+
+        switch (tab) {
+            case 'upcoming': newParams = await getLotsNew(payload); break;
+            case 'past': newParams = await getLotsNew(payload, false, true); break;
+            case 'auctions': newParams = await getAuctionsNew(payload); break;
+            case 'other': newParams = await getOtherNew(payload); break;
+        }
+
+        return dispatch({type: UPDATE_FILTERS_NEW, payload: newParams});
+    };
 }
 
 export function updateSorting(payload = null) {
-    return (dispatch) => (dispatch({type: UPDATE_SORTING, payload: payload}));
+    return async (dispatch) => {
+        const { currentTab = 'upcoming' } = payload;
+
+        let newParams = null;
+
+        switch (currentTab) {
+            case 'upcoming': newParams = await getLotsNew(payload); break;
+            case 'past': newParams = await getLotsNew(payload, false, true); break;
+            case 'auctions': newParams = await getAuctionsNew(payload); break;
+            case 'other': newParams = await getOtherNew(payload); break;
+        }
+
+        return dispatch({type: UPDATE_SORTING, payload: newParams});
+    };
 }
 
 export function updateSearch(payload = null) {
-    return (dispatch) => (dispatch({type: UPDATE_SEARCH, payload: payload}));
+    return async (dispatch) => {
+        const { currentTab = 'upcoming' } = payload;
+
+        let newParams = null;
+
+        switch (currentTab) {
+            case 'upcoming': newParams = await getLotsNew(payload); break;
+            case 'past': newParams = await getLotsNew(payload, false, true); break;
+            case 'auctions': newParams = await getAuctionsNew(payload); break;
+            case 'other': newParams = await getOtherNew(payload); break;
+        }
+
+        return dispatch({type: UPDATE_SEARCH, payload: newParams});
+    };
 }
 
 export function loadMore(payload = null, tab = 'upcoming') {
     return async (dispatch) => {
         let newParams = null;
+
+        if (payload.page === 0) ++payload.page;
 
         switch (tab) {
             case 'upcoming': newParams = await getLotsNew(payload); break;
@@ -236,7 +274,10 @@ export function loadMore(payload = null, tab = 'upcoming') {
     };
 }
 
-export function setNextPage() {
-    return (dispatch) => (dispatch({type: NEXT_PAGE, payload: {}}));
-}
+export function initData() {
+    return async (dispatch) => {
+        let newParams = await getLotsNew({});
 
+        return dispatch({type: INIT_DATA, payload: newParams});
+    };
+}

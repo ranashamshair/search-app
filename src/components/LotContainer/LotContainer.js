@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Lot from '../Lot/Lot';
 import LotLoader from '../LotLoader/LotLoader';
 import {connect} from "react-redux";
-import {getLots, loadMore, setNextPage} from '../../actions/index';
+import {loadMore} from '../../actions/index';
 import store from "../../store";
 
 class LotContainer extends Component {
@@ -30,40 +30,6 @@ class LotContainer extends Component {
 
     componentDidMount() {
         this._isMounted = true;
-        this.props.getLots(this.state);
-
-        store.subscribe(() => {
-            if (this._isMounted) {
-                const storeState = store.getState();
-
-                const {
-                    searchText = '',
-                    selectedCategories = [],
-                    priceMin = '',
-                    priceMax = '',
-                    sorting = '',
-                    page = 0
-                } = storeState;
-
-                const difference = selectedCategories
-                    .filter(x => !this.state.selectedCategories.includes(x))
-                    .concat(this.state.selectedCategories.filter(x => !selectedCategories.includes(x)));
-
-                const changes = {};
-                if (searchText !== this.state.searchText) changes.searchText = searchText;
-                if (difference.length > 0) changes.selectedCategories = selectedCategories;
-                if (priceMin !== this.state.priceMin) changes.priceMin = priceMin;
-                if (priceMax !== this.state.priceMax) changes.priceMax = priceMax;
-                if (sorting !== this.state.sorting) changes.sorting = sorting;
-
-                if (Object.keys(changes).length > 0) {
-                    changes.loading = true;
-                    this.setState(changes, () => this.props.getLots(Object.assign(storeState, changes)));
-                } else if (page > 0 && page !== this.state.page) {
-                    this.setState({page: page}, () => store.dispatch( loadMore(storeState, storeState.currentTab) ) );
-                }
-            }
-        });
     }
 
     componentWillUnmount() {
@@ -71,7 +37,8 @@ class LotContainer extends Component {
     }
 
     loadMore(e) {
-        store.dispatch( setNextPage() );
+        const storeState = store.getState();
+        this.props.loadMore(storeState, storeState.currentTab);
     }
 
     render() {
@@ -79,14 +46,14 @@ class LotContainer extends Component {
 
         let show = true;
 
-        if ( this.state.loading ) {
+        if ( this.props.isLoading ) {
             for (let i = 0; i < 4; i++) {
                 lots.push(<LotLoader key={i}/>);
             }
         }
 
         // restore this when api is ready to work maybe
-        if ( this.props.lots.length )
+        if ( this.props.lots.length && !this.props.isLoading )
         {
             lots = this.props.lots.map(item =>
                 <React.Fragment key={'lot_' + item.ref} >
@@ -100,14 +67,14 @@ class LotContainer extends Component {
             );
 
         } else {
-            if ( !this.props.loading ) {
-                if(!this.state.loading && this.props.message){
+            if ( !this.props.isLoading ) {
+                if(this.props.message){
                     show = false;
                     // lots = <p className="error-message">{this.props.message}</p>;
                 }else{
-                    setTimeout(() => {
-                        if (this._isMounted) this.setState({loading: false});
-                    }, 3000);
+                    // setTimeout(() => {
+                    //     if (this._isMounted) this.setState({loading: false});
+                    // }, 3000);
                 }
             }
         }
@@ -141,11 +108,10 @@ function mapStateToProps(state) {
         lots: state.lotsNew || [],
         message: state.message,
         page: state.page,
-        loading: state.loading
     };
 }
 
 export default connect(
     mapStateToProps,
-    { getLots }
+    { loadMore }
 )(LotContainer);

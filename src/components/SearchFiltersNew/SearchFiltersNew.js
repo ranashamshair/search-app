@@ -81,12 +81,21 @@ class SearchFilters extends Component {
 
         window.history.pushState({path:newUrl},'',newUrl);
 
-        store.dispatch(updateFiltersNew({
-          selectedCategories: setCategory,
-          priceMin: pricemin || '',
-          priceMax: pricemax || '',
-        }, currentTab));
-        store.dispatch(updateSorting({sorting: sorting}));
+        this.props.loadChanges(() => {
+          if (this._isMounted) {
+            const storeState = store.getState();
+
+            if (sorting !== storeState.sorting) {
+              store.dispatch(updateSorting(Object.assign(storeState, {sorting: sorting})));
+            } else {
+              store.dispatch(updateFiltersNew(Object.assign(storeState, {
+                selectedCategories: setCategory,
+                priceMin: pricemin || '',
+                priceMax: pricemax || '',
+              }), currentTab));
+            }
+          }
+        });
       }
     }
   }
@@ -184,14 +193,7 @@ class SearchFilters extends Component {
   }
 
   render() {
-    const { noResults, availableCategories, submited, currentTab, pricemin, pricemax, sorting, isOpen, isMobile } = this.state;
-
-    // if(submited){
-    //   setTimeout(() => {
-    //     this.setState({submited: false})
-    //   }, 3000)
-    // }
-
+    const { noResults, availableCategories, currentTab, pricemin, pricemax, sorting, isOpen, isMobile } = this.state;
 
     const sortOptions = {
       'upcoming': [
@@ -248,19 +250,6 @@ class SearchFilters extends Component {
 
     return (
         <>
-            {
-                submited ? (
-                    <div className="preloader-blur">
-                        <Loader
-                            type="ThreeDots"
-                            color="#8C2828"
-                            height={50}
-                            width={50}
-                            timeout={3000}
-                        />
-                    </div>
-                ) : ''
-            }
             <div className="pt-4 search-filter">
                 <div className="d-flex justify-content-center justify-content-sm-between align-items-end">
                     <button className="py-2 px-4 text-uppercase font-weight-extra-bold" onClick={this.handleOpenClose}>Filter <FontAwesomeIcon className="ml-3" icon={isOpen ? faArrowUp : faArrowDown}/></button>
@@ -304,12 +293,6 @@ class SearchFilters extends Component {
                                         <label htmlFor={'category_' + item.id}>{item.name}</label>
                                     </div>
                                 ))
-                                // this.props.categories.map(item => (
-                                //   <div className="ui checkbox" key={'category_' + item.id}>
-                                //     <input type="checkbox" data-input="categories_chechbox" id={'category_' + item.id} defaultChecked={this.categorySelected(item.id)} value={item.id} />
-                                //     <label htmlFor={'category_' + item.id}>{item.name}</label>
-                                //   </div>
-                                // ))
                             }
                         </div>
                         <div className="col-12 d-flex justify-content-center p-3">

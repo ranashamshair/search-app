@@ -6,7 +6,7 @@ import Loader from 'react-loader-spinner';
 
 import './SearchBar.css';
 import store from "../../store";
-import {updateSearch,} from "../../actions"; //  getAuctions, getEvents,
+import {updateSearch} from "../../actions"; //  getAuctions, getEvents,
 
 import SearchFiltersNew from '../SearchFiltersNew/SearchFiltersNew';
 
@@ -24,7 +24,8 @@ class SearchBar extends Component {
             query: '',
             submited: false,
             count: 1, // delete this when api return count of lots,
-            currentTab: storeState.currentTab || 'upcoming',
+            // currentTab: storeState.currentTab || this.props.openTabs || 'upcoming',
+            currentTab: this.props.openTabs || storeState.currentTab || 'upcoming',
             sorting: storeState.sorting || '',
             categories: storeState.selectedCategories || [],
             pricemin: storeState.priceMin || '',
@@ -87,7 +88,8 @@ class SearchBar extends Component {
 
                 const stateChanges = {
                     query: searchText,
-                    currentTab: currentTab,
+                    // currentTab: currentTab,
+                    currentTab: this.props.openTabs || currentTab,
                     sorting: sorting,
                     categories: selectedCategories,
                     pricemin: priceMin,
@@ -159,7 +161,11 @@ class SearchBar extends Component {
                 window.history.pushState({path:newUrl},'',newUrl);
             }
 
-            store.dispatch(updateSearch({searchText: query }));
+            this.props.loadChanges(() => {
+                if (this._isMounted) {
+                    store.dispatch(updateSearch(Object.assign(store.getState(), {searchText: query })));
+                }
+            });
         }
     };
 
@@ -182,7 +188,8 @@ class SearchBar extends Component {
         return (
             <>
                 {
-                    this.state.submited ? (
+                    // this.state.submited ? (
+                    this.props.isLoading ? (
                         <div className="preloader-blur">
                             <Loader
                                 type="ThreeDots"
@@ -239,7 +246,7 @@ class SearchBar extends Component {
                                         </button>
                                     </div>
 
-                                    <SearchFiltersNew />
+                                    <SearchFiltersNew loadChanges={this.props.loadChanges} />
                                 </div>
                             </div>
                         </form>
