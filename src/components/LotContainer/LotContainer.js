@@ -57,12 +57,12 @@ class LotContainer extends Component {
         {
             lots = this.props.lots.map(item =>
                 <React.Fragment key={'lot_' + item.ref} >
-                {
-                    <Lot
-                        lot={item}
-                        isPast={false}
-                    />
-                }
+                    {
+                        <Lot
+                            lot={item}
+                            isPast={false}
+                        />
+                    }
                 </React.Fragment>
             );
 

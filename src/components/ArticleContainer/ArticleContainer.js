@@ -101,7 +101,7 @@ class ArticleContainer extends Component {
             </div>
         ) : '';
     }
-    
+
 }
 
 function mapStateToProps(state) {
