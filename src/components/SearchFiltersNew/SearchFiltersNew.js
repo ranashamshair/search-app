@@ -254,7 +254,7 @@ class SearchFilters extends Component {
                 <div className="d-flex justify-content-center justify-content-sm-between align-items-end">
                     <button className="py-2 px-4 text-uppercase font-weight-extra-bold" onClick={this.handleOpenClose}>Filter <FontAwesomeIcon className="ml-3" icon={isOpen ? faArrowUp : faArrowDown}/></button>
                     {
-                        !isMobile ?
+                        // !isMobile ?
                             (<select onChange={this.handleSortingSelect} value={sorting}>
                                 <option value="" disabled>Sort by</option>
                                 {
@@ -263,7 +263,7 @@ class SearchFilters extends Component {
                                     ))
                                 }
                             </select>)
-                            : ""
+                            // : ""
                     }
                 </div>
                 {
