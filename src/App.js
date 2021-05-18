@@ -86,7 +86,7 @@ class App extends Component{
 
     updateUrlParams() {
         const { openTabs = 'upcoming' } = this.state;
-        const { currentTab = 'upcoming' } = store.getState();
+        const { currentTab = 'upcoming', searchText = '' } = store.getState();
 
         if (openTabs !== currentTab) {
             if (window.history.pushState) {
@@ -94,6 +94,7 @@ class App extends Component{
                 const params = [];
 
                 if (openTabs) params.push('tab=' + openTabs);
+                if (searchText) params.push('search=' + searchText);
 
                 if (params.length) {
                     newUrl += '?' + params.join('&');
@@ -101,7 +102,7 @@ class App extends Component{
                 window.history.pushState({path:newUrl},'',newUrl);
             }
 
-            store.dispatch(updateTab({currentTab: openTabs}));
+            store.dispatch(updateTab({currentTab: openTabs, searchText: searchText}));
             // store.dispatch(updateFiltersNew({
             //     selectedCategories: [],
             //     priceMin: '',

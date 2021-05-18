@@ -80,7 +80,7 @@ function rootReducer(state = initialState, action) {
             let changes = procNewData(currentTab, state, {page: 0, currentTab: currentTab}, action.payload);
 
             if (currentTab !== state.currentTab) {
-                changes.searchText = '';
+                // changes.searchText = '';
                 changes.selectedCategories= [];
                 changes.priceMin= '';
                 changes.priceMax= '';

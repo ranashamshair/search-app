@@ -19,6 +19,7 @@ class SearchBar extends Component {
 
         const storeState = store.getState();
 
+        this.loadingsAfterMount = 0;
         this.state = {
             searchFiltersActive: true,
             query: '',
@@ -70,7 +71,7 @@ class SearchBar extends Component {
         const _this = this;
 
         store.subscribe(() => {
-            if (this._isMounted) {
+            if (_this._isMounted) {
                 const {
                     searchText,
                     sorting,
@@ -86,10 +87,15 @@ class SearchBar extends Component {
                     postsCount
                 } = store.getState();
 
+                if (_this._isMounted && _this.loadingsAfterMount < 2) {
+                    ++_this.loadingsAfterMount
+                }
+
                 const stateChanges = {
                     query: searchText,
                     // currentTab: currentTab,
-                    currentTab: this.props.openTabs || currentTab,
+                    // currentTab: _this.props.openTabs || currentTab,
+                    currentTab: (_this.loadingsAfterMount !== 2) ? _this.props.openTabs || currentTab : currentTab,
                     sorting: sorting,
                     categories: selectedCategories,
                     pricemin: priceMin,
@@ -108,6 +114,13 @@ class SearchBar extends Component {
             }
         });
     }
+
+    // componentDidUpdate(prevProps) {
+    //     // if (prevProps.text !== this.props.text) {
+    //     //     this.updateAndNotify();
+    //     // }
+    //     this.setState({currentTab: this.props.openTabs});
+    // }
 
     componentWillUnmount() {
         this._isMounted = false;

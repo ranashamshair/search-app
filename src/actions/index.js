@@ -112,7 +112,7 @@ const otherFilter = (params) => {
 };
 
 async function getLotsNew(payload = null, refresh = false, past = false) {
-    let route = baseUrl + (past ? '/searchlots/inv/past' : '/searchlots/inv/upcoming') + ((payload && !refresh) ? lotFilter(payload, past) : `?${orderParams('', past ? 'past': 'upcoming')}`);
+    let route = baseUrl + (past ? '/searchlots/inv/past' : '/searchlots/inv/upcoming') + ((payload && !refresh) ? lotFilter(payload, past) : `?${ ((payload && payload.searchText) ? `keyword=${payload.searchText}&`: '') + orderParams('', past ? 'past': 'upcoming')}`);
     const params = payload ? { ...payload } : {};
 
     try {
@@ -131,8 +131,7 @@ async function getLotsNew(payload = null, refresh = false, past = false) {
 }
 
 async function getAuctionsNew(payload = null, refresh = false) {
-    let route = baseUrl + '/searchlots/inv/auctions' + ((payload && !refresh) ? auctionFilter(payload) : `?${orderParams('', 'auctions')}`);
-
+    let route = baseUrl + '/searchlots/inv/auctions' + ((payload && !refresh) ? auctionFilter(payload) : `?${ ((payload && payload.searchText) ? `keyword=${payload.searchText}&`: '') + orderParams('', 'auctions')}`);
     const params = payload ? { ...payload } : {};
 
     try {
@@ -151,7 +150,7 @@ async function getAuctionsNew(payload = null, refresh = false) {
 }
 
 async function getOtherNew(payload = null, refresh = false) {
-    let route = baseUrl + '/searchlots/inv/search' + ((payload && !refresh) ? otherFilter(payload) : `?${orderParams('', 'other')}`);
+    let route = baseUrl + '/searchlots/inv/search' + ((payload && !refresh) ? otherFilter(payload) : `?${ ((payload && payload.searchText) ? `keyword=${payload.searchText}&`: '') + orderParams('', 'other')}`);
 
     const params = payload ? { ...payload } : {};
 
