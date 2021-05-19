@@ -157,8 +157,10 @@ class App extends Component{
             }
         });
 
-        window.addEventListener('popstate', () => {
-            if(this._isMounted && !this.state.loading) this.getFiltersFromUrlParams();
+        window.addEventListener('popstate', (event) => {
+            if (this._isMounted && !this.state.loading) {
+                this.getFiltersFromUrlParams();
+            }
         });
     }
 

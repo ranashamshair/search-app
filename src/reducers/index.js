@@ -84,6 +84,7 @@ function rootReducer(state = initialState, action) {
                 changes.selectedCategories= [];
                 changes.priceMin= '';
                 changes.priceMax= '';
+                changes.sorting = '';
             }
 
             return Object.assign({}, state, changes, actionChanges);

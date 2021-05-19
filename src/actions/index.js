@@ -124,6 +124,7 @@ async function getLotsNew(payload = null, refresh = false, past = false) {
         params.success = true;
     } catch (error) {
         console.log('error: ', error);
+        params.success = false;
         params.message = (typeof error === 'string') ? error : ((error.hasOwnProperty('response') && error.response)  ? error.response.data.message : '');
     }
 
@@ -143,6 +144,7 @@ async function getAuctionsNew(payload = null, refresh = false) {
         params.success = true;
     } catch (error) {
         console.log(error);
+        params.success = false;
         params.message = (typeof error === 'string') ? error : ((error.hasOwnProperty('response') && error.response)  ? error.response.data.message : '');
     }
 
@@ -165,6 +167,7 @@ async function getOtherNew(payload = null, refresh = false) {
 
     } catch (error) {
         console.log(error);
+        params.success = false;
         params.message = (typeof error === 'string') ? error : ((error.hasOwnProperty('response') && error.response)  ? error.response.data.message : '');
     }
 
