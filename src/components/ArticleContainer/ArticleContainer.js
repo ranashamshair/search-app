@@ -50,12 +50,6 @@ class ArticleContainer extends Component {
             }
         }
 
-        // let i = 0;
-        // while (this.state.loading) {
-        //     news.push(<ArticleLoader key={'news_' + i} />);
-        //     ++i;
-        // }
-
         if ( this.props.news.length && !this.props.isLoading )
         {
             news = this.props.news.map((item, key)=>
@@ -71,13 +65,8 @@ class ArticleContainer extends Component {
         } else {
             if ( !this.props.isLoading ) {
                 if(this.props.message){
-                    // console.log('news:  ', news);
                     show = false;
-                    // news = <p className="error-message">{this.props.message}</p>;
                 }else{
-                    // setTimeout(() => {
-                    //     if (this._isMounted) this.setState({loading: false});
-                    // }, 3000);
                 }
             }
         }

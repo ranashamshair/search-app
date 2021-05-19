@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
 
 import LotContainer from './components/LotContainer/LotContainer';
-// import AuctionsContainer from './components/AuctionsContainer/AuctionsContainer'; work
 import ArticleContainer from './components/ArticleContainer/ArticleContainer';
 import SearchBox from './components/SearchBox/SearchBox';
 
 import './App.css';
-// import './assets/css/app.css';
 
 import { Provider } from 'react-redux';
 import store from './store/index';
@@ -17,7 +15,6 @@ import {
     updateFromURL, initData
 } from './actions/index';
 import PastLotContainer from "./components/PastLotContainer/PastLotContainer";
-import {updateFiltersNew, updateSearch, updateSorting} from "./actions";
 import AuctionsContainer from "./components/AuctionsContainer/AuctionsContainer";
 
 window.store = store;
@@ -103,11 +100,6 @@ class App extends Component{
             }
 
             store.dispatch(updateTab({currentTab: openTabs, searchText: searchText}));
-            // store.dispatch(updateFiltersNew({
-            //     selectedCategories: [],
-            //     priceMin: '',
-            //     priceMax: '',
-            // }, openTabs));
         }
     }
 
@@ -203,7 +195,7 @@ class App extends Component{
         return (
             <div className="App">
                 <Provider store={store}>
-                    <SearchBox handleTabSelect={this.handleTabSelect} isLoading={loading} loadChanges={this.applyChangesLoading} openTabs={this.state.openTabs} />
+                    <SearchBox handleTabSelect={this.handleTabSelect} isLoading={loading} loadChanges={this.applyChangesLoading} openTabs={openTabs} />
 
                     <main className="main-content">
                         <section className="section">

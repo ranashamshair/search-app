@@ -49,6 +49,7 @@ const orderParams = (sorting = '', type = null) => {
                 case 'past': return 'sort_by=date&sort_order=desc';
                 case 'auctions': return 'sort_by=date&sort_order=asc';
                 case 'other': return 'sort_by=date&sort_order=desc';
+                default: return '';
             }
         }
     }

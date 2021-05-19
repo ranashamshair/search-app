@@ -2,20 +2,13 @@ import React, {useEffect, useState} from 'react';
 import FadeIn from 'react-fade-in';
 import './Lot.css';
 
+const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
 function getDate(datetime) {
     const dateT = new Date(datetime);
 
-    const darr = dateT.toDateString().split(' ');
-    darr.shift();
-    darr[1] = parseInt(darr[1]);
-    switch (darr[1]) {
-        case 1: darr[1] += 'st'; break;
-        case 2: darr[1] += 'nd'; break;
-        case 3: darr[1] += 'rd'; break;
-        default: darr[1] += 'th';
-    }
-
-    return darr.join(' ');
+    return `${days[dateT.getDay()]}, ${months[dateT.getMonth()]} ${dateT.getDate()}, ${dateT.getFullYear()}`;
 }
 
 function Lot(props) {
@@ -41,7 +34,7 @@ function Lot(props) {
         <>
             <div className="col-12 col-md-6 col-lg-3 pb-4 lot-container">
                 <FadeIn>
-                    <a href={url} target="_blank">
+                    <a href={url} target="_blank" rel="noopener noreferrer">
                         <figure className="text-center imgContainer">
                             {
                                 (photo) ? (
@@ -57,9 +50,9 @@ function Lot(props) {
                         </figure>
                     </a>
                     <aside className="search-lot--content py-4 px-4 text-left">
-                        <a href={url} target="_blank">
-                            <h3 className="font-weight-normal text-grey title">{title}</h3>
-                            {saleTitle && <h4 className="my-3 font-weight-normal subtitle"><u>{saleTitle}</u></h4>}
+                        <a href={url} target="_blank" rel="noopener noreferrer">
+                            <h3 className="font-weight-normal text-grey title" dangerouslySetInnerHTML={{__html: title}} />
+                            {saleTitle && <h4 className="my-3 font-weight-normal subtitle"><u dangerouslySetInnerHTML={{__html: saleTitle}} /></h4>}
                         </a>
                         {estimatePrice !== '' && <p className='m-0'>Estimate: {estimatePrice}</p>}
                         {lotNumber && <p className='m-0'>Lot number: {lotNumber} {(props.isPast && lotNumberExtension) || ''}</p>}
@@ -76,30 +69,3 @@ function Lot(props) {
 }
 
 export default Lot;
-
-// <FadeIn>
-//     <a href={url} target="_blank">
-//         <figure className="text-center imgContainer">
-//             {
-//                 (lot.photo) ? (
-//                     <img src={lot.photo} alt="Text" className="mw-100" width="260" height="250" />
-//                   ) :
-//                   <img src="https://johnmoran.invaluable.com/wp-content/themes/theme-johnmoran/dist/img/moran_grey.png" alt="LOGO" className="mw-100" width="260" />
-//             }
-//         </figure>
-//     </a>
-//     <aside className="search-lot--content py-3 px-3 text-left">
-//         <a href={url} target="_blank">
-//             {/*<span className="text-grey mb-1 d-block">Lot {lot.lotNumber + ((props.isPast && lot.lotNumberExtension) ? ' - ' + lot.lotNumberExtension : '')}</span>*/}
-//             {/*<h3 className="font-weight-bold text-grey">{props.artist}</h3>*/}
-//             <h3 className="font-weight-bold text-grey">{lot.title}</h3>
-//             <h4 className="mb-1">{lot.saleTitle}</h4>
-//         </a>
-//         <p className="font-weight-bold text-grey">{estimate}</p>
-//         {
-//             (props.isPast) ? (
-//               <p className="font-weight-bold text-grey">Result price: {curr + lot.priceResult}</p>
-//             ) : ''
-//         }
-//     </aside>
-// </FadeIn>

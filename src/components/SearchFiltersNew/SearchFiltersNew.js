@@ -9,7 +9,6 @@ import {
   getCategories, updateFiltersNew, updateSorting
 } from "../../actions";
 import store from "../../store";
-import Loader from "react-loader-spinner";
 
 class SearchFilters extends Component {
 
@@ -193,7 +192,7 @@ class SearchFilters extends Component {
   }
 
   render() {
-    const { noResults, availableCategories, currentTab, pricemin, pricemax, sorting, isOpen, isMobile } = this.state;
+    const { noResults, availableCategories, currentTab, pricemin, pricemax, sorting, isOpen, /*isMobile*/ } = this.state;
 
     const sortOptions = {
       'upcoming': [
@@ -290,7 +289,7 @@ class SearchFilters extends Component {
                                             value={item.id}
                                             onChange={this.handleCheckboxChange}
                                         />
-                                        <label htmlFor={'category_' + item.id}>{item.name}</label>
+                                        <label htmlFor={'category_' + item.id} dangerouslySetInnerHTML={{__html: item.name}} />
                                     </div>
                                 ))
                             }

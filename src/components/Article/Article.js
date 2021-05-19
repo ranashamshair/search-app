@@ -19,7 +19,7 @@ function Article(props) {
         <>
           <div className="col-12 col-md-6 col-lg-3 pb-4 search-auction-result anim-search-result lot-container">
             <FadeIn>
-              <a href={props.link} target="_blank">
+              <a href={props.link} target="_blank" rel="noopener noreferrer">
                 <figure className="text-center imgContainer">
                   {
                     (props.imgSrc) ? (
@@ -35,10 +35,10 @@ function Article(props) {
                 </figure>
               </a>
               <aside className="search-lot--content py-4 px-4 text-left">
-                <a href={props.link} target="_blank">
-                  <h3 className="font-weight-normal text-grey title">{props.articleTitle}</h3>
+                <a href={props.link} target="_blank" rel="noopener noreferrer">
+                  <h3 className="font-weight-normal text-grey title" dangerouslySetInnerHTML={{__html: props.articleTitle}} />
                 </a>
-                {props.excerpt !== '' && <p className='m-0'>Excerpt: {props.excerpt}</p>}
+                {props.excerpt !== '' && <p className='m-0' dangerouslySetInnerHTML={{__html: `Excerpt: ${props.excerpt}`}} />}
               </aside>
             </FadeIn>
           </div>
