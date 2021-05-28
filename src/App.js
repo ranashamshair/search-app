@@ -81,11 +81,33 @@ class App extends Component{
         });
     }
 
+
     updateUrlParams() {
         const { openTabs = 'upcoming' } = this.state;
-        const { currentTab = 'upcoming', searchText = '' } = store.getState();
+        const {
+            currentTab = 'upcoming',
+            searchText = '',
+            lastLotFilters = null,
+            lastPastLotFilters = null,
+            lastAuctionFilters = null,
+            lastPostFilter = null
+        } = store.getState();
 
         if (openTabs !== currentTab) {
+            let lastFilters = null;
+            switch (openTabs) {
+                case 'upcoming': lastFilters = lastLotFilters; break;
+                case 'past': lastFilters = lastPastLotFilters; break;
+                case 'auctions': lastFilters = lastAuctionFilters; break;
+                case 'other': lastFilters = lastPostFilter; break;
+            }
+
+            const filterChanges = {
+                selectedCategories: (lastFilters.hasOwnProperty('categories') && lastFilters['categories'].length) ? lastFilters['categories'] : [],
+                priceMin: (lastFilters.hasOwnProperty('min') && lastFilters['min'] !== '') ? lastFilters['min'] : '',
+                priceMax: (lastFilters.hasOwnProperty('max') && lastFilters['max'] !== '') ? lastFilters['max'] : '',
+            };
+
             if (window.history.pushState) {
                 let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
                 const params = [];
@@ -93,13 +115,19 @@ class App extends Component{
                 if (openTabs) params.push('tab=' + openTabs);
                 if (searchText) params.push('search=' + searchText);
 
+                if (filterChanges.selectedCategories.length) {
+                    params.push('categories=' + filterChanges.selectedCategories.join(','))
+                }
+                if (filterChanges.priceMin !== '') params.push('min_price=' + filterChanges.priceMin);
+                if (filterChanges.priceMax !== '') params.push('max_price=' + filterChanges.priceMax);
+
                 if (params.length) {
                     newUrl += '?' + params.join('&');
                 }
                 window.history.pushState({path:newUrl},'',newUrl);
             }
 
-            store.dispatch(updateTab({currentTab: openTabs, searchText: searchText}));
+            store.dispatch(updateTab({currentTab: openTabs, searchText: searchText, ...filterChanges}));
         }
     }
 
@@ -166,9 +194,11 @@ class App extends Component{
     handleTabSelect (e) {
         e.preventDefault();
 
-        this.setState({openTabs: e.target.name, loading: true}, () => {
-            if (this._isMounted) this.updateUrlParams();
-        });
+        if (e.target.name !== this.state.openTabs) {
+            this.setState({openTabs: e.target.name, loading: true}, () => {
+                if (this._isMounted) this.updateUrlParams();
+            });
+        }
     }
 
     applyChangesLoading (callback) {

@@ -201,10 +201,10 @@ export function updateTab(payload = {}) {
         let newParams = null;
 
         switch (currentTab) {
-            case 'upcoming': newParams = await getLotsNew(payload, true); break;
-            case 'past': newParams = await getLotsNew(payload, true, true); break;
-            case 'auctions': newParams = await getAuctionsNew(payload, true); break;
-            case 'other': newParams = await getOtherNew(payload, true); break;
+            case 'upcoming': newParams = await getLotsNew(payload); break;
+            case 'past': newParams = await getLotsNew(payload, false, true); break;
+            case 'auctions': newParams = await getAuctionsNew(payload); break;
+            case 'other': newParams = await getOtherNew(payload); break;
         }
 
         return dispatch({type: UPDATE_TAB, payload: newParams});

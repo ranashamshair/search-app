@@ -33,6 +33,23 @@ const initialState = {
     auctionsCount: 0,
     postsCount: 0,
     activeTabCounter: 0,
+
+    // last filters
+    lastLotFilters: {
+        categories: [],
+        min: '',
+        max: '',
+    },
+    lastPastLotFilters: {
+        min: '',
+        max: '',
+    },
+    lastAuctionFilters: {
+        categories: [],
+    },
+    lastPostFilter: {
+        categories: [],
+    }
 };
 
 const reduceRefreshedData = (changes = {}, payload) => {
@@ -75,15 +92,15 @@ function rootReducer(state = initialState, action) {
             return Object.assign({}, state, { allCategories: action.payload.categories }, actionChanges);
         }
         case UPDATE_TAB: {
-            const { currentTab = 'upcoming' } = action.payload;
+            const { currentTab = 'upcoming', selectedCategories = [], priceMin = '', priceMax = '' } = action.payload;
 
             let changes = procNewData(currentTab, state, {page: 0, currentTab: currentTab}, action.payload);
 
             if (currentTab !== state.currentTab) {
                 // changes.searchText = '';
-                changes.selectedCategories= [];
-                changes.priceMin= '';
-                changes.priceMax= '';
+                changes.selectedCategories = selectedCategories;
+                changes.priceMin = priceMin;
+                changes.priceMax = priceMax;
                 changes.sorting = '';
             }
 
@@ -188,6 +205,8 @@ function rootReducer(state = initialState, action) {
 const procNewData = (currentTab, state, changes, payload, removeFilters = true) => {
     changes = reduceRefreshedData(changes, payload);
 
+    const { selectedCategories = null, priceMin = null, priceMax = null } = payload;
+
     if (currentTab === 'upcoming' || currentTab === 'past') {
         // if (!removeFilters && currentTab === 'upcoming' && state.allCategories.length > 0 && payload.categoryIds) {
         if (currentTab === 'upcoming' && state.allCategories.length > 0 && payload.categoryIds) {
@@ -209,6 +228,17 @@ const procNewData = (currentTab, state, changes, payload, removeFilters = true) 
             changes.lotsPast = [];
             changes.auctionsNew = [];
             changes.postsNew = [];
+
+
+            changes.selectedCategories = selectedCategories;
+            changes.priceMin = priceMin;
+            changes.priceMax = priceMax;
+
+            changes.lastLotFilters = {
+                categories: selectedCategories || state.selectedCategories,
+                min: priceMin || state.priceMin,
+                max: priceMax || state.priceMax,
+            };
         } else {
             changes.lotsPast = uniqueItemsObj ? Object.values(uniqueItemsObj) : [];
             changes.pastLotsCount = changes.activeTabCounter;
@@ -216,6 +246,11 @@ const procNewData = (currentTab, state, changes, payload, removeFilters = true) 
             changes.lotsNew = [];
             changes.auctionsNew = [];
             changes.postsNew = [];
+
+            changes.lastPastLotFilters = {
+                min: priceMin || state.priceMin,
+                max: priceMax || state.priceMax,
+            };
         }
     } else if (currentTab === 'auctions') {
         // if (!removeFilters && state.allCategories.length > 0 && payload.categoryIds) {
@@ -236,6 +271,10 @@ const procNewData = (currentTab, state, changes, payload, removeFilters = true) 
         changes.lotsNew = [];
         changes.lotsPast = [];
         changes.postsNew = [];
+
+        changes.lastAuctionFilters = {
+            categories: selectedCategories || state.selectedCategories,
+        };
     } else {
         // if (!removeFilters && state.allCategories.length > 0 && payload.categoryIds) {
         if (state.allCategories.length > 0 && payload.categoryIds) {
@@ -256,6 +295,10 @@ const procNewData = (currentTab, state, changes, payload, removeFilters = true) 
         changes.lotsNew = [];
         changes.lotsPast = [];
         changes.auctionsNew = [];
+
+        changes.lastPostFilter = {
+            categories: selectedCategories || state.selectedCategories,
+        }
     }
 
     return changes;
