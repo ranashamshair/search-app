@@ -205,7 +205,7 @@ function rootReducer(state = initialState, action) {
 const procNewData = (currentTab, state, changes, payload, removeFilters = true) => {
     changes = reduceRefreshedData(changes, payload);
 
-    const { selectedCategories = null, priceMin = null, priceMax = null } = payload;
+    const { selectedCategories = [], priceMin = '', priceMax = '' } = payload;
 
     if (currentTab === 'upcoming' || currentTab === 'past') {
         // if (!removeFilters && currentTab === 'upcoming' && state.allCategories.length > 0 && payload.categoryIds) {
@@ -235,9 +235,9 @@ const procNewData = (currentTab, state, changes, payload, removeFilters = true) 
             changes.priceMax = priceMax;
 
             changes.lastLotFilters = {
-                categories: selectedCategories || state.selectedCategories,
-                min: priceMin || state.priceMin,
-                max: priceMax || state.priceMax,
+                categories: selectedCategories,
+                min: priceMin,
+                max: priceMax,
             };
         } else {
             changes.lotsPast = uniqueItemsObj ? Object.values(uniqueItemsObj) : [];
@@ -248,8 +248,8 @@ const procNewData = (currentTab, state, changes, payload, removeFilters = true) 
             changes.postsNew = [];
 
             changes.lastPastLotFilters = {
-                min: priceMin || state.priceMin,
-                max: priceMax || state.priceMax,
+                min: priceMin,
+                max: priceMax,
             };
         }
     } else if (currentTab === 'auctions') {
@@ -273,7 +273,7 @@ const procNewData = (currentTab, state, changes, payload, removeFilters = true) 
         changes.postsNew = [];
 
         changes.lastAuctionFilters = {
-            categories: selectedCategories || state.selectedCategories,
+            categories: selectedCategories,
         };
     } else {
         // if (!removeFilters && state.allCategories.length > 0 && payload.categoryIds) {
@@ -297,7 +297,7 @@ const procNewData = (currentTab, state, changes, payload, removeFilters = true) 
         changes.auctionsNew = [];
 
         changes.lastPostFilter = {
-            categories: selectedCategories || state.selectedCategories,
+            categories: selectedCategories,
         }
     }
 
