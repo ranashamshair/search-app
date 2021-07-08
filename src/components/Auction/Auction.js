@@ -50,8 +50,8 @@ function Auction(props) {
                     </a>
                     <aside className="search-lot--content py-4 px-4 text-left">
                         <a href={props.link} target="_blank" rel="noopener noreferrer">
-                            <h3 className="font-weight-normal text-grey title" dangerouslySetInnerHTML={{__html: addrShow}} />
-                            {props.title && <h4 className="my-3 font-weight-normal subtitle"><u dangerouslySetInnerHTML={{__html: props.title}} /></h4>}
+                            <h3 className="font-weight-normal text-grey title" dangerouslySetInnerHTML={{__html: props.title}} />
+                            {props.title && <h4 className="my-3 font-weight-normal subtitle"><u dangerouslySetInnerHTML={{__html: addrShow}} /></h4>}
                         </a>
                         {date !== '' && <p className='m-0'>{date}</p>}
                         {time !== '' && <p className='m-0'>{time}</p>}

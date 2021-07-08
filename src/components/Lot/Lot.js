@@ -12,7 +12,7 @@ function getDate(datetime) {
 }
 
 function Lot(props) {
-    const { ref, title, photo, saleTitle, currencySymbol, saleDate, estimate ,estimateLow,
+    const { ref, title, photo, currencySymbol, saleDate, estimate ,estimateLow,
         lotNumber, bid, lotNumberExtension, priceResult } = props.lot;
 
 
@@ -52,7 +52,6 @@ function Lot(props) {
                     <aside className="search-lot--content py-4 px-4 text-left">
                         <a href={url} target="_blank" rel="noopener noreferrer">
                             <h3 className="font-weight-normal text-grey title" dangerouslySetInnerHTML={{__html: title}} />
-                            {saleTitle && <h4 className="my-3 font-weight-normal subtitle"><u dangerouslySetInnerHTML={{__html: saleTitle}} /></h4>}
                         </a>
                         {estimatePrice !== '' && <p className='m-0'>Estimate: {estimatePrice}</p>}
                         {lotNumber && <p className='m-0'>Lot number: {lotNumber} {(props.isPast && lotNumberExtension) || ''}</p>}
