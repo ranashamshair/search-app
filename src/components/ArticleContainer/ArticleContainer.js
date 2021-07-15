@@ -66,7 +66,6 @@ class ArticleContainer extends Component {
             if ( !this.props.isLoading ) {
                 if(this.props.message){
                     show = false;
-                }else{
                 }
             }
         }

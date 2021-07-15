@@ -1,5 +1,4 @@
 import {
-    GET_CATEGORIES,
     INIT_DATA,
     LOAD_MORE,
     UPDATE_ALL_FROM_URL,
@@ -10,10 +9,8 @@ import {
 } from "../constants/action-types";
 
 const initialState = {
-    allCategories: [],
     availableCategories: [],
     // FOR NEW VERSION !!!
-    lastCompletedAction: '',
     lotsNew: [],
     lotsPast: [],
     auctionsNew: [],
@@ -71,8 +68,6 @@ const reduceRefreshedData = (changes = {}, payload) => {
 };
 
 function rootReducer(state = initialState, action) {
-    const actionChanges = { lastCompletedAction: action.type };
-
     switch (action.type) {
         case INIT_DATA: {
             const { currentTab = 'upcoming' } = state;
@@ -86,10 +81,7 @@ function rootReducer(state = initialState, action) {
                 changes.priceMax= '';
             }
 
-            return Object.assign({}, state, changes, actionChanges);
-        }
-        case GET_CATEGORIES: {
-            return Object.assign({}, state, { allCategories: action.payload.categories }, actionChanges);
+            return Object.assign({}, state, changes);
         }
         case UPDATE_TAB: {
             const { currentTab = 'upcoming', selectedCategories = [], priceMin = '', priceMax = '' } = action.payload;
@@ -104,28 +96,28 @@ function rootReducer(state = initialState, action) {
                 changes.sorting = '';
             }
 
-            return Object.assign({}, state, changes, actionChanges);
+            return Object.assign({}, state, changes);
         }
         case UPDATE_FILTERS_NEW: {
             const { currentTab = 'upcoming' } = state;
 
-            let changes = procNewData(currentTab, state, {page: 0}, action.payload, false);
+            let changes = procNewData(currentTab, state, {page: 0}, action.payload);
 
-            return Object.assign({}, state, changes, actionChanges);
+            return Object.assign({}, state, changes);
         }
         case UPDATE_SORTING: {
             const { currentTab = 'upcoming' } = state;
 
-            let changes = procNewData(currentTab, state, {page: 0, sorting: action.payload.sorting}, action.payload, false);
+            let changes = procNewData(currentTab, state, {page: 0, sorting: action.payload.sorting}, action.payload);
 
-            return Object.assign({}, state, changes, actionChanges);
+            return Object.assign({}, state, changes);
         }
         case UPDATE_SEARCH: {
             const { currentTab = 'upcoming' } = state;
 
-            let changes = procNewData(currentTab, state, {page: 0, searchText: action.payload.searchText}, action.payload, false);
+            let changes = procNewData(currentTab, state, {page: 0, searchText: action.payload.searchText}, action.payload);
 
-            return Object.assign({}, state, changes, actionChanges);
+            return Object.assign({}, state, changes);
         }
         case LOAD_MORE: {
             let changes = {
@@ -187,14 +179,14 @@ function rootReducer(state = initialState, action) {
                 }
             }
 
-            return Object.assign({}, state, changes, actionChanges);
+            return Object.assign({}, state, changes);
         }
         case UPDATE_ALL_FROM_URL: {
             const { currentTab = 'upcoming' } = action.payload;
 
-            let changes = procNewData(currentTab, state, {page: 0}, action.payload, false);
+            let changes = procNewData(currentTab, state, {page: 0}, action.payload);
 
-            return Object.assign({}, state, action.payload, changes, actionChanges);
+            return Object.assign({}, state, action.payload, changes);
         }
         default: {
             return state;
@@ -202,15 +194,16 @@ function rootReducer(state = initialState, action) {
     }
 }
 
-const procNewData = (currentTab, state, changes, payload, removeFilters = true) => {
+const procNewData = (currentTab, state, changes, payload) => {
     changes = reduceRefreshedData(changes, payload);
 
     const { selectedCategories = [], priceMin = '', priceMax = '' } = payload;
 
+    changes.availableCategories = state.availableCategories;
+
     if (currentTab === 'upcoming' || currentTab === 'past') {
-        // if (!removeFilters && currentTab === 'upcoming' && state.allCategories.length > 0 && payload.categoryIds) {
-        if (currentTab === 'upcoming' && state.allCategories.length > 0 && payload.categoryIds) {
-            changes.availableCategories = state.allCategories.filter(item => payload.categoryIds.indexOf(item.id.toString()) !== -1);
+        if (currentTab === 'upcoming' && payload.usedCategories) {
+            changes.availableCategories = payload.usedCategories;
         }
 
         let uniqueItemsObj = null;
@@ -253,9 +246,8 @@ const procNewData = (currentTab, state, changes, payload, removeFilters = true) 
             };
         }
     } else if (currentTab === 'auctions') {
-        // if (!removeFilters && state.allCategories.length > 0 && payload.categoryIds) {
-        if (state.allCategories.length > 0 && payload.categoryIds) {
-            changes.availableCategories = state.allCategories.filter(item => payload.categoryIds.indexOf(item.id) !== -1);
+        if (payload.usedCategories) {
+            changes.availableCategories = payload.usedCategories;
         }
 
         let uniqueItemsObj = null;
@@ -276,18 +268,12 @@ const procNewData = (currentTab, state, changes, payload, removeFilters = true) 
             categories: selectedCategories,
         };
     } else {
-        // if (!removeFilters && state.allCategories.length > 0 && payload.categoryIds) {
-        if (state.allCategories.length > 0 && payload.categoryIds) {
-            changes.availableCategories = state.allCategories.filter(item => payload.categoryIds.indexOf(item.id) !== -1);
+        if (payload.usedCategories) {
+            changes.availableCategories = payload.usedCategories;
         }
 
         changes.postsNew = [];
         if (changes.items.length) {
-            //     let uniqueItemsObj = changes.items.reduce( (c, e) => {
-            //         if (!c[e.title]) c[e.title] = e;
-            //         return c;
-            //     }, {});
-            //     changes.postsNew = Object.values(uniqueItemsObj);
             changes.postsNew = changes.items;
         }
         changes.postsCount = changes.activeTabCounter;

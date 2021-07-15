@@ -9,7 +9,6 @@ import './App.css';
 import { Provider } from 'react-redux';
 import store from './store/index';
 import {
-    getCategories,
     loadMore,
     updateTab,
     updateFromURL, initData
@@ -18,7 +17,6 @@ import PastLotContainer from "./components/PastLotContainer/PastLotContainer";
 import AuctionsContainer from "./components/AuctionsContainer/AuctionsContainer";
 
 window.store = store;
-window.getCategories = getCategories;
 window.loadMore = loadMore;
 window.updateTab = updateTab;
 window.initData = initData;
@@ -134,6 +132,17 @@ class App extends Component{
     componentDidMount() {
         this._isMounted = true;
 
+        const params = this.parseUrl();
+        if (Object.keys(params).length > 0) {
+            this.getFiltersFromUrlParams(params);
+        } else {
+            store.dispatch( initData() );
+        }
+
+        this.setState({
+            openTabs: this.state.openTabs || 'upcoming'
+        });
+
         store.subscribe(() => {
             if (this._isMounted) {
                 const {
@@ -144,36 +153,21 @@ class App extends Component{
                     postsCount = 0,
 
                     message = '',
-                    lastCompletedAction = '',
                 } = store.getState();
 
-                if (lastCompletedAction === 'GET_CATEGORIES') {
-                    const params = this.parseUrl();
-                    if (Object.keys(params).length > 0) {
-                        this.getFiltersFromUrlParams(params);
-                    } else {
-                        store.dispatch( initData() );
-                    }
-
-                    this.setState({
-                        openTabs: this.state.openTabs || 'upcoming'
-                    })
-                }
-                else {
-                    this.setState({
-                        loading: false,
-                        noResults: (
-                            message !== '' &&
-                            (
-                                (currentTab === 'upcoming' && lotsCount === 0) ||
-                                (currentTab === 'past' && pastLotsCount === 0) ||
-                                (currentTab === 'auctions' && auctionsCount === 0) ||
-                                (currentTab === 'other' && postsCount === 0)
-                            )
-                        ),
-                        openTabs: currentTab
-                    })
-                }
+                this.setState({
+                    loading: false,
+                    noResults: (
+                        message !== '' &&
+                        (
+                            (currentTab === 'upcoming' && lotsCount === 0) ||
+                            (currentTab === 'past' && pastLotsCount === 0) ||
+                            (currentTab === 'auctions' && auctionsCount === 0) ||
+                            (currentTab === 'other' && postsCount === 0)
+                        )
+                    ),
+                    openTabs: currentTab
+                })
             }
         });
 

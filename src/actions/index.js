@@ -1,5 +1,5 @@
 import {
-    GET_CATEGORIES,
+    // GET_CATEGORIES,
     INIT_DATA,
     LOAD_MORE, UPDATE_ALL_FROM_URL,
     UPDATE_FILTERS_NEW,
@@ -13,31 +13,15 @@ import axios from "axios";
 // const baseUrl = 'https://johnmoran.hksndev2.co.uk/wp-json';
 // const baseUrl = 'https://johnmoranstage.invaluable.com/wp-json';
 const baseUrl = 'http://hksndev2.co.uk/contemporary/wp-json';
+// const baseUrl = 'https://www.dzendzianandsons.com/wp-json';
 // const baseUrl = '/wp-json';
 
 const requestOptions = {
     headers: {
         'id': 'V053C9yWvo45XsOxKB',
+        // 'id': 's2DUnuzU3TVfk44ZNp',
     }
 };
-
-
-export function getCategories(payload = null) {
-    return async (dispatch) => {
-        try {
-            const response = await axios.get( baseUrl + '/searchlots/inv/categories', requestOptions);
-
-            return dispatch({
-                type: GET_CATEGORIES,
-                payload: {
-                    categories: response.data || []
-                }
-            });
-        } catch (error) {
-            console.log(error);
-        }
-    }
-}
 
 const orderParams = (sorting = '', type = null) => {
     if (sorting === '') {
@@ -121,7 +105,7 @@ async function getLotsNew(payload = null, refresh = false, past = false) {
 
         params.items = response.data.data;
         params.count = response.data.count;
-        if (!past) params.categoryIds = response.data.used_categories;
+        if (!past) params.usedCategories = response.data.used_categories;
         params.success = true;
     } catch (error) {
         console.log('error: ', error);
@@ -141,7 +125,7 @@ async function getAuctionsNew(payload = null, refresh = false) {
 
         params.items = response.data.data;
         params.count = response.data.count;
-        params.categoryIds = response.data.used_categories;
+        params.usedCategories = response.data.used_categories;
         params.success = true;
     } catch (error) {
         console.log(error);
@@ -162,7 +146,7 @@ async function getOtherNew(payload = null, refresh = false) {
 
         params.items = response.data.data;
         params.count = response.data.count;
-        params.categoryIds = response.data.used_categories;
+        params.usedCategories = response.data.used_categories;
         params.success = true;
 
 

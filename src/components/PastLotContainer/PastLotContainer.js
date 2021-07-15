@@ -57,8 +57,6 @@ class LotContainer extends Component {
 
         if ( this.props.pastLots.length && !this.props.isLoading )
         {
-            // console.log('this.props.pastLots:  ', this.props.pastLots);
-
             pastLots = this.props.pastLots.map(item =>
                 <React.Fragment key={'past_lot_' + item.ref}>
                     {
@@ -74,11 +72,6 @@ class LotContainer extends Component {
             if ( !this.props.isLoading ) {
                 if(this.props.message){
                     show = false;
-                    // pastLots = <p className="error-message">{this.props.message}</p>;
-                }else{
-                    // setTimeout(() => {
-                    //     if (this._isMounted) this.setState({loading: false});
-                    // }, 3000);
                 }
             }
         }

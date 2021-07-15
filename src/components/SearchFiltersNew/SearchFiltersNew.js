@@ -6,7 +6,7 @@ import { faArrowUp, faArrowDown, faArrowRight } from '@fortawesome/free-solid-sv
 
 import {connect} from "react-redux";
 import {
-  getCategories, updateFiltersNew, updateSorting
+  /*getCategories,*/ updateFiltersNew, updateSorting
 } from "../../actions";
 import store from "../../store";
 
@@ -101,7 +101,7 @@ class SearchFilters extends Component {
 
   componentDidMount() {
     this._isMounted = true;
-    this.props.getCategories();
+    // this.props.getCategories();
 
     const _this = this;
 
@@ -313,5 +313,5 @@ function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps,
-  { getCategories }
+  { /*getCategories*/ }
 )(SearchFilters);

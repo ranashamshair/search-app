@@ -66,10 +66,6 @@ class AuctionsContainer extends Component {
             if ( !this.props.isLoading ) {
                 if(this.props.message){
                     auctions = <p className="error-message">{this.props.message}</p>;
-                }else{
-                    // setTimeout(() => {
-                    //     if (this._isMounted) this.setState({loading: false});
-                    // }, 3000);
                 }
             }
         }
