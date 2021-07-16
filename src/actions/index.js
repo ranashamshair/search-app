@@ -12,14 +12,14 @@ import axios from "axios";
 
 // const baseUrl = 'https://johnmoran.hksndev2.co.uk/wp-json';
 // const baseUrl = 'https://johnmoranstage.invaluable.com/wp-json';
-const baseUrl = 'http://hksndev2.co.uk/contemporary/wp-json';
+// const baseUrl = 'https://hksndev2.co.uk/contemporary/wp-json';
 // const baseUrl = 'https://www.dzendzianandsons.com/wp-json';
-// const baseUrl = '/wp-json';
+const baseUrl = '/wp-json';
 
 const requestOptions = {
     headers: {
-        'id': 'V053C9yWvo45XsOxKB',
-        // 'id': 's2DUnuzU3TVfk44ZNp',
+        // 'id': 'V053C9yWvo45XsOxKB',
+        'id': 's2DUnuzU3TVfk44ZNp',
     }
 };
 
