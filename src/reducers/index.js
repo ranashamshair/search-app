@@ -287,6 +287,8 @@ const procNewData = (currentTab, state, changes, payload) => {
         }
     }
 
+    changes.availableCategories = [...new Set(changes.availableCategories)];
+
     return changes;
 };
 
