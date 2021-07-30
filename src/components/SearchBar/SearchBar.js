@@ -1,16 +1,11 @@
 import React, {Component} from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 import Loader from 'react-loader-spinner';
 
 import './SearchBar.css';
 import store from "../../store";
-import {updateSearch} from "../../actions"; //  getAuctions, getEvents,
 
 import SearchFiltersNew from '../SearchFiltersNew/SearchFiltersNew';
-
-// import data from '../../requestApi.json';
 
 class SearchBar extends Component {
 
@@ -25,7 +20,6 @@ class SearchBar extends Component {
             query: '',
             submited: false,
             count: 1, // delete this when api return count of lots,
-            // currentTab: storeState.currentTab || this.props.openTabs || 'upcoming',
             currentTab: this.props.openTabs || storeState.currentTab || 'upcoming',
             sorting: storeState.sorting || '',
             categories: storeState.selectedCategories || [],
@@ -40,9 +34,6 @@ class SearchBar extends Component {
         this._isMounted = false;
 
         this.delay = 0;
-
-        this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
-        this.showSearchFilters = this.showSearchFilters.bind(this);
     }
 
     toggleFilter(menu_btn) {
@@ -60,13 +51,6 @@ class SearchBar extends Component {
 
     componentDidMount() {
         this._isMounted = true;
-        const menu_btn = document.getElementById('menu_search_form_btn');
-
-        if(menu_btn){
-            menu_btn.querySelector('#to_open').style.display = "none";
-
-            menu_btn.addEventListener('click', e => this.toggleFilter(menu_btn));
-        }
 
         const _this = this;
 
@@ -93,8 +77,6 @@ class SearchBar extends Component {
 
                 const stateChanges = {
                     query: searchText,
-                    // currentTab: currentTab,
-                    // currentTab: _this.props.openTabs || currentTab,
                     currentTab: (_this.loadingsAfterMount !== 2) ? _this.props.openTabs || currentTab : currentTab,
                     sorting: sorting,
                     categories: selectedCategories,
@@ -115,79 +97,9 @@ class SearchBar extends Component {
         });
     }
 
-    // componentDidUpdate(prevProps) {
-    //     // if (prevProps.text !== this.props.text) {
-    //     //     this.updateAndNotify();
-    //     // }
-    //     this.setState({currentTab: this.props.openTabs});
-    // }
-
     componentWillUnmount() {
         this._isMounted = false;
-
-        const menu_btn = document.getElementById('menu_search_form_btn');
-        if (menu_btn) {
-            menu_btn.removeEventListener('click', e => this.toggleFilter(menu_btn));
-        }
     }
-
-    handleSearchSubmit = (e) => {
-        e.preventDefault();
-
-        const {
-            currentTab,
-            query,
-            sorting,
-            categories,
-            pricemin,
-            pricemax
-        } = this.state;
-
-        const storeState = store.getState();
-
-        if (
-            storeState.currentTab !== currentTab ||
-            storeState.searchText !== query ||
-            storeState.sorting !== sorting ||
-            storeState.priceMin !== pricemin ||
-            storeState.priceMax !== pricemax
-        ) {
-            if (window.history.pushState) {
-                let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-                const params = [];
-
-                if (currentTab) params.push('tab=' + currentTab);
-                if (query) params.push('search=' + query);
-
-                if (categories.length) {
-                    params.push('categories=' + categories.join(','));
-                }
-
-                if (pricemin) params.push('min_price=' + pricemin);
-                if (pricemax) params.push('max_price=' + pricemax);
-                if (sorting) params.push('sort=' + sorting);
-
-                if (params.length) {
-                    newUrl += '?' + params.join('&');
-                }
-
-                window.history.pushState({path:newUrl},'',newUrl);
-            }
-
-            this.props.loadChanges(() => {
-                if (this._isMounted) {
-                    store.dispatch(updateSearch(Object.assign(store.getState(), {searchText: query })));
-                }
-            });
-        }
-    };
-
-    showSearchFilters = (e) => {
-        const menu_btn = document.getElementById('menu_search_form_btn');
-
-        menu_btn.classList.add('open');
-    };
-
 
     render() {
         const {
@@ -222,14 +134,6 @@ class SearchBar extends Component {
                         <form action="/" className="h-site-search--form">
                             <div className="container">
                                 <div className="column justify-content-center">
-
-                                    <div className="mx-auto pb-5 col-12 col-md-6 col-lg-6 col-xl-4 form-group form-item h-form-group h-form-item d-flex flex-column flex-lg-row align-items-lg-center">
-                                        <div className="ui icon input">
-                                            <label htmlFor="search" className="sr-only">Search Auctions/Lots</label>
-                                            <input type="text" id="search" className="form-control h-form-control" placeholder="Enter the terms you wish to search for" value={this.state.query} onChange={e => this.setState({query: e.target.value})} />
-                                            <button type="submit" className="position-relative w-25" onClick={this.handleSearchSubmit}><FontAwesomeIcon icon={faSearch} size="sm" /></button>
-                                        </div>
-                                    </div>
 
                                     <div className="tabs mx-auto col-12 d-flex justify-content-center">
                                         {/*when click save type of lots and get request to api and save to redux*/}

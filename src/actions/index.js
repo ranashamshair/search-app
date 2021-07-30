@@ -103,14 +103,18 @@ async function getLotsNew(payload = null, refresh = false, past = false) {
     try {
         const response = await axios.get(route, requestOptions);
 
+        if (response.data.count === 0) {
+            throw new Error('Nothing found');
+        }
+
         params.items = response.data.data;
         params.count = response.data.count;
         if (!past) params.usedCategories = response.data.used_categories;
         params.success = true;
     } catch (error) {
-        console.log('error: ', error);
+        // console.log(error);
         params.success = false;
-        params.message = (typeof error === 'string') ? error : ((error.hasOwnProperty('response') && error.response)  ? error.response.data.message : '');
+        params.message = (typeof error === 'string') ? error : ((error.hasOwnProperty('response') && error.response)  ? error.response.data.message : (error.message || ''));
     }
 
     return params;
@@ -128,7 +132,7 @@ async function getAuctionsNew(payload = null, refresh = false) {
         params.usedCategories = response.data.used_categories;
         params.success = true;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         params.success = false;
         params.message = (typeof error === 'string') ? error : ((error.hasOwnProperty('response') && error.response)  ? error.response.data.message : '');
     }
@@ -148,10 +152,8 @@ async function getOtherNew(payload = null, refresh = false) {
         params.count = response.data.count;
         params.usedCategories = response.data.used_categories;
         params.success = true;
-
-
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         params.success = false;
         params.message = (typeof error === 'string') ? error : ((error.hasOwnProperty('response') && error.response)  ? error.response.data.message : '');
     }
