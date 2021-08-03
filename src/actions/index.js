@@ -31,7 +31,7 @@ const orderParams = (sorting = '', type = null) => {
             switch (type) {
                 case 'upcoming': return 'sort_by=date&sort_order=asc';
                 case 'past': return 'sort_by=date&sort_order=desc';
-                case 'auctions': return 'sort_by=date&sort_order=asc';
+                case 'auctions': return 'sort_by=date&sort_order=desc';
                 case 'other': return 'sort_by=date&sort_order=desc';
                 default: return '';
             }

@@ -267,7 +267,7 @@ class SearchFilters extends Component {
             'auctions': [
                 {
                     label: 'Date',
-                    value: 'date||asc'
+                    value: 'date||desc'
                 },
                 {
                     label: 'Title',
