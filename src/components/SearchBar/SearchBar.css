@@ -1,4 +1,4 @@
-.h-site-search--search {
+#main_app_43tg4 .h-site-search--search {
     /*padding: 2.875rem 2.5rem;*/
     transition: 0.7s all cubic-bezier(.73,.05,.69,.94);
     /*background-color: white;*/
@@ -7,33 +7,29 @@
 }
 
 @media screen and (max-width: 567px) {
-    .h-site-search--search .container {
+    #main_app_43tg4 .h-site-search--search .container {
         padding: 0;
     }
 }
 
-.h-site-search--form .h-form-control::placeholder {
+#main_app_43tg4 .h-site-search--form .h-form-control::placeholder {
     color: #5555;
 }
 
-.h-site-search--searchbox {
-    transition: transform .3s;
-}
-
-.h-site-search--form .h-form-control {
+#main_app_43tg4 .h-site-search--form .h-form-control {
     margin-left: 0;
 }
 
-.ui.icon.input > input {
+#main_app_43tg4 .ui.icon.input > input {
     padding-right: 2.67142857em !important;
 }
 
-.ui.input {
+#main_app_43tg4 .ui.input {
     font-size: 1em;
     width: 100%;
 }
 
-.ui.input {
+#main_app_43tg4 .ui.input {
     position: relative;
     font-weight: normal;
     font-style: normal;
@@ -43,7 +39,7 @@
     color: rgba(0, 0, 0, 0.87);
 }
 
-.ui.input > input {
+#main_app_43tg4 .ui.input > input {
     margin: 0em;
     max-width: 90%;
     -webkit-box-flex: 1;
@@ -76,41 +72,41 @@
 /*    background: transparent;*/
 /*}*/
 
-.h-site-search--search-empty {
+#main_app_43tg4 .h-site-search--search-empty {
     padding: 8rem 2.5rem 12rem;
     z-index: 1000;
 }
 
-.searchBox .h-form-item {
+#main_app_43tg4 .searchBox .h-form-item {
     flex: 100% 0 1;
 }
 
-.searchBox .vertical-center.move {
+#main_app_43tg4 .searchBox .vertical-center.move {
     transform: translate(0);
 }
 
-.h-site-search--search-wrap{
+#main_app_43tg4 .h-site-search--search-wrap{
     width: 100%;
     z-index: 1000;
 }
 
-.input-group.mb-3{
+#main_app_43tg4.input-group.mb-3{
     display: block;
 }
 
-.h-search-filter .ui.button.primary .svg-inline--fa.fa-w-16{
+#main_app_43tg4 .h-search-filter .ui.button.primary .svg-inline--fa.fa-w-16{
     color: #ffffff;
 }
 
-.h-header.w-100.has-no-hero{
+#main_app_43tg4 .h-header.w-100.has-no-hero{
     border-bottom: unset;
 }
 
-.tabs {
+#main_app_43tg4 .tabs {
     border-bottom: 2px solid black;
 }
 
-button {
+#main_app_43tg4 button {
     font-size: 16px;
     line-height: 20px;
     color: #000000;
@@ -120,26 +116,26 @@ button {
 }
 
 @media screen and (max-width: 768px) {
-    button {
+    #main_app_43tg4 button {
         font-size: 14px;
     }
-    .h-site-search--search {
+    #main_app_43tg4 .h-site-search--search {
         padding: 2rem 0;
     }
 }
 
-button.active {
+#main_app_43tg4 button.active {
     color: #FFFFFF;
     background-color: #000000;
 }
 
 @media (min-width: 992px){
-    body .hero-empty {
+    body #main_app_hero_empty_34t54gy54 {
         min-height: 4.5625rem;
     }
 }
 
-.dropdown-item-alt{
+#main_app_43tg4 .dropdown-item-alt{
     display: block;
     width: 100%;
     padding: 0.25rem 1.5rem;

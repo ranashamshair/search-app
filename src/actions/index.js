@@ -1,7 +1,7 @@
 import {
     // GET_CATEGORIES,
     INIT_DATA,
-    LOAD_MORE, UPDATE_ALL_FROM_URL,
+    LOAD_MORE, RESET_FILTERS, UPDATE_ALL_FROM_URL,
     UPDATE_FILTERS_NEW,
     UPDATE_SEARCH,
     UPDATE_SORTING,
@@ -261,6 +261,30 @@ export function loadMore(payload = null, tab = 'upcoming') {
 
         return dispatch({type: LOAD_MORE, payload: newParams});
     };
+}
+
+export function resetFilters(search = '', tab = 'upcoming') {
+    return async (dispatch) => {
+        let newParams = null;
+
+        const payload = {
+            currentTab: tab,
+            searchText: search,
+            selectedCategories: [],
+            priceMin: '',
+            priceMax: '',
+            sorting: ''
+        };
+
+        switch (tab) {
+            case 'upcoming': newParams = await getLotsNew(payload); break;
+            case 'past': newParams = await getLotsNew(payload, false, true); break;
+            case 'auctions': newParams = await getAuctionsNew(payload); break;
+            case 'other': newParams = await getOtherNew(payload); break;
+        }
+
+        return dispatch({type: RESET_FILTERS, payload: newParams});
+    }
 }
 
 export function initData() {

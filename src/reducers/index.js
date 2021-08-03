@@ -1,6 +1,6 @@
 import {
     INIT_DATA,
-    LOAD_MORE,
+    LOAD_MORE, RESET_FILTERS,
     UPDATE_ALL_FROM_URL,
     UPDATE_FILTERS_NEW,
     UPDATE_SEARCH,
@@ -178,6 +178,18 @@ function rootReducer(state = initialState, action) {
                     }
                 }
             }
+
+            return Object.assign({}, state, changes);
+        }
+        case RESET_FILTERS: {
+            const { currentTab = 'upcoming' } = state;
+
+            let changes = procNewData(currentTab, state, {page: 0, searchText: action.payload.searchText}, action.payload);
+
+            changes.selectedCategories = [];
+            changes.priceMin = '';
+            changes.priceMax = '';
+            changes.sorting = '';
 
             return Object.assign({}, state, changes);
         }

@@ -217,7 +217,7 @@ class App extends Component{
         const { noResults, loading, openTabs } = this.state;
 
         return (
-            <div className="App">
+            <div className="App" id="main_app_43tg4">
                 <Provider store={store}>
                     <SearchBox handleTabSelect={this.handleTabSelect} isLoading={loading} loadChanges={this.applyChangesLoading} openTabs={openTabs} />
 

@@ -1,25 +1,25 @@
-.imgContainer {
+#main_app_43tg4 .imgContainer {
     /*background-color: #F3F3F3;*/
     background-color: #ffffff;
 }
 
-.search-lot--content {
+#main_app_43tg4 .search-lot--content {
     background-color: #FFFFFF;
     font-family: 'Dosis', sans-serif;
     height: 100%;
 }
 
-.lot-container > div {
+#main_app_43tg4 .lot-container > div {
     height: 100%;
     display: flex;
     flex-direction: column;
 }
 
-.lot-container > div > div:last-child {
+#main_app_43tg4 .lot-container > div > div:last-child {
     height: 100%;
 }
 
-.title {
+#main_app_43tg4 .title {
     font-size: 1.625rem;
     line-height: 1.2;
     letter-spacing: 1px;
@@ -27,7 +27,7 @@
     /*line-height: 28px;*/
 }
 
-.subtitle {
+#main_app_43tg4 .subtitle {
     color: #968a8a;
     font-size: 1.25rem;
     line-height: 1.2;
@@ -36,7 +36,7 @@
     /*line-height: 28px;*/
 }
 
-.emptyPhoto {
+#main_app_43tg4 .emptyPhoto {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -44,7 +44,7 @@
 }
 
 @media screen and (max-width: 576px) {
-    .emptyPhoto {
+    #main_app_43tg4 .emptyPhoto {
         height: auto;
     }
 }
