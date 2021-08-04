@@ -7,9 +7,9 @@ import * as serviceWorker from './serviceWorker';
 import "react-app-polyfill/ie11";
 import "react-app-polyfill/stable";
 
-import 'jquery/dist/jquery.min.js'
-import 'popper.js';
-import 'bootstrap/dist/js/bootstrap';
+// import 'jquery/dist/jquery.min.js'
+// import 'popper.js';
+// import 'bootstrap/dist/js/bootstrap';
 
 
 ReactDOM.render(<App />, document.getElementById('root'));
