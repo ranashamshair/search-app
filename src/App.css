@@ -15,6 +15,15 @@ body {
     margin-bottom: 3rem;
 }
 
+.App .main-content {
+    padding: 0;
+    min-height: 100px;
+}
+@media (min-width: 992px)
+.App .main-content {
+    padding-top: 5rem;
+}
+
 body #searchBox .dropdown-item-alt .ui.checkbox{
     display: block;
 }
@@ -64,5 +73,6 @@ body div[aria-busy=true]{
 .widget-fluid .widget-fluid--image img, .imgContainer img{
     object-fit: cover;
     object-position: center;
+    width: auto;
 }
 

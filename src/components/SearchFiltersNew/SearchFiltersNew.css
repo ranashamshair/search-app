@@ -1,25 +1,25 @@
-#main_app_43tg4 .search-filter button {
+#root .search-filter button {
     background-color: #000000;
     color: #FFFFFF;
     font-size: 16px;
     line-height: 26px;
     letter-spacing: 1px;
 }
-#main_app_43tg4 .search-filter button[type="submit"] {
+#root .search-filter button[type="submit"] {
     background-color: #000000;
     color: #FFFFFF;
     font-size: 16px;
     margin-right: 10px;
 }
 
-#main_app_43tg4 .search-filter button[type="reset"] {
+#root .search-filter button[type="reset"] {
     background-color: #892828;
     color: #FFFFFF;
     font-size: 16px;
     margin-left: 10px;
 }
 
-#main_app_43tg4 input {
+#root input {
     border-radius: 0;
     outline: none;
     border: none;
@@ -27,12 +27,12 @@
     color: #000000;
     font-weight: bold;
 }
-#main_app_43tg4 input::placeholder {
+#root input::placeholder {
     color: #000000;
     font-weight: bold;
 }
 
-#main_app_43tg4 select {
+#root select {
     height: 46px;
     border: none;
     outline: none;
@@ -43,6 +43,6 @@
     width: 100%;
 }
 
-#main_app_43tg4 .filter-container {
+#root .filter-container {
     border-bottom: 2px solid black;
 }

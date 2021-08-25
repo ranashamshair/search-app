@@ -1,4 +1,4 @@
-#main_app_43tg4 input[type="checkbox"]:not(#upcoming-only) + label {
+#root input[type="checkbox"]:not(#upcoming-only) + label {
     display: block;
     position: relative;
     padding: .25rem 2rem;
@@ -6,7 +6,7 @@
     margin-bottom: 0;
 }
 
-#main_app_43tg4 input[type="checkbox"]:not(#upcoming-only) + label:before {
+#root input[type="checkbox"]:not(#upcoming-only) + label:before {
     content: '';
     position: absolute;
     left: 0;
@@ -21,11 +21,11 @@
     border: 0.125rem solid #555555;
 }
 
-#main_app_43tg4 .h-modal-dialog input[type="checkbox"]:not(#upcoming-only) + label:before {
+#root .h-modal-dialog input[type="checkbox"]:not(#upcoming-only) + label:before {
     background-color: transparent;   
 }
 
-#main_app_43tg4 input[type="checkbox"]:not(#upcoming-only) + label:after {
+#root input[type="checkbox"]:not(#upcoming-only) + label:after {
     content: "";
     border: 0.125rem solid;
     border-left: 0;
@@ -40,7 +40,7 @@
     width: 0.3rem;
 }
 
-#main_app_43tg4 input[type="checkbox"]:not(#upcoming-only):checked + label:after {
+#root input[type="checkbox"]:not(#upcoming-only):checked + label:after {
     opacity: 1;
     visibility: visible;
 }

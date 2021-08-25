@@ -1,7 +1,7 @@
-#main_app_43tg4 .favourite {
+#root .favourite {
     padding: 1rem;
 }
 
-#main_app_43tg4 .favourite-content h3 {
+#root .favourite-content h3 {
     font-size: 1rem;
 }

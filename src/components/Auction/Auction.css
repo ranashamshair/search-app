@@ -1,7 +1,7 @@
 
 @media (min-width: 1200px) {
 
-    #main_app_43tg4 .App .widget-fluid--body {
+    #root .App .widget-fluid--body {
         width: 50%;
     }
 

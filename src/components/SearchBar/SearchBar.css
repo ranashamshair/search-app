@@ -1,4 +1,4 @@
-#main_app_43tg4 .h-site-search--search {
+#root .h-site-search--search {
     /*padding: 2.875rem 2.5rem;*/
     transition: 0.7s all cubic-bezier(.73,.05,.69,.94);
     /*background-color: white;*/
@@ -7,29 +7,29 @@
 }
 
 @media screen and (max-width: 567px) {
-    #main_app_43tg4 .h-site-search--search .container {
+    #root .h-site-search--search .container {
         padding: 0;
     }
 }
 
-#main_app_43tg4 .h-site-search--form .h-form-control::placeholder {
+#root .h-site-search--form .h-form-control::placeholder {
     color: #5555;
 }
 
-#main_app_43tg4 .h-site-search--form .h-form-control {
+#root .h-site-search--form .h-form-control {
     margin-left: 0;
 }
 
-#main_app_43tg4 .ui.icon.input > input {
+#root .ui.icon.input > input {
     padding-right: 2.67142857em !important;
 }
 
-#main_app_43tg4 .ui.input {
+#root .ui.input {
     font-size: 1em;
     width: 100%;
 }
 
-#main_app_43tg4 .ui.input {
+#root .ui.input {
     position: relative;
     font-weight: normal;
     font-style: normal;
@@ -39,7 +39,7 @@
     color: rgba(0, 0, 0, 0.87);
 }
 
-#main_app_43tg4 .ui.input > input {
+#root .ui.input > input {
     margin: 0em;
     max-width: 90%;
     -webkit-box-flex: 1;
@@ -72,41 +72,41 @@
 /*    background: transparent;*/
 /*}*/
 
-#main_app_43tg4 .h-site-search--search-empty {
+#root .h-site-search--search-empty {
     padding: 8rem 2.5rem 12rem;
     z-index: 1000;
 }
 
-#main_app_43tg4 .searchBox .h-form-item {
+#root .searchBox .h-form-item {
     flex: 100% 0 1;
 }
 
-#main_app_43tg4 .searchBox .vertical-center.move {
+#root .searchBox .vertical-center.move {
     transform: translate(0);
 }
 
-#main_app_43tg4 .h-site-search--search-wrap{
+#root .h-site-search--search-wrap{
     width: 100%;
     z-index: 1000;
 }
 
-#main_app_43tg4.input-group.mb-3{
+#root.input-group.mb-3{
     display: block;
 }
 
-#main_app_43tg4 .h-search-filter .ui.button.primary .svg-inline--fa.fa-w-16{
+#root .h-search-filter .ui.button.primary .svg-inline--fa.fa-w-16{
     color: #ffffff;
 }
 
-#main_app_43tg4 .h-header.w-100.has-no-hero{
+#root .h-header.w-100.has-no-hero{
     border-bottom: unset;
 }
 
-#main_app_43tg4 .tabs {
+#root .tabs {
     border-bottom: 2px solid black;
 }
 
-#main_app_43tg4 button {
+#root button {
     font-size: 16px;
     line-height: 20px;
     color: #000000;
@@ -116,15 +116,15 @@
 }
 
 @media screen and (max-width: 768px) {
-    #main_app_43tg4 button {
+    #root button {
         font-size: 14px;
     }
-    #main_app_43tg4 .h-site-search--search {
+    #root .h-site-search--search {
         padding: 2rem 0;
     }
 }
 
-#main_app_43tg4 button.active {
+#root button.active {
     color: #FFFFFF;
     background-color: #000000;
 }
@@ -135,7 +135,7 @@
     }
 }
 
-#main_app_43tg4 .dropdown-item-alt{
+#root .dropdown-item-alt{
     display: block;
     width: 100%;
     padding: 0.25rem 1.5rem;

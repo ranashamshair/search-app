@@ -31,27 +31,27 @@
     --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-#main_app_43tg4 *,
-#main_app_43tg4 *::before,
-#main_app_43tg4 *::after {
+#root *,
+#root *::before,
+#root *::after {
     box-sizing: border-box;
 }
 
-html #main_app_43tg4 {
+html #root {
     font-family: sans-serif;
     line-height: 1.15;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-#main_app_43tg4 aside,
-#main_app_43tg4 figure,
-#main_app_43tg4 main,
-#main_app_43tg4 section {
+#root aside,
+#root figure,
+#root main,
+#root section {
     display: block;
 }
 
-body #main_app_43tg4 {
+body #root {
     margin: 0;
     font-family: "Nunito Sans", sans-serif;
     font-size: 1rem;
@@ -62,104 +62,104 @@ body #main_app_43tg4 {
     background-color: #fff;
 }
 
-#main_app_43tg4 [tabindex="-1"]:focus:not(:focus-visible) {
+#root [tabindex="-1"]:focus:not(:focus-visible) {
     outline: 0 !important;
 }
 
-#main_app_43tg4 h3 {
+#root h3 {
     margin-top: 0;
     margin-bottom: 0.5rem;
 }
 
-#main_app_43tg4 p {
+#root p {
     margin-top: 0;
     margin-bottom: 1rem;
 }
 
-#main_app_43tg4 a {
+#root a {
     color: #555555;
     text-decoration: none;
     background-color: transparent;
 }
 
-#main_app_43tg4 a:hover {
+#root a:hover {
     color: #2f2f2f;
     text-decoration: underline;
 }
 
-#main_app_43tg4 figure {
+#root figure {
     margin: 0 0 1rem;
 }
 
-#main_app_43tg4 img {
+#root img {
     vertical-align: middle;
     border-style: none;
 }
 
-#main_app_43tg4 svg {
+#root svg {
     overflow: hidden;
     vertical-align: middle;
 }
 
-#main_app_43tg4 label {
+#root label {
     display: inline-block;
     margin-bottom: 0.5rem;
 }
 
-#main_app_43tg4 button {
+#root button {
     border-radius: 0;
 }
 
-#main_app_43tg4 button:focus {
+#root button:focus {
     /*outline: 1px dotted;*/
     /*outline: 5px auto -webkit-focus-ring-color; work*/
     outline: none;
 }
 
-#main_app_43tg4 input,
-#main_app_43tg4 button,
-#main_app_43tg4 select {
+#root input,
+#root button,
+#root select {
     margin: 0;
     font-family: inherit;
     font-size: inherit;
     line-height: inherit;
 }
 
-#main_app_43tg4 button,
-#main_app_43tg4 input {
+#root button,
+#root input {
     overflow: visible;
 }
 
-#main_app_43tg4 button,
-#main_app_43tg4 select {
+#root button,
+#root select {
     text-transform: none;
 }
 
-#main_app_43tg4 select {
+#root select {
     word-wrap: normal;
 }
 
-#main_app_43tg4 button,
-#main_app_43tg4 [type="reset"],
-#main_app_43tg4 [type="submit"] {
+#root button,
+#root [type="reset"],
+#root [type="submit"] {
     -webkit-appearance: button;
 }
 
-#main_app_43tg4 button:not(:disabled),
-#main_app_43tg4 [type="button"]:not(:disabled),
-#main_app_43tg4 [type="reset"]:not(:disabled),
-#main_app_43tg4 [type="submit"]:not(:disabled) {
+#root button:not(:disabled),
+#root [type="button"]:not(:disabled),
+#root [type="reset"]:not(:disabled),
+#root [type="submit"]:not(:disabled) {
     cursor: pointer;
 }
 
-#main_app_43tg4 button::-moz-focus-inner,
-#main_app_43tg4 [type="reset"]::-moz-focus-inner,
-#main_app_43tg4 [type="submit"]::-moz-focus-inner {
+#root button::-moz-focus-inner,
+#root [type="reset"]::-moz-focus-inner,
+#root [type="submit"]::-moz-focus-inner {
     padding: 0;
     border-style: none;
 }
 
-#main_app_43tg4 input[type="checkbox"] {
+#root input[type="checkbox"] {
     box-sizing: border-box;
     padding: 0;
 }
@@ -170,17 +170,17 @@ body #main_app_43tg4 {
     -webkit-appearance: button;
 }
 
-#main_app_43tg4 h3 {
+#root h3 {
     margin-bottom: 0.5rem;
     font-weight: 500;
     line-height: 1.2;
 }
 
-#main_app_43tg4 h3 {
+#root h3 {
     font-size: 1.75rem;
 }
 
-#main_app_43tg4 .container {
+#root .container {
     width: 100%;
     padding-right: 15px;
     padding-left: 15px;
@@ -189,48 +189,48 @@ body #main_app_43tg4 {
 }
 
 @media (min-width: 576px) {
-    #main_app_43tg4 .container {
+    #root .container {
         max-width: 540px;
     }
 }
 
 @media (min-width: 768px) {
-    #main_app_43tg4 .container {
+    #root .container {
         max-width: 720px;
     }
 }
 
 @media (min-width: 992px) {
-    #main_app_43tg4 .container {
+    #root .container {
         max-width: 960px;
     }
 }
 
 @media (min-width: 1200px) {
-    #main_app_43tg4 .container {
+    #root .container {
         max-width: 1140px;
     }
 }
 
 @media (min-width: 576px) {
-    #main_app_43tg4 .container {
+    #root .container {
         max-width: 540px;
     }
 }
 
 @media (min-width: 768px) {
-    #main_app_43tg4 .container {
+    #root .container {
         max-width: 720px;
     }
 }
 
 @media (min-width: 992px) {
-    #main_app_43tg4 .container {
+    #root .container {
         max-width: 960px;
     }
 }
 
-#main_app_43tg4 .row {
+#root .row {
     display: -webkit-box;
     display: flex;
     flex-wrap: wrap;
@@ -238,26 +238,26 @@ body #main_app_43tg4 {
     margin-left: -15px;
 }
 
-#main_app_43tg4 .col-12 {
+#root .col-12 {
     -webkit-box-flex: 0;
     flex: 0 0 100%;
     max-width: 100%;
 }
 
 @media (min-width: 768px) {
-    #main_app_43tg4 .col-md-3 {
+    #root .col-md-3 {
         -webkit-box-flex: 0;
         flex: 0 0 25%;
         max-width: 25%;
     }
 
-    #main_app_43tg4 .col-md-6 {
+    #root .col-md-6 {
         -webkit-box-flex: 0;
         flex: 0 0 50%;
         max-width: 50%;
     }
 
-    #main_app_43tg4 .col-md-9 {
+    #root .col-md-9 {
         -webkit-box-flex: 0;
         flex: 0 0 75%;
         max-width: 75%;
@@ -265,22 +265,22 @@ body #main_app_43tg4 {
 }
 
 @media (min-width: 992px) {
-    #main_app_43tg4 .col-lg-2 {
+    #root .col-lg-2 {
         -webkit-box-flex: 0;
         flex: 0 0 16.66667%;
         max-width: 16.66667%;
     }
-    #main_app_43tg4 .col-lg-3 {
+    #root .col-lg-3 {
         -webkit-box-flex: 0;
         flex: 0 0 25%;
         max-width: 25%;
     }
-    #main_app_43tg4 .col-lg-4 {
+    #root .col-lg-4 {
         -webkit-box-flex: 0;
         flex: 0 0 33.33333%;
         max-width: 33.33333%;
     }
-    #main_app_43tg4 .col-lg-6 {
+    #root .col-lg-6 {
         -webkit-box-flex: 0;
         flex: 0 0 50%;
         max-width: 50%;
@@ -288,7 +288,7 @@ body #main_app_43tg4 {
 }
 
 @media (min-width: 1200px) {
-    #main_app_43tg4 .col-xl-4 {
+    #root .col-xl-4 {
         -webkit-box-flex: 0;
         flex: 0 0 33.33333%;
         max-width: 33.33333%;
@@ -296,7 +296,7 @@ body #main_app_43tg4 {
 
 }
 
-#main_app_43tg4 .form-control {
+#root .form-control {
     display: block;
     width: 100%;
     height: calc(1.5em + 0.75rem + 2px);
@@ -314,23 +314,23 @@ body #main_app_43tg4 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    #main_app_43tg4 .form-control {
+    #root .form-control {
         -webkit-transition: none;
         transition: none;
     }
 }
 
-#main_app_43tg4 .form-control::-ms-expand {
+#root .form-control::-ms-expand {
     background-color: transparent;
     border: 0;
 }
 
-#main_app_43tg4 .form-control:-moz-focusring {
+#root .form-control:-moz-focusring {
     color: transparent;
     text-shadow: 0 0 0 #495057;
 }
 
-#main_app_43tg4 .form-control:focus {
+#root .form-control:focus {
     color: #495057;
     background-color: #fff;
     border-color: #959595;
@@ -338,46 +338,46 @@ body #main_app_43tg4 {
     box-shadow: 0 0 0 0.2rem rgba(85, 85, 85, 0.25);
 }
 
-#main_app_43tg4 .form-control::-webkit-input-placeholder {
+#root .form-control::-webkit-input-placeholder {
     color: #6c757d;
     opacity: 1;
 }
 
-#main_app_43tg4 .form-control::-moz-placeholder {
+#root .form-control::-moz-placeholder {
     color: #6c757d;
     opacity: 1;
 }
 
-#main_app_43tg4 .form-control:-ms-input-placeholder {
+#root .form-control:-ms-input-placeholder {
     color: #6c757d;
     opacity: 1;
 }
 
-#main_app_43tg4 .form-control::-ms-input-placeholder {
+#root .form-control::-ms-input-placeholder {
     color: #6c757d;
     opacity: 1;
 }
 
-#main_app_43tg4 .form-control:disabled {
+#root .form-control:disabled {
     background-color: #e9ecef;
     opacity: 1;
 }
 
-#main_app_43tg4 .form-group {
+#root .form-group {
     margin-bottom: 1rem;
 }
 
-#main_app_43tg4 .was-validated .custom-control-input:valid:focus:not(:checked) ~ .custom-control-label::before,
-#main_app_43tg4 .custom-control-input.is-valid:focus:not(:checked) ~ .custom-control-label::before {
+#root .was-validated .custom-control-input:valid:focus:not(:checked) ~ .custom-control-label::before,
+#root .custom-control-input.is-valid:focus:not(:checked) ~ .custom-control-label::before {
     border-color: #28a745;
 }
 
-#main_app_43tg4 .was-validated .custom-control-input:invalid:focus:not(:checked) ~ .custom-control-label::before,
-#main_app_43tg4 .custom-control-input.is-invalid:focus:not(:checked) ~ .custom-control-label::before {
+#root .was-validated .custom-control-input:invalid:focus:not(:checked) ~ .custom-control-label::before,
+#root .custom-control-input.is-invalid:focus:not(:checked) ~ .custom-control-label::before {
     border-color: #dc3545;
 }
 
-#main_app_43tg4 .btn {
+#root .btn {
     display: inline-block;
     font-weight: 400;
     color: #212529;
@@ -399,172 +399,172 @@ body #main_app_43tg4 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    #main_app_43tg4 .btn {
+    #root .btn {
         -webkit-transition: none;
         transition: none;
     }
 }
 
-#main_app_43tg4 .btn:hover {
+#root .btn:hover {
     color: #212529;
     text-decoration: none;
 }
 
-#main_app_43tg4 .btn:focus {
+#root .btn:focus {
     outline: 0;
     box-shadow: 0 0 0 0.2rem rgba(85, 85, 85, 0.25);
 }
 
-#main_app_43tg4 .btn:disabled {
+#root .btn:disabled {
     opacity: 0.65;
 }
 
-#main_app_43tg4 .btn-primary:not(:disabled):not(.disabled):active,
-#main_app_43tg4 .btn-primary:not(:disabled):not(.disabled).active {
+#root .btn-primary:not(:disabled):not(.disabled):active,
+#root .btn-primary:not(:disabled):not(.disabled).active {
     color: #fff;
     background-color: #3c3c3c;
     border-color: #353535;
 }
 
-#main_app_43tg4 .btn-primary:not(:disabled):not(.disabled):active:focus,
-#main_app_43tg4 .btn-primary:not(:disabled):not(.disabled).active:focus {
+#root .btn-primary:not(:disabled):not(.disabled):active:focus,
+#root .btn-primary:not(:disabled):not(.disabled).active:focus {
     box-shadow: 0 0 0 0.2rem rgba(111, 111, 111, 0.5);
 }
 
-#main_app_43tg4 .btn-secondary:not(:disabled):not(.disabled):active,
-#main_app_43tg4 .btn-secondary:not(:disabled):not(.disabled).active {
+#root .btn-secondary:not(:disabled):not(.disabled):active,
+#root .btn-secondary:not(:disabled):not(.disabled).active {
     color: #fff;
     background-color: #545b62;
     border-color: #4e555b;
 }
 
-#main_app_43tg4 .btn-secondary:not(:disabled):not(.disabled):active:focus,
-#main_app_43tg4 .btn-secondary:not(:disabled):not(.disabled).active:focus {
+#root .btn-secondary:not(:disabled):not(.disabled):active:focus,
+#root .btn-secondary:not(:disabled):not(.disabled).active:focus {
     box-shadow: 0 0 0 0.2rem rgba(130, 138, 145, 0.5);
 }
 
-#main_app_43tg4 .btn-success:not(:disabled):not(.disabled):active,
-#main_app_43tg4 .btn-success:not(:disabled):not(.disabled).active {
+#root .btn-success:not(:disabled):not(.disabled):active,
+#root .btn-success:not(:disabled):not(.disabled).active {
     color: #fff;
     background-color: #1e7e34;
     border-color: #1c7430;
 }
 
-#main_app_43tg4 .btn-success:not(:disabled):not(.disabled):active:focus,
-#main_app_43tg4 .btn-success:not(:disabled):not(.disabled).active:focus {
+#root .btn-success:not(:disabled):not(.disabled):active:focus,
+#root .btn-success:not(:disabled):not(.disabled).active:focus {
     box-shadow: 0 0 0 0.2rem rgba(72, 180, 97, 0.5);
 }
 
-#main_app_43tg4 .btn-info:not(:disabled):not(.disabled):active,
-#main_app_43tg4 .btn-info:not(:disabled):not(.disabled).active {
+#root .btn-info:not(:disabled):not(.disabled):active,
+#root .btn-info:not(:disabled):not(.disabled).active {
     color: #fff;
     background-color: #117a8b;
     border-color: #10707f;
 }
 
-#main_app_43tg4 .btn-info:not(:disabled):not(.disabled):active:focus,
-#main_app_43tg4 .btn-info:not(:disabled):not(.disabled).active:focus {
+#root .btn-info:not(:disabled):not(.disabled):active:focus,
+#root .btn-info:not(:disabled):not(.disabled).active:focus {
     box-shadow: 0 0 0 0.2rem rgba(58, 176, 195, 0.5);
 }
 
-#main_app_43tg4 .btn-warning:not(:disabled):not(.disabled):active,
-#main_app_43tg4 .btn-warning:not(:disabled):not(.disabled).active {
+#root .btn-warning:not(:disabled):not(.disabled):active,
+#root .btn-warning:not(:disabled):not(.disabled).active {
     color: #212529;
     background-color: #d39e00;
     border-color: #c69500;
 }
 
-#main_app_43tg4 .btn-warning:not(:disabled):not(.disabled):active:focus,
-#main_app_43tg4 .btn-warning:not(:disabled):not(.disabled).active:focus {
+#root .btn-warning:not(:disabled):not(.disabled):active:focus,
+#root .btn-warning:not(:disabled):not(.disabled).active:focus {
     box-shadow: 0 0 0 0.2rem rgba(222, 170, 12, 0.5);
 }
 
-#main_app_43tg4 .btn-danger:not(:disabled):not(.disabled):active,
-#main_app_43tg4 .btn-danger:not(:disabled):not(.disabled).active {
+#root .btn-danger:not(:disabled):not(.disabled):active,
+#root .btn-danger:not(:disabled):not(.disabled).active {
     color: #fff;
     background-color: #bd2130;
     border-color: #b21f2d;
 }
 
-#main_app_43tg4 .btn-danger:not(:disabled):not(.disabled):active:focus,
-#main_app_43tg4 .btn-danger:not(:disabled):not(.disabled).active:focus {
+#root .btn-danger:not(:disabled):not(.disabled):active:focus,
+#root .btn-danger:not(:disabled):not(.disabled).active:focus {
     box-shadow: 0 0 0 0.2rem rgba(225, 83, 97, 0.5);
 }
 
-#main_app_43tg4 .custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
+#root .custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
     border-color: #959595;
 }
 
-#main_app_43tg4 .custom-control-input:not(:disabled):active ~ .custom-control-label::before {
+#root .custom-control-input:not(:disabled):active ~ .custom-control-label::before {
     color: #fff;
     background-color: #aeaeae;
     border-color: #aeaeae;
 }
 
-#main_app_43tg4 .close:not(:disabled):not(.disabled):hover,
-#main_app_43tg4 .close:not(:disabled):not(.disabled):focus {
+#root .close:not(:disabled):not(.disabled):hover,
+#root .close:not(:disabled):not(.disabled):focus {
     opacity: .75;
 }
 
-#main_app_43tg4 .d-flex {
+#root .d-flex {
     display: -webkit-box !important;
     display: flex !important;
 }
 
-#main_app_43tg4 .flex-column {
+#root .flex-column {
     -webkit-box-orient: vertical !important;
     -webkit-box-direction: normal !important;
     flex-direction: column !important;
 }
 
-#main_app_43tg4 .flex-wrap {
+#root .flex-wrap {
     flex-wrap: wrap !important;
 }
 
-#main_app_43tg4 .justify-content-center {
+#root .justify-content-center {
     -webkit-box-pack: center !important;
     justify-content: center !important;
 }
 
-#main_app_43tg4 .align-items-end {
+#root .align-items-end {
     -webkit-box-align: end !important;
     align-items: flex-end !important;
 }
 
 @media (min-width: 576px) {
-    #main_app_43tg4 .justify-content-sm-between {
+    #root .justify-content-sm-between {
         -webkit-box-pack: justify !important;
         justify-content: space-between !important;
     }
 }
 
 @media (min-width: 768px) {
-    #main_app_43tg4 .justify-content-md-between {
+    #root .justify-content-md-between {
         -webkit-box-pack: justify !important;
         justify-content: space-between !important;
     }
 }
 
 @media (min-width: 992px) {
-    #main_app_43tg4 .flex-lg-row {
+    #root .flex-lg-row {
         -webkit-box-orient: horizontal !important;
         -webkit-box-direction: normal !important;
         flex-direction: row !important;
     }
-    #main_app_43tg4 .align-items-lg-center {
+    #root .align-items-lg-center {
         -webkit-box-align: center !important;
         align-items: center !important;
     }
 }
 
-#main_app_43tg4 .position-relative {
+#root .position-relative {
     position: relative !important;
 }
 
 @supports ((position: -webkit-sticky) or (position: sticky)) {
 }
 
-#main_app_43tg4 .sr-only {
+#root .sr-only {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -576,287 +576,287 @@ body #main_app_43tg4 {
     border: 0;
 }
 
-#main_app_43tg4 .w-25 {
+#root .w-25 {
     width: 25% !important;
 }
 
-#main_app_43tg4 .mw-100 {
+#root .mw-100 {
     max-width: 100% !important;
 }
 
-#main_app_43tg4 .m-0 {
+#root .m-0 {
     margin: 0 !important;
 }
 
-#main_app_43tg4 .mr-2 {
+#root .mr-2 {
     margin-right: 0.5rem !important;
 }
 
-#main_app_43tg4 .mb-2 {
+#root .mb-2 {
     margin-bottom: 0.5rem !important;
 }
 
-#main_app_43tg4 .mt-3 {
+#root .mt-3 {
     margin-top: 1rem !important;
 }
 
-#main_app_43tg4 .ml-3 {
+#root .ml-3 {
     margin-left: 1rem !important;
 }
 
-#main_app_43tg4 .mb-5 {
+#root .mb-5 {
     margin-bottom: 3rem !important;
 }
 
-#main_app_43tg4 .p-0 {
+#root .p-0 {
     padding: 0 !important;
 }
 
-#main_app_43tg4 .px-0 {
+#root .px-0 {
     padding-right: 0 !important;
 }
 
-#main_app_43tg4 .px-0 {
+#root .px-0 {
     padding-left: 0 !important;
 }
 
-#main_app_43tg4 .py-1 {
+#root .py-1 {
     padding-top: 0.25rem !important;
 }
 
-#main_app_43tg4 .py-1 {
+#root .py-1 {
     padding-bottom: 0.25rem !important;
 }
 
-#main_app_43tg4 .py-2 {
+#root .py-2 {
     padding-top: 0.5rem !important;
 }
 
-#main_app_43tg4 .pb-2,
-#main_app_43tg4 .py-2 {
+#root .pb-2,
+#root .py-2 {
     padding-bottom: 0.5rem !important;
 }
 
-#main_app_43tg4 .p-3 {
+#root .p-3 {
     padding: 1rem !important;
 }
 
-#main_app_43tg4 .px-3 {
+#root .px-3 {
     padding-right: 1rem !important;
 }
 
-#main_app_43tg4 .pb-3 {
+#root .pb-3 {
     padding-bottom: 1rem !important;
 }
 
-#main_app_43tg4 .px-3 {
+#root .px-3 {
     padding-left: 1rem !important;
 }
 
-#main_app_43tg4 .pt-4,
-#main_app_43tg4 .py-4 {
+#root .pt-4,
+#root .py-4 {
     padding-top: 1.5rem !important;
 }
 
-#main_app_43tg4 .px-4 {
+#root .px-4 {
     padding-right: 1.5rem !important;
 }
 
-#main_app_43tg4 .pb-4,
-#main_app_43tg4 .py-4 {
+#root .pb-4,
+#root .py-4 {
     padding-bottom: 1.5rem !important;
 }
 
-#main_app_43tg4 .px-4 {
+#root .px-4 {
     padding-left: 1.5rem !important;
 }
 
-#main_app_43tg4 .pb-5 {
+#root .pb-5 {
     padding-bottom: 3rem !important;
 }
 
-#main_app_43tg4 .mx-auto {
+#root .mx-auto {
     margin-right: auto !important;
 }
 
-#main_app_43tg4 .mx-auto {
+#root .mx-auto {
     margin-left: auto !important;
 }
 
 @media (min-width: 768px) {
-    #main_app_43tg4 .mr-md-3 {
+    #root .mr-md-3 {
         margin-right: 1rem !important;
     }
-    #main_app_43tg4 .px-md-0 {
+    #root .px-md-0 {
         padding-right: 0 !important;
     }
-    #main_app_43tg4 .pb-md-0 {
+    #root .pb-md-0 {
         padding-bottom: 0 !important;
     }
-    #main_app_43tg4 .px-md-0 {
+    #root .px-md-0 {
         padding-left: 0 !important;
     }
-    #main_app_43tg4 .px-md-2 {
+    #root .px-md-2 {
         padding-right: 0.5rem !important;
     }
 
-    #main_app_43tg4 .px-md-2 {
+    #root .px-md-2 {
         padding-left: 0.5rem !important;
     }
-    #main_app_43tg4 .px-md-4 {
+    #root .px-md-4 {
         padding-right: 1.5rem !important;
     }
 
-    #main_app_43tg4 .px-md-4 {
+    #root .px-md-4 {
         padding-left: 1.5rem !important;
     }
-    #main_app_43tg4 .pt-md-5 {
+    #root .pt-md-5 {
         padding-top: 3rem !important;
     }
 }
 
 @media (min-width: 992px) {
 
-    #main_app_43tg4 .px-lg-5 {
+    #root .px-lg-5 {
         padding-right: 3rem !important;
     }
 
-    #main_app_43tg4 .px-lg-5 {
+    #root .px-lg-5 {
         padding-left: 3rem !important;
     }
 
 }
 
-#main_app_43tg4 .text-left {
+#root .text-left {
     text-align: left !important;
 }
 
-#main_app_43tg4 .text-center {
+#root .text-center {
     text-align: center !important;
 }
 
-#main_app_43tg4 .text-uppercase {
+#root .text-uppercase {
     text-transform: uppercase !important;
 }
 
-#main_app_43tg4 .font-weight-normal {
+#root .font-weight-normal {
     font-weight: 400 !important;
 }
 
-#main_app_43tg4 .font-weight-extra-bold {
+#root .font-weight-extra-bold {
     font-weight: 900 !important;
 }
 
 @media print {
-    #main_app_43tg4 *,
-    #main_app_43tg4 *::before,
-    #main_app_43tg4 *::after {
+    #root *,
+    #root *::before,
+    #root *::after {
         text-shadow: none !important;
         box-shadow: none !important;
     }
-    #main_app_43tg4 a:not(.btn) {
+    #root a:not(.btn) {
         text-decoration: underline;
     }
-    #main_app_43tg4 img {
+    #root img {
         page-break-inside: avoid;
     }
-    #main_app_43tg4 p,
-    #main_app_43tg4 h3 {
+    #root p,
+    #root h3 {
         orphans: 3;
         widows: 3;
     }
-    #main_app_43tg4 h3 {
+    #root h3 {
         page-break-after: avoid;
     }
     /* TODO ??? */
     @page {
         size: a3;
     }
-    body #main_app_43tg4 {
+    body #root {
         min-width: 992px !important;
     }
-    #main_app_43tg4 .container {
+    #root .container {
         min-width: 992px !important;
     }
 }
 
-#main_app_43tg4 a:hover {
+#root a:hover {
     text-decoration: none;
 }
 
-html #main_app_43tg4 {
+html #root {
     scroll-behavior: behaviour;
 }
 
-body #main_app_43tg4 {
+body #root {
     background-color: #efefef;
     -webkit-font-smoothing: antialiased;
     scroll-behavior: smooth;
 }
 
-#main_app_43tg4 .main-content > section:first-of-type:not(.section-introduction) {
+#root .main-content > section:first-of-type:not(.section-introduction) {
     padding-top: 2rem;
 }
 
-#main_app_43tg4 .main-content {
+#root .main-content {
     background-color: #efefef;
     min-height: 60vh;
 }
 
-#main_app_43tg4 figure {
+#root figure {
     margin: 0;
 }
 
-#main_app_43tg4 a {
+#root a {
     color: #2d2d2d;
 }
 
-#main_app_43tg4 a:hover {
+#root a:hover {
     text-decoration: none;
 }
 
-#main_app_43tg4 .text-grey {
+#root .text-grey {
     color: #555555 !important;
 }
 
-#main_app_43tg4 .container {
+#root .container {
     max-width: none;
 }
 
-#main_app_43tg4 .App .main-content {
+#root .App .main-content {
     padding: 0;
     min-height: 100px;
 }
 
 @media (min-width: 768px) {
-    #main_app_43tg4 .main-content > section:first-of-type:not(.section-introduction) {
+    #root .main-content > section:first-of-type:not(.section-introduction) {
         padding-top: 2rem;
     }
-    #main_app_43tg4 .container {
+    #root .container {
         max-width: none;
     }
 }
 
 @media (min-width: 992px) {
-    #main_app_43tg4 .main-content > section:first-of-type:not(.section-introduction) {
+    #root .main-content > section:first-of-type:not(.section-introduction) {
         padding-top: 2rem;
     }
-    #main_app_43tg4 .container {
+    #root .container {
         max-width: none;
     }
 }
 
 @media (min-width: 1200px) {
-    #main_app_43tg4 .container {
+    #root .container {
         max-width: 1440px;
     }
 }
 
-#main_app_43tg4 h3 {
+#root h3 {
     line-height: 1.1;
 }
 
-#main_app_43tg4 .btn {
+#root .btn {
     border-radius: 0;
     min-width: 10.625rem;
     padding: 0.5rem 1.5rem;
@@ -865,7 +865,7 @@ body #main_app_43tg4 {
     font-family: "Roboto", sans-serif;
 }
 
-#main_app_43tg4 .btn:hover {
+#root .btn:hover {
     color: #ffffff;
     -webkit-transition: color;
     transition: color;
@@ -875,42 +875,42 @@ body #main_app_43tg4 {
 }
 
 @media (min-width: 576px) {
-    #main_app_43tg4 .btn {
+    #root .btn {
         padding: 0.5rem 1.5rem;
     }
 }
 
-#main_app_43tg4 button[type="submit"] {
+#root button[type="submit"] {
     font-size: 1rem;
 }
 
-#main_app_43tg4 .dropzone .dz-preview .dz-details .dz-filename:not(:hover) {
+#root .dropzone .dz-preview .dz-details .dz-filename:not(:hover) {
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-#main_app_43tg4 .dropzone .dz-preview .dz-details .dz-filename:not(:hover) span {
+#root .dropzone .dz-preview .dz-details .dz-filename:not(:hover) span {
     border: 1px solid transparent;
 }
 
-#main_app_43tg4 .hero-empty {
+#root .hero-empty {
     min-height: 5.375rem;
 }
 
 @media (min-width: 992px) {
-    #main_app_43tg4 .hero-empty {
+    #root .hero-empty {
         min-height: 5.5625rem;
     }
 }
 
-#main_app_43tg4 .row-spacing {
+#root .row-spacing {
     margin-bottom: 3rem;
 }
 
 @supports (-webkit-marquee-repetition: infinite) and ((-o-object-fit: fill) or (object-fit: fill)) {
 }
 
-#main_app_43tg4 .form-control {
+#root .form-control {
     border-radius: 0;
     border: 0;
     height: auto;
@@ -922,28 +922,28 @@ body #main_app_43tg4 {
     border-right: 0.125rem solid transparent;
 }
 
-#main_app_43tg4 .form-control:focus {
+#root .form-control:focus {
     border: 0.125rem solid #555555;
     background-color: #efefef;
 }
 
-#main_app_43tg4 .form-group label {
+#root .form-group label {
     font-size: 1rem;
     font-weight: 500;
 }
 
-#main_app_43tg4 input[type="checkbox"] {
+#root input[type="checkbox"] {
     position: absolute;
     opacity: 0;
 }
 
-#main_app_43tg4 input[type="checkbox"] + label {
+#root input[type="checkbox"] + label {
     display: block;
     position: relative;
     padding: .5rem 2.5rem;
 }
 
-#main_app_43tg4 input[type="checkbox"] + label:before {
+#root input[type="checkbox"] + label:before {
     content: '';
     position: absolute;
     left: 0;
@@ -958,7 +958,7 @@ body #main_app_43tg4 {
     border: 0.125rem solid #555555;
 }
 
-#main_app_43tg4 input[type="checkbox"] + label:after {
+#root input[type="checkbox"] + label:after {
     content: "";
     border: 0.125rem solid;
     border-left: 0;
@@ -975,33 +975,33 @@ body #main_app_43tg4 {
     width: 0.375rem;
 }
 
-#main_app_43tg4 input[type="checkbox"]:checked + label:after {
+#root input[type="checkbox"]:checked + label:after {
     opacity: 1;
     visibility: visible;
 }
 
-#main_app_43tg4 input[type="checkbox"]:focus + label::before {
+#root input[type="checkbox"]:focus + label::before {
     box-shadow: 0 0 0 0.2rem rgba(85, 85, 85, 0.25);
 }
 
 @media (min-width: 992px) {
-    #main_app_43tg4 .form-group {
+    #root .form-group {
         margin-bottom: 2rem;
     }
-    #main_app_43tg4 .form-control {
+    #root .form-control {
         padding: 1.5rem 1.125rem;
     }
 }
 
-#main_app_43tg4 input[type="text"]:focus {
+#root input[type="text"]:focus {
     border-color: inherit;
 }
 
 @media screen and (max-width: 576px) {
-    #main_app_43tg4 .container {
+    #root .container {
         padding: 0;
     }
-    #main_app_43tg4 .row {
+    #root .row {
         margin: 0;
     }
 }
