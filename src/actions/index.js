@@ -9,17 +9,16 @@ import {
 } from "../constants/action-types";
 import axios from "axios";
 
-
-// const baseUrl = 'https://johnmoran.hksndev2.co.uk/wp-json';
-// const baseUrl = 'https://johnmoranstage.invaluable.com/wp-json';
-// const baseUrl = 'https://hksndev2.co.uk/contemporary/wp-json';
-// const baseUrl = 'https://www.dzendzianandsons.com/wp-json';
-const baseUrl = '/wp-json';
+//const baseUrl = '/wp-json'; For WP deployment
+const baseUrl = 'http://johnmoran.hksndev2.co.uk/wp-json'; // Local development - comment out for WP deployment
 
 const requestOptions = {
     headers: {
-        // 'id': 'V053C9yWvo45XsOxKB',
-        'id': 's2DUnuzU3TVfk44ZNp',
+        'id': 'amevnwEgbRd9mx5yBu', // Local development - comment out for WP deployment
+        // API Keys - set in WP Plugin // For WP deployment
+        //'id': 's2DUnuzU3TVfk44ZNp', // John Moran
+        //'id': '3jFt725ZnAZsRfBZqu', // Tajan
+        //'id': '5QxzPDyQhcumKy8S7R', // Weschlers
     }
 };
 

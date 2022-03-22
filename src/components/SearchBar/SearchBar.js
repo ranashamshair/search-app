@@ -195,7 +195,7 @@ class SearchBar extends Component {
                                         <div className="ui icon input">
                                             <label htmlFor="search" className="sr-only">Search Auctions/Lots</label>
                                             <input type="text" id="search" className="form-control h-form-control" placeholder="Enter the terms you wish to search for" value={this.state.query} onChange={e => this.setState({query: e.target.value})} />
-                                            <button type="submit" className="position-relative w-25" onClick={this.handleSearchSubmit}><FontAwesomeIcon icon={faSearch} size="sm" /></button>
+                                            <button type="submit" className="position-relative w-25" onClick={this.handleSearchSubmit}><FontAwesomeIcon icon={faSearch} size="sm" /><span className="sr-only">Submit Search</span></button>
                                         </div>
                                     </div>
 

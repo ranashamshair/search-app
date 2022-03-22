@@ -295,14 +295,14 @@ class SearchFilters extends Component {
                         <button className="py-2 px-4 text-uppercase font-weight-extra-bold" onClick={this.handleOpenClose}>Filter <FontAwesomeIcon className="ml-3" icon={isOpen ? faArrowUp : faArrowDown}/></button>
                         {
                             // !isMobile ?
-                            (<select onChange={this.handleSortingSelect} value={sorting}>
+                            (<label><select onChange={this.handleSortingSelect} value={sorting}>
                                 <option value="" disabled>Sort by</option>
                                 {
                                     currentSortOptions.map(opt => (
                                         <option key={opt.value} value={opt.value}>{opt.label}</option>
                                     ))
                                 }
-                            </select>)
+                            </select></label>)
                             // : ""
                         }
                     </div>
