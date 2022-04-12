@@ -319,21 +319,35 @@ class SearchFilters extends Component {
                             }
 
                             <div className="col-12 col-md-9 d-flex flex-wrap">
-                                {
-                                    (currentTab !== 'past' && !noResults) && availableCategories.map(item => (
-                                        <div className="ui checkbox col-12 col-lg-4 col-md-6 pb-2" key={'category_' + item.id}>
-                                            <input
-                                                type="checkbox"
-                                                id={'category_' + item.id}
-                                                // defaultChecked={this.categorySelected(item.replaceAll(' ','-'))}
-                                                checked={this.categorySelected(item.id)}
-                                                value={item.id}
-                                                onChange={this.handleCheckboxChange}
-                                            />
-                                            <label htmlFor={'category_' + item.id} dangerouslySetInnerHTML={{__html: item.name}} />
-                                        </div>
-                                    ))
-                                }
+                              {
+                                  (currentTab !== 'past' && !noResults) && availableCategories.map(item => (
+                                      <div className="ui checkbox col-12 col-lg-4 col-md-6 pb-2" key={'category_' + item.id}>
+                                          <input
+                                              type="checkbox"
+                                              id={'category_' + item.id}
+                                              // defaultChecked={this.categorySelected(item.replaceAll(' ','-'))}
+                                              checked={this.categorySelected(item.id)}
+                                              value={item.id}
+                                              onChange={this.handleCheckboxChange}
+                                          />
+                                          <label htmlFor={'category_' + item.id} dangerouslySetInnerHTML={{__html: item.name}} />
+                                          <div className="border mb-2"></div>
+                                          { item.childCategories && item.childCategories.map(i =>(
+                                              <div key={'category_' + i.id}>
+                                                  <input
+                                                      type="checkbox"
+                                                      id={'category_' + i.id}
+                                                      // defaultChecked={this.categorySelected(item.replaceAll(' ','-'))}
+                                                      checked={this.categorySelected(i.id)}
+                                                      value={i.id}
+                                                      onChange={this.handleCheckboxChange}
+                                                  />
+                                                  <label htmlFor={'category_' + i.id} dangerouslySetInnerHTML={{__html: i.name}} />
+                                              </div>
+                                          ))}
+                                      </div>
+                                  ))
+                              }
                             </div>
                             <div className="col-12 d-flex justify-content-center p-3">
                                 <button type="submit" className="py-2 px-4 text-uppercase font-weight-extra-bold" onClick={this.handleSubmitFilters}>Apply filters <FontAwesomeIcon className="ml-3" icon={faArrowRight}/></button>

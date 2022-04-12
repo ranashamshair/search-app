@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 
 //const baseUrl = '/wp-json'; For WP deployment
-const baseUrl = 'http://johnmoran.hksndev2.co.uk/wp-json'; // Local development - comment out for WP deployment
+const baseUrl = 'https://johnmoran.hksndev2.co.uk/wp-json'; // Local development - comment out for WP deployment
 
 const requestOptions = {
     headers: {
